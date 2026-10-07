@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AlertsLink } from "@/components/AlertsLink";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,7 +22,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </span>
               Price Tracker
             </Link>
-            <a href="/docs" className="ml-auto text-sm text-muted hover:text-ink">
+            <AlertsLink />
+            <a href="/docs" className="text-sm text-muted hover:text-ink">
               API
             </a>
             <a
@@ -36,8 +38,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </header>
         <div className="flex-1">{children}</div>
         <footer className="mx-auto w-full max-w-6xl px-4 py-8 text-xs text-faint">
-          Built with Node.js, Supabase and Next.js. Data: books.toscrape.com (a public scraping sandbox), CoinGecko,
-          Central Bank of the Republic of Türkiye and fawazahmed0/exchange-api. Updated daily.
+          Built with Node.js, Supabase and Next.js. Data: books.toscrape.com (a public scraping sandbox), CoinGecko, Central Bank of the
+          Republic of Türkiye and fawazahmed0/exchange-api. Updated daily.
         </footer>
       </body>
     </html>
