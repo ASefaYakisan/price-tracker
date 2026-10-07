@@ -3,3 +3,4 @@ node_modules/
 .env*
 !.env.example
 scraper/data/
+!web/.env.production

@@ -114,12 +114,17 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
               onClick={() => router.push(`/products/${p.id}`)}
               className="flex cursor-pointer items-center gap-4 px-4 py-3 transition-colors hover:bg-hover"
             >
-              <span
-                className="grid size-10 shrink-0 place-items-center rounded-lg bg-accent-soft text-sm font-semibold text-accent"
-                aria-hidden
-              >
-                {p.title.replace(/^(the|a|an)\s+/i, "").slice(0, 1)}
-              </span>
+              {p.image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element -- small remote thumbnails, no optimisation needed
+                <img src={p.image_url} alt="" loading="lazy" className="h-12 w-9 shrink-0 rounded object-cover" />
+              ) : (
+                <span
+                  className="grid size-10 shrink-0 place-items-center rounded-lg bg-accent-soft text-sm font-semibold text-accent"
+                  aria-hidden
+                >
+                  {p.title.replace(/^(the|a|an)\s+/i, "").slice(0, 1)}
+                </span>
+              )}
               <div className="min-w-0 flex-1">
                 <Link href={`/products/${p.id}`} className="block truncate font-medium text-ink hover:text-accent">
                   {p.title}
