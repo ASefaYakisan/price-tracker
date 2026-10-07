@@ -7,6 +7,15 @@ export const SOURCE_LABELS: Record<string, string> = {
 
 export const sourceLabel = (source: string) => SOURCE_LABELS[source] ?? source;
 
+// Shoppers want prices to fall; for crypto, currencies and gold a rise is the good news.
+const MARKET_SOURCES = new Set(["coingecko", "tcmb", "gold"]);
+export const riseIsGood = (source: string) => MARKET_SOURCES.has(source);
+
+// "good" | "bad" tone for a percentage move, from the viewer's side of the trade.
+export function changeTone(pct: number, source: string): "good" | "bad" {
+  return (pct > 0) === riseIsGood(source) ? "good" : "bad";
+}
+
 export function money(value: number | null | undefined, currency: string | null) {
   if (value == null) return "–";
   // Small values (cheap coins, yen) need more than two decimals to show any movement.

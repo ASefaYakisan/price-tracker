@@ -1,3 +1,4 @@
+import { processAlerts } from './alerts.js';
 import * as booksToScrape from './adapters/books-toscrape.js';
 import * as coingecko from './adapters/coingecko.js';
 import * as gold from './adapters/gold.js';
@@ -45,6 +46,16 @@ async function main() {
     } catch (err) {
       console.error(`  FAILED: ${err.message ?? err}`);
       failures.push(name);
+    }
+  }
+  if (store.db) {
+    console.log('alerts:');
+    try {
+      const { checked, sent } = await processAlerts(store.db);
+      console.log(`  ${checked} open, ${sent} sent`);
+    } catch (err) {
+      console.error(`  FAILED: ${err.message ?? err}`);
+      failures.push('alerts');
     }
   }
   if (failures.length) {

@@ -1,11 +1,12 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AlertForm } from "@/components/AlertForm";
 import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 import { Stat } from "@/components/Stat";
 import { getPriceHistory, getProduct } from "@/lib/data";
-import { dateTime, money, percentChange, sourceLabel } from "@/lib/format";
+import { changeTone, dateTime, money, percentChange, sourceLabel } from "@/lib/format";
 
 export default function ProductPage({ params }: PageProps<"/products/[id]">) {
   return (
@@ -56,7 +57,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
           <div className="text-sm text-muted">Current price</div>
           <div className="mt-1 text-2xl font-semibold tabular-nums">{money(product.price, product.currency)}</div>
           <div className="mt-1">
-            <ChangeBadge price={product.price} previous={product.previous_price} currency={product.currency} />
+            <ChangeBadge price={product.price} previous={product.previous_price} currency={product.currency} source={product.source} />
           </div>
         </div>
         <Stat label="Lowest" value={prices.length ? money(Math.min(...prices), product.currency) : "–"} hint="in this period" />
@@ -65,13 +66,19 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
           label="Period change"
           value={periodChange == null ? "–" : `${periodChange > 0 ? "+" : ""}${periodChange.toFixed(1)}%`}
           hint={first == null ? undefined : `from ${money(first, product.currency)}`}
-          tone={periodChange == null || Math.abs(periodChange) < 0.05 ? undefined : periodChange < 0 ? "good" : "bad"}
+          tone={periodChange == null || Math.abs(periodChange) < 0.05 ? undefined : changeTone(periodChange, product.source)}
         />
       </section>
 
       <section className="rounded-xl border border-line bg-card p-4 sm:p-6">
         <h2 className="mb-4 font-medium">Price history</h2>
         <PriceChart points={history} currency={product.currency} />
+      </section>
+
+      <section className="mt-6 rounded-xl border border-line bg-card p-4 sm:p-6">
+        <h2 className="font-medium">Price alert</h2>
+        <p className="mb-4 mt-1 text-sm text-muted">Get one email when the price reaches your target. Checked after every daily scrape.</p>
+        <AlertForm productId={product.id} price={product.price} currency={product.currency} />
       </section>
     </>
   );

@@ -160,7 +160,7 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
               <div className="text-right">
                 <div className="font-semibold tabular-nums">{money(p.price, p.currency)}</div>
                 <div className="mt-0.5">
-                  <ChangeBadge price={p.price} previous={p.previous_price} currency={p.currency} />
+                  <ChangeBadge price={p.price} previous={p.previous_price} currency={p.currency} source={p.source} />
                 </div>
               </div>
               <svg viewBox="0 0 20 20" className="hidden size-4 text-faint sm:block" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>

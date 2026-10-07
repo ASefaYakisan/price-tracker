@@ -45,8 +45,8 @@ export default async function Home() {
 
       <section className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Stat label="Tracked items" value={products.length} hint={`Average change ${avg > 0 ? "+" : ""}${avg.toFixed(1)}%`} />
-        <Stat label="Price drops" value={drops} hint="since the last scrape" tone={drops ? "good" : undefined} />
-        <Stat label="Price rises" value={rises} hint="since the last scrape" tone={rises ? "bad" : undefined} />
+        <Stat label="Price drops" value={drops} hint="since the last scrape" />
+        <Stat label="Price rises" value={rises} hint="since the last scrape" />
         <Stat
           label="Out of stock"
           value={outOfStock}

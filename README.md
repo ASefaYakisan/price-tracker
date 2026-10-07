@@ -39,6 +39,10 @@ NEXT_PUBLIC_SUPABASE_URL=... NEXT_PUBLIC_SUPABASE_ANON_KEY=... npm run dev
 
 `.github/workflows/scrape.yml` runs the scraper every day at 06:00 UTC and can be started by hand from the Actions tab. It needs one repository secret: `SUPABASE_SERVICE_ROLE_KEY`.
 
+## Price alerts
+
+Visitors leave an email and a target price on any product page. After every scrape the job emails each alert whose target is reached, once, then marks it sent. Emails go through [Resend](https://resend.com): add a `RESEND_API_KEY` repository secret to switch sending on; without it the job only logs which alerts are due. Alerts are write-only for the public (RLS insert policy, no read access).
+
 ## Adding a site
 
 Create `scraper/src/adapters/<site>.js` exporting `name` and either `startUrl` + `parseListing(html, pageUrl)` returning `{ products, nextUrl }` (HTML sites) or `fetchAll()` returning products (APIs), then register it in `src/index.js`.
@@ -54,5 +58,5 @@ Create `scraper/src/adapters/<site>.js` exporting `name` and either `startUrl` +
 - [x] Light and dark themes, mobile layout
 - [x] Multiple sources: crypto (CoinGecko), exchange rates (TCMB XML), gold
 - [ ] Google Sheets sync
-- [ ] Price-drop email alerts
+- [x] Price-drop email alerts (sign up on the product page, sent after each scrape via Resend)
 - [x] Daily schedule (GitHub Actions cron)

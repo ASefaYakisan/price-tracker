@@ -9,6 +9,7 @@ export function createStore({ url = process.env.SUPABASE_URL, key = process.env.
 function supabaseStore(db) {
   return {
     kind: 'supabase',
+    db,
     async save(source, products, scrapedAt) {
       const { data: rows, error } = await db
         .from('products')

@@ -1,24 +1,27 @@
-import { money, percentChange } from "@/lib/format";
+import { changeTone, money, percentChange } from "@/lib/format";
 
 export function ChangeBadge({
   price,
   previous,
   currency,
+  source,
 }: {
   price: number | null;
   previous: number | null;
   currency: string | null;
+  source: string;
 }) {
   const pct = percentChange(price, previous);
   if (pct == null || Math.abs(pct) < 0.005) {
     return <span className="text-sm text-faint">No change</span>;
   }
   const down = pct < 0;
+  const good = changeTone(pct, source) === "good";
   const diff = Math.abs((price ?? 0) - (previous ?? 0));
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-sm font-medium tabular-nums ${
-        down ? "bg-good-soft text-good" : "bg-bad-soft text-bad"
+        good ? "bg-good-soft text-good" : "bg-bad-soft text-bad"
       }`}
       title={`${down ? "Down" : "Up"} ${money(diff, currency)} since last scrape`}
     >

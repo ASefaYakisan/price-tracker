@@ -33,3 +33,6 @@ jobs:
           SUPABASE_URL: https://zaufbyefvjttfppirjrj.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+          # Optional: without it, due alerts are only logged, not emailed.
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SITE_URL: https://price-tracker-sefa-yksn.vercel.app
