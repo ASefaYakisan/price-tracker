@@ -1,0 +1,31 @@
+name: Daily scrape
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # every day at 06:00 UTC (09:00 Türkiye)
+  workflow_dispatch:
+    inputs:
+      pages:
+        description: Listing pages to crawl
+        default: "3"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: scraper/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run scrape -- books-toscrape ${{ inputs.pages || '3' }}
+        env:
+          SUPABASE_URL: https://zaufbyefvjttfppirjrj.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

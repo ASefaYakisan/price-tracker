@@ -31,9 +31,10 @@ create table if not exists alerts (
   last_sent_at  timestamptz,
   created_at    timestamptz not null default now()
 );
+create index if not exists alerts_product on alerts (product_id);
 
 -- Latest price and change versus the previous scrape, for the dashboard list.
-create or replace view product_latest as
+create or replace view product_latest with (security_invoker = true) as
 select p.*, cur.price, cur.in_stock, cur.scraped_at,
        prev.price as previous_price,
        cur.price - prev.price as price_change
@@ -51,5 +52,5 @@ left join lateral (
 alter table products enable row level security;
 alter table price_history enable row level security;
 alter table alerts enable row level security;
-create policy "public read products" on products for select using (true);
-create policy "public read history" on price_history for select using (true);
+create policy "public read products" on products for select to anon, authenticated using (true);
+create policy "public read history" on price_history for select to anon, authenticated using (true);

@@ -35,6 +35,10 @@ cd ../web && npm install
 NEXT_PUBLIC_SUPABASE_URL=... NEXT_PUBLIC_SUPABASE_ANON_KEY=... npm run dev
 ```
 
+## Daily schedule
+
+`.github/workflows/scrape.yml` runs the scraper every day at 06:00 UTC and can be started by hand from the Actions tab. It needs one repository secret: `SUPABASE_SERVICE_ROLE_KEY`.
+
 ## Adding a site
 
 Create `scraper/src/adapters/<site>.js` exporting `name`, `startUrl` and `parseListing(html, pageUrl)` returning `{ products, nextUrl }`, then register it in `src/index.js`.
@@ -50,4 +54,4 @@ Create `scraper/src/adapters/<site>.js` exporting `name`, `startUrl` and `parseL
 - [x] Light and dark themes, mobile layout
 - [ ] Google Sheets sync
 - [ ] Price-drop email alerts
-- [ ] Daily schedule (GitHub Actions cron)
+- [x] Daily schedule (GitHub Actions cron)

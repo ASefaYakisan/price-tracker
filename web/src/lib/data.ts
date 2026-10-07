@@ -31,7 +31,13 @@ export async function getProducts(): Promise<ProductRow[]> {
     .order("price_change", { ascending: true, nullsFirst: false })
     .limit(200);
   if (error) throw new Error(error.message);
-  return data as ProductRow[];
+  return (data as ProductRow[]).map(toNumbers);
+}
+
+// Postgres numeric can arrive as a string; the UI does arithmetic on these fields.
+function toNumbers(row: ProductRow): ProductRow {
+  const num = (v: unknown) => (v == null ? null : Number(v));
+  return { ...row, price: num(row.price), previous_price: num(row.previous_price), price_change: num(row.price_change) };
 }
 
 export type PricePoint = { scraped_at: string; price: number | null; in_stock: boolean };
@@ -43,7 +49,7 @@ export async function getProduct(id: number): Promise<ProductRow | null> {
   const db = createClient(url!, anonKey!);
   const { data, error } = await db.from("product_latest").select("*").eq("id", id).maybeSingle();
   if (error) throw new Error(error.message);
-  return data as ProductRow | null;
+  return data ? toNumbers(data as ProductRow) : null;
 }
 
 export async function getPriceHistory(id: number, days = 90): Promise<PricePoint[]> {
@@ -59,7 +65,7 @@ export async function getPriceHistory(id: number, days = 90): Promise<PricePoint
     .gte("scraped_at", since)
     .order("scraped_at", { ascending: true });
   if (error) throw new Error(error.message);
-  return data as PricePoint[];
+  return (data as PricePoint[]).map((p) => ({ ...p, price: p.price == null ? null : Number(p.price) }));
 }
 
 // Sample rows so the dashboard renders before Supabase is connected.
