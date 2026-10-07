@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getProducts, isDemo, type ProductRow } from "@/lib/data";
 
 const money = (value: number | null, currency: string | null) =>
@@ -13,12 +14,20 @@ export default async function Home() {
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-10">
-      <header className="mb-8">
+      <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
         <h1 className="text-2xl font-semibold">Price Tracker</h1>
         <p className="text-sm text-zinc-500">
           Last scrape: {lastRun ? new Date(lastRun).toLocaleString("en-GB") : "never"}
           {isDemo && " · demo data (connect Supabase to see live prices)"}
         </p>
+        </div>
+        <a
+          href="/api/export"
+          className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100"
+        >
+          Export CSV
+        </a>
       </header>
 
       <section className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -63,9 +72,9 @@ function Row({ product: p }: { product: ProductRow }) {
   return (
     <tr className="border-t border-zinc-100">
       <td className="px-4 py-2">
-        <a href={p.url} target="_blank" rel="noreferrer" className="hover:underline">
+        <Link href={`/products/${p.id}`} className="hover:underline">
           {p.title}
-        </a>
+        </Link>
         <div className="text-xs text-zinc-400">{p.source}</div>
       </td>
       <td className="px-4 py-2 text-right tabular-nums">{money(p.price, p.currency)}</td>

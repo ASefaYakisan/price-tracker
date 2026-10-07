@@ -4,13 +4,15 @@ A Node.js scraper collects product prices on a schedule and stores every run in 
 
 ![Dashboard](panel-onizleme.png)
 
+![Price history](urun-grafik.png)
+
 ## Structure
 
 | Folder | What it does |
 | --- | --- |
 | `scraper/` | Node.js 20+ crawler. One adapter per site (`src/adapters/`), polite fetching with retries, pagination. Saves to Supabase, or to local JSON when no credentials are set. |
 | `supabase/migrations/` | Tables `products`, `price_history`, `alerts`, the `product_latest` view and row level security. |
-| `web/` | Next.js dashboard reading the `product_latest` view. Shows demo data until Supabase is connected. |
+| `web/` | Next.js dashboard: product list, per-product price history chart, CSV export. Shows demo data until Supabase is connected. |
 
 ## Run it
 
@@ -34,7 +36,8 @@ Create `scraper/src/adapters/<site>.js` exporting `name`, `startUrl` and `parseL
 - [x] Scraper with pagination and retries, unit-tested parser
 - [x] Supabase schema with price history
 - [x] Dashboard with price change and stock status
-- [ ] Price history chart per product
-- [ ] CSV export and Google Sheets sync
+- [x] Price history chart per product (hover tooltip, table view)
+- [x] CSV export (`/api/export`, spreadsheet-safe)
+- [ ] Google Sheets sync
 - [ ] Price-drop email alerts
 - [ ] Daily schedule (GitHub Actions cron)
