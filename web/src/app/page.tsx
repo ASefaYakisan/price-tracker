@@ -3,6 +3,7 @@ import { dateTime, percentChange } from "@/lib/format";
 import { ProductTable } from "@/components/ProductTable";
 import { Stat } from "@/components/Stat";
 import { TrackForm } from "@/components/TrackForm";
+import { MyAlerts } from "@/components/MyAlerts";
 
 export default async function Home() {
   const products = await getProducts();
@@ -57,6 +58,8 @@ export default async function Home() {
       </section>
 
       <TrackForm />
+
+      <MyAlerts />
 
       <ProductTable products={products} />
     </main>

@@ -78,7 +78,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
       <section className="mt-6 rounded-xl border border-line bg-card p-4 sm:p-6">
         <h2 className="font-medium">Price alert</h2>
         <p className="mb-4 mt-1 text-sm text-muted">Get one email when the price reaches your target. Checked after every daily scrape.</p>
-        <AlertForm productId={product.id} price={product.price} currency={product.currency} />
+        <AlertForm productId={product.id} title={product.title} price={product.price} currency={product.currency} />
       </section>
     </>
   );

@@ -25,6 +25,9 @@ export function TrackForm() {
     }).catch(() => null);
     const json = await res?.json().catch(() => null);
     if (res?.ok && json?.id) {
+      // Reset first: the browser can restore this page from history with its old state.
+      setState({ kind: "idle" });
+      setUrl("");
       router.push(`/products/${json.id}`);
       router.refresh();
     } else if (res?.ok && json?.demo) setState({ kind: "demo", product: json.product });
