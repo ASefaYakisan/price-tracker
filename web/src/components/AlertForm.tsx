@@ -47,6 +47,8 @@ export function AlertForm({
           target: Number(target),
           currency,
           createdAt: new Date().toISOString(),
+          id: json.id,
+          token: json.token,
         });
       setState({ kind: "done", demo: Boolean(json.demo), updated: Boolean(json.updated) });
     } else
@@ -60,8 +62,8 @@ export function AlertForm({
     return (
       <>
         <p className="rounded-lg bg-good-soft px-4 py-3 text-sm text-ink">
-          {state.updated ? "Alert updated." : "Done."} We will email <strong>{email}</strong> once the price is at or below <strong>{money(Number(target), currency)}</strong>.
-          {state.demo && " (Demo mode: nothing is saved.)"}{" "}
+          {state.updated ? "Alert updated." : "Done."} We will email <strong>{email}</strong> once the price is at or below{" "}
+          <strong>{money(Number(target), currency)}</strong>.{state.demo && " (Demo mode: nothing is saved.)"}{" "}
           <button type="button" onClick={() => setState({ kind: "idle" })} className="font-medium text-accent hover:underline">
             Add another
           </button>

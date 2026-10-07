@@ -11,6 +11,9 @@ export type SavedAlert = {
   target: number;
   currency: string | null;
   createdAt: string;
+  // Returned by the server; needed to edit or delete the alert. Older entries lack them.
+  id?: number;
+  token?: string;
 };
 
 const KEY = "price-tracker:alerts";
@@ -29,10 +32,26 @@ function read(): SavedAlert[] {
   return cache;
 }
 
+const sameAlert = (a: SavedAlert, b: SavedAlert) =>
+  a.id != null && b.id != null ? a.id === b.id : a.productId === b.productId && a.email.toLowerCase() === b.email.toLowerCase();
+
 export function saveAlert(alert: SavedAlert) {
   // One entry per item and address, like the server: a new target replaces the old one.
   const same = (a: SavedAlert) => a.productId === alert.productId && a.email.toLowerCase() === alert.email.toLowerCase();
-  cache = [alert, ...read().filter((a) => !same(a))].slice(0, 50);
+  write([alert, ...read().filter((a) => !same(a) && !sameAlert(a, alert))].slice(0, 50));
+}
+
+// Replace one entry in place (after an edit, or when the server hands back a token).
+export function replaceAlert(old: SavedAlert, next: SavedAlert) {
+  write(read().map((a) => (a === old || sameAlert(a, old) ? next : a)));
+}
+
+export function removeAlert(alert: SavedAlert) {
+  write(read().filter((a) => a !== alert && !sameAlert(a, alert)));
+}
+
+function write(next: SavedAlert[]) {
+  cache = next;
   try {
     localStorage.setItem(KEY, JSON.stringify(cache));
   } catch {
