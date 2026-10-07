@@ -3,7 +3,7 @@ import { json } from "@/lib/api";
 const Product = {
   type: "object",
   properties: {
-    id: { type: "integer", example: 149 },
+    id: { type: "integer", example: 123 },
     source: { type: "string", enum: ["books-toscrape", "coingecko", "tcmb", "gold"], example: "coingecko" },
     title: { type: "string", example: "Bitcoin (BTC)" },
     url: { type: "string", format: "uri" },
@@ -22,7 +22,14 @@ const errorResponse = (description: string) => ({
   description,
   content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
 });
-const idParam = { name: "id", in: "path", required: true, schema: { type: "integer", minimum: 1 } };
+const idParam = {
+  name: "id",
+  in: "path",
+  required: true,
+  description: "Item id from /api/products (ids are not sequential). 123 is Bitcoin.",
+  schema: { type: "integer", minimum: 1 },
+  example: 123,
+};
 
 const spec = {
   openapi: "3.0.3",
