@@ -33,8 +33,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </header>
         <div className="flex-1">{children}</div>
         <footer className="mx-auto w-full max-w-6xl px-4 py-8 text-xs text-faint">
-          Built with Node.js, Supabase and Next.js. Demo data comes from books.toscrape.com, a public sandbox for
-          scraping practice.
+          Built with Node.js, Supabase and Next.js. Data: books.toscrape.com (a public scraping sandbox), CoinGecko,
+          Central Bank of the Republic of Türkiye and fawazahmed0/exchange-api. Updated daily.
         </footer>
       </body>
     </html>

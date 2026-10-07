@@ -2,7 +2,7 @@
 
 **Live demo:** https://price-tracker-sefa-yksn.vercel.app
 
-A Node.js scraper collects product prices on a schedule and stores every run in Supabase (Postgres). A Next.js dashboard shows current prices, the change since the last run and stock status.
+A Node.js scraper collects prices from four sources on a schedule (an e-commerce catalogue, crypto, exchange rates and gold) and stores every run in Supabase (Postgres). A Next.js dashboard shows current prices, the change since the last run and stock status.
 
 ![Dashboard](panel-onizleme.png)
 
@@ -18,7 +18,7 @@ A Node.js scraper collects product prices on a schedule and stores every run in 
 
 | Folder | What it does |
 | --- | --- |
-| `scraper/` | Node.js 20+ crawler. One adapter per site (`src/adapters/`), polite fetching with retries, pagination. Saves to Supabase, or to local JSON when no credentials are set. |
+| `scraper/` | Node.js 20+ collector. One adapter per source (`src/adapters/`): HTML crawling with pagination (books.toscrape.com), JSON APIs (CoinGecko, gold) and XML (Central Bank of Türkiye rates). Polite fetching with retries; one failing source never blocks the others. Saves to Supabase, or to local JSON when no credentials are set. |
 | `supabase/migrations/` | Tables `products`, `price_history`, `alerts`, the `product_latest` view and row level security. |
 | `web/` | Next.js dashboard: search, filters and sorting, per-product price history chart, Excel and CSV export, light and dark themes. Shows demo data until Supabase is connected. |
 
@@ -28,7 +28,7 @@ A Node.js scraper collects product prices on a schedule and stores every run in 
 # 1. Database: paste supabase/migrations/0001_init.sql into the Supabase SQL editor
 # 2. Scraper
 cd scraper && npm install
-SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run scrape -- books-toscrape 5
+SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run scrape -- all 3   # or a single source: coingecko, tcmb, gold, books-toscrape
 npm test
 # 3. Dashboard
 cd ../web && npm install
@@ -41,7 +41,7 @@ NEXT_PUBLIC_SUPABASE_URL=... NEXT_PUBLIC_SUPABASE_ANON_KEY=... npm run dev
 
 ## Adding a site
 
-Create `scraper/src/adapters/<site>.js` exporting `name`, `startUrl` and `parseListing(html, pageUrl)` returning `{ products, nextUrl }`, then register it in `src/index.js`.
+Create `scraper/src/adapters/<site>.js` exporting `name` and either `startUrl` + `parseListing(html, pageUrl)` returning `{ products, nextUrl }` (HTML sites) or `fetchAll()` returning products (APIs), then register it in `src/index.js`.
 
 ## Roadmap
 
@@ -52,6 +52,7 @@ Create `scraper/src/adapters/<site>.js` exporting `name`, `startUrl` and `parseL
 - [x] Excel (.xlsx) and CSV export (`/api/export?format=xlsx|csv`, spreadsheet-safe)
 - [x] Search, filters (drops, rises, out of stock) and sorting
 - [x] Light and dark themes, mobile layout
+- [x] Multiple sources: crypto (CoinGecko), exchange rates (TCMB XML), gold
 - [ ] Google Sheets sync
 - [ ] Price-drop email alerts
 - [x] Daily schedule (GitHub Actions cron)

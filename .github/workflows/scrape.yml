@@ -5,8 +5,11 @@ on:
     - cron: "0 6 * * *" # every day at 06:00 UTC (09:00 Türkiye)
   workflow_dispatch:
     inputs:
+      source:
+        description: Source to scrape (all, books-toscrape, coingecko, tcmb, gold)
+        default: all
       pages:
-        description: Listing pages to crawl
+        description: Listing pages to crawl for HTML sources
         default: "3"
 
 jobs:
@@ -25,7 +28,8 @@ jobs:
           cache-dependency-path: scraper/package-lock.json
       - run: npm ci
       - run: npm test
-      - run: npm run scrape -- books-toscrape ${{ inputs.pages || '3' }}
+      - run: npm run scrape -- ${{ inputs.source || 'all' }} ${{ inputs.pages || '3' }}
         env:
           SUPABASE_URL: https://zaufbyefvjttfppirjrj.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}

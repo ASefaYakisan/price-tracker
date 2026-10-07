@@ -83,7 +83,17 @@ const demo = (id: number, slug: string, title: string, price: number, previous: 
   in_stock,
   scraped_at: now,
 });
+const other = (id: number, source: string, title: string, url: string, currency: string, price: number, previous: number): ProductRow => ({
+  ...demo(id, "", title, price, previous),
+  source,
+  url,
+  currency,
+});
 const DEMO_PRODUCTS: ProductRow[] = [
+  other(9, "coingecko", "Bitcoin (BTC)", "https://www.coingecko.com/en/coins/bitcoin", "USD", 121480.5, 118920.1),
+  other(10, "coingecko", "Ethereum (ETH)", "https://www.coingecko.com/en/coins/ethereum", "USD", 4380.22, 4512.9),
+  other(11, "tcmb", "US Dollar (USD/TRY)", "https://www.tcmb.gov.tr/", "TRY", 49.1802, 49.0915),
+  other(12, "gold", "Gram Gold (TRY)", "https://github.com/fawazahmed0/exchange-api", "TRY", 6518.13, 6542.4),
   demo(1, "a-light-in-the-attic_1000", "A Light in the Attic", 45.17, 51.77),
   demo(2, "tipping-the-velvet_999", "Tipping the Velvet", 53.74, 53.74, false),
   demo(3, "soumission_998", "Soumission", 46.1, 50.1),
@@ -105,7 +115,7 @@ function demoHistory(id: number, days: number): PricePoint[] {
   let price = product.previous_price ?? product.price;
   for (let i = Math.min(days, 30) - 1; i >= 1; i--) {
     points.push({ scraped_at: new Date(end - i * 86_400_000).toISOString(), price: +price.toFixed(2), in_stock: true });
-    if (rand() < 0.25) price = Math.max(1, price + (rand() - 0.5) * 6);
+    if (rand() < 0.4) price = Math.max(0.01, price * (1 + (rand() - 0.5) * 0.06));
   }
   points[points.length - 1].price = product.previous_price;
   points.push({ scraped_at: product.scraped_at!, price: product.price, in_stock: product.in_stock ?? true });

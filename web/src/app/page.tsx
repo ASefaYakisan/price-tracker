@@ -16,9 +16,9 @@ export default async function Home() {
     <main className="mx-auto w-full max-w-6xl px-4 py-8">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Products</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Tracked prices</h1>
           <p className="mt-1 text-sm text-muted">
-            {lastRun ? `Last scrape ${dateTime(lastRun)}` : "No scrapes yet"} · {products.length} products tracked
+            {lastRun ? `Last scrape ${dateTime(lastRun)}` : "No scrapes yet"} · {products.length} items across {new Set(products.map((p) => p.source)).size} sources
           </p>
         </div>
         <div className="flex gap-2">
@@ -44,7 +44,7 @@ export default async function Home() {
       )}
 
       <section className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Stat label="Tracked products" value={products.length} hint={`Average change ${avg > 0 ? "+" : ""}${avg.toFixed(1)}%`} />
+        <Stat label="Tracked items" value={products.length} hint={`Average change ${avg > 0 ? "+" : ""}${avg.toFixed(1)}%`} />
         <Stat label="Price drops" value={drops} hint="since the last scrape" tone={drops ? "good" : undefined} />
         <Stat label="Price rises" value={rises} hint="since the last scrape" tone={rises ? "bad" : undefined} />
         <Stat

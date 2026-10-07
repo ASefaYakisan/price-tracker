@@ -5,13 +5,13 @@ import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 import { Stat } from "@/components/Stat";
 import { getPriceHistory, getProduct } from "@/lib/data";
-import { dateTime, money, percentChange } from "@/lib/format";
+import { dateTime, money, percentChange, sourceLabel } from "@/lib/format";
 
 export default function ProductPage({ params }: PageProps<"/products/[id]">) {
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-8">
       <Link href="/" className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink">
-        <span aria-hidden>←</span> All products
+        <span aria-hidden>←</span> All items
       </Link>
       <Suspense fallback={<div className="mt-6 h-96 animate-pulse rounded-xl bg-card" />}>
         <ProductDetail params={params} />
@@ -36,7 +36,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
         <div className="min-w-0">
           <h1 className="text-2xl font-semibold tracking-tight">{product.title}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted">
-            <span>{product.source}</span>
+            <span>{sourceLabel(product.source)}</span>
             <StockPill inStock={product.in_stock} />
             {product.scraped_at && <span>Updated {dateTime(product.scraped_at)}</span>}
           </div>
@@ -47,7 +47,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
           rel="noreferrer"
           className="inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-card px-3 text-sm font-medium text-ink hover:bg-hover"
         >
-          Open product page <span aria-hidden>↗</span>
+          View source <span aria-hidden>↗</span>
         </a>
       </div>
 

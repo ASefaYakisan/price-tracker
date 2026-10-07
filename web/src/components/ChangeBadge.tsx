@@ -29,16 +29,13 @@ export function ChangeBadge({
   );
 }
 
+// Only the exception is worth a label; "in stock" on every row (or on a currency) is noise.
 export function StockPill({ inStock }: { inStock: boolean | null }) {
-  return inStock === false ? (
+  if (inStock !== false) return null;
+  return (
     <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-warn-soft px-2 py-0.5 text-xs font-medium text-warn">
       <span className="size-1.5 rounded-full bg-warn" aria-hidden />
       Out of stock
-    </span>
-  ) : (
-    <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs text-muted">
-      <span className="size-1.5 rounded-full bg-good" aria-hidden />
-      In stock
     </span>
   );
 }

@@ -2,11 +2,11 @@
 
 import { useRef, useState } from "react";
 import type { PricePoint } from "@/lib/data";
-import { money, shortDate } from "@/lib/format";
+import { axisMoney, money, shortDate } from "@/lib/format";
 
 const W = 720;
 const H = 260;
-const PAD = { top: 16, right: 12, bottom: 28, left: 64 };
+const PAD = { top: 16, right: 12, bottom: 28, left: 76 };
 
 // Round axis ticks to 1, 2 or 5 × 10^n so labels read £45, £50, £55.
 function niceTicks(min: number, max: number, count = 4) {
@@ -70,7 +70,7 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
           <g key={v}>
             <line x1={PAD.left} x2={W - PAD.right} y1={y(v)} y2={y(v)} stroke="var(--grid)" />
             <text x={PAD.left - 10} y={y(v)} textAnchor="end" dominantBaseline="middle" fontSize="12" fill="var(--faint)">
-              {money(v, currency)}
+              {axisMoney(v, currency)}
             </text>
           </g>
         ))}

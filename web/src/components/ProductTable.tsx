@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { ProductRow } from "@/lib/data";
-import { money, percentChange } from "@/lib/format";
+import { money, percentChange, sourceLabel } from "@/lib/format";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 
 const FILTERS = [
@@ -39,13 +39,16 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<FilterKey>("all");
   const [sort, setSort] = useState<SortKey>("drop");
+  const [source, setSource] = useState("all");
+  const sources = useMemo(() => [...new Set(products.map((p) => p.source))].sort(), [products]);
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
     return products
-      .filter((p) => matches(p, filter) && (!q || p.title.toLowerCase().includes(q)))
+      .filter((p) => (source === "all" || p.source === source) && matches(p, filter) && (!q || p.title.toLowerCase().includes(q)))
       .sort(SORTS[sort].fn);
-  }, [products, query, filter, sort]);
+  }, [products, query, filter, sort, source]);
+  const inSource = source === "all" ? products : products.filter((p) => p.source === source);
 
   return (
     <section className="rounded-xl border border-line bg-card">
@@ -60,13 +63,33 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search products…"
+            placeholder="Search…"
             className="h-9 w-full rounded-lg border border-line bg-bg pr-3 pl-9 text-sm text-ink placeholder:text-faint focus:border-accent focus:outline-none"
           />
         </label>
+        {sources.length > 1 && (
+          <label className="relative shrink-0">
+            <span className="sr-only">Source</span>
+            <select
+              value={source}
+              onChange={(e) => setSource(e.target.value)}
+              className="h-9 w-full appearance-none rounded-lg border border-line bg-bg pr-8 pl-3 text-sm text-ink focus:border-accent focus:outline-none"
+            >
+              <option value="all">All sources</option>
+              {sources.map((s) => (
+                <option key={s} value={s}>
+                  {sourceLabel(s)}
+                </option>
+              ))}
+            </select>
+            <svg viewBox="0 0 20 20" className="pointer-events-none absolute top-2.5 right-2.5 size-4 text-faint" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <path d="M6 8l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </label>
+        )}
         <div className="flex flex-wrap gap-1 rounded-lg bg-bg p-1" role="group" aria-label="Filter">
           {FILTERS.map((f) => {
-            const count = products.filter((p) => matches(p, f.key)).length;
+            const count = inSource.filter((p) => matches(p, f.key)).length;
             const active = filter === f.key;
             return (
               <button
@@ -105,7 +128,7 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
       </div>
 
       {rows.length === 0 ? (
-        <p className="p-10 text-center text-sm text-muted">No products match these filters.</p>
+        <p className="p-10 text-center text-sm text-muted">Nothing matches these filters.</p>
       ) : (
         <ul className="divide-y divide-line">
           {rows.map((p) => (
@@ -130,7 +153,7 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
                   {p.title}
                 </Link>
                 <div className="mt-0.5 flex items-center gap-3">
-                  <span className="truncate text-xs text-faint">{p.source}</span>
+                  <span className="truncate text-xs text-faint">{sourceLabel(p.source)}</span>
                   <StockPill inStock={p.in_stock} />
                 </div>
               </div>
