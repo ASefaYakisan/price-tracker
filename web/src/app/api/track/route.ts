@@ -6,9 +6,18 @@ import { assertPublicUrl } from "@/lib/safe-url";
 
 const MAX_CUSTOM = 100; // keeps the public demo from being filled by strangers
 const BROWSER_HEADERS = {
-  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36",
-  "accept-language": "tr-TR,tr;q=0.9,en;q=0.8",
-  accept: "text/html",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+  accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  "accept-language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+  "cache-control": "no-cache",
+  "sec-ch-ua": '"Chromium";v="141", "Google Chrome";v="141", "Not?A_Brand";v="99"',
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": '"Windows"',
+  "sec-fetch-dest": "document",
+  "sec-fetch-mode": "navigate",
+  "sec-fetch-site": "none",
+  "sec-fetch-user": "?1",
+  "upgrade-insecure-requests": "1",
 };
 
 // POST { url } -> reads the price from the page now, saves it, and the daily job keeps checking it.
