@@ -21,11 +21,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </span>
               Price Tracker
             </Link>
+            <a href="/docs" className="ml-auto text-sm text-muted hover:text-ink">
+              API
+            </a>
             <a
               href="https://github.com/ASefaYakisan/price-tracker"
               target="_blank"
               rel="noreferrer"
-              className="ml-auto text-sm text-muted hover:text-ink"
+              className="text-sm text-muted hover:text-ink"
             >
               Source on GitHub
             </a>
