@@ -64,11 +64,11 @@ export async function getPriceHistory(id: number, days = 90): Promise<PricePoint
 
 // Sample rows so the dashboard renders before Supabase is connected.
 const now = new Date().toISOString();
-const demo = (id: number, title: string, price: number, previous: number, in_stock = true): ProductRow => ({
+const demo = (id: number, slug: string, title: string, price: number, previous: number, in_stock = true): ProductRow => ({
   id,
   source: "books-toscrape",
   title,
-  url: "https://books.toscrape.com/",
+  url: `https://books.toscrape.com/catalogue/${slug}/index.html`,
   image_url: null,
   currency: "GBP",
   price,
@@ -78,11 +78,14 @@ const demo = (id: number, title: string, price: number, previous: number, in_sto
   scraped_at: now,
 });
 const DEMO_PRODUCTS: ProductRow[] = [
-  demo(1, "A Light in the Attic", 45.17, 51.77),
-  demo(2, "Tipping the Velvet", 53.74, 53.74, false),
-  demo(3, "Soumission", 46.1, 50.1),
-  demo(4, "Sharp Objects", 49.99, 47.82),
-  demo(5, "Sapiens: A Brief History of Humankind", 54.23, 54.23),
+  demo(1, "a-light-in-the-attic_1000", "A Light in the Attic", 45.17, 51.77),
+  demo(2, "tipping-the-velvet_999", "Tipping the Velvet", 53.74, 53.74, false),
+  demo(3, "soumission_998", "Soumission", 46.1, 50.1),
+  demo(4, "sharp-objects_997", "Sharp Objects", 49.99, 47.82),
+  demo(5, "sapiens-a-brief-history-of-humankind_996", "Sapiens: A Brief History of Humankind", 54.23, 54.23),
+  demo(6, "the-requiem-red_995", "The Requiem Red", 22.65, 22.65),
+  demo(7, "the-dirty-little-secrets-of-getting-your-dream-job_994", "The Dirty Little Secrets of Getting Your Dream Job", 33.34, 35.02),
+  demo(8, "the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993", "The Coming Woman", 17.93, 17.93, false),
 ];
 
 // Deterministic daily series ending at the demo product's current price.

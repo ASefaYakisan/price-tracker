@@ -2,15 +2,18 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PriceChart } from "@/components/PriceChart";
+import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
+import { Stat } from "@/components/Stat";
 import { getPriceHistory, getProduct } from "@/lib/data";
+import { dateTime, money, percentChange } from "@/lib/format";
 
 export default function ProductPage({ params }: PageProps<"/products/[id]">) {
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10">
-      <Link href="/" className="text-sm text-zinc-500 hover:underline">
-        ← All products
+    <main className="mx-auto w-full max-w-4xl px-4 py-8">
+      <Link href="/" className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink">
+        <span aria-hidden>←</span> All products
       </Link>
-      <Suspense fallback={<p className="mt-6 text-sm text-zinc-500">Loading…</p>}>
+      <Suspense fallback={<div className="mt-6 h-96 animate-pulse rounded-xl bg-card" />}>
         <ProductDetail params={params} />
       </Suspense>
     </main>
@@ -24,38 +27,52 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   if (!product) notFound();
 
   const prices = history.map((p) => p.price).filter((p): p is number => p != null);
-  const fmt = (v: number) =>
-    new Intl.NumberFormat("en-GB", { style: "currency", currency: product.currency ?? "USD" }).format(v);
+  const first = prices[0] ?? null;
+  const periodChange = percentChange(product.price, first);
 
   return (
     <>
-      <h1 className="mt-4 text-2xl font-semibold">{product.title}</h1>
-      <p className="text-sm text-zinc-500">
-        {product.source} ·{" "}
-        <a href={product.url} target="_blank" rel="noreferrer" className="hover:underline">
-          View on site
+      <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold tracking-tight">{product.title}</h1>
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted">
+            <span>{product.source}</span>
+            <StockPill inStock={product.in_stock} />
+            {product.scraped_at && <span>Updated {dateTime(product.scraped_at)}</span>}
+          </div>
+        </div>
+        <a
+          href={product.url}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-card px-3 text-sm font-medium text-ink hover:bg-hover"
+        >
+          Open product page <span aria-hidden>↗</span>
         </a>
-      </p>
+      </div>
 
-      <section className="my-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Stat label="Current" value={product.price == null ? "–" : fmt(product.price)} />
-        <Stat label="Lowest" value={prices.length ? fmt(Math.min(...prices)) : "–"} />
-        <Stat label="Highest" value={prices.length ? fmt(Math.max(...prices)) : "–"} />
+      <section className="my-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="rounded-xl border border-line bg-card p-4">
+          <div className="text-sm text-muted">Current price</div>
+          <div className="mt-1 text-2xl font-semibold tabular-nums">{money(product.price, product.currency)}</div>
+          <div className="mt-1">
+            <ChangeBadge price={product.price} previous={product.previous_price} currency={product.currency} />
+          </div>
+        </div>
+        <Stat label="Lowest" value={prices.length ? money(Math.min(...prices), product.currency) : "–"} hint="in this period" />
+        <Stat label="Highest" value={prices.length ? money(Math.max(...prices), product.currency) : "–"} hint="in this period" />
+        <Stat
+          label="Period change"
+          value={periodChange == null ? "–" : `${periodChange > 0 ? "+" : ""}${periodChange.toFixed(1)}%`}
+          hint={first == null ? undefined : `from ${money(first, product.currency)}`}
+          tone={periodChange == null || Math.abs(periodChange) < 0.05 ? undefined : periodChange < 0 ? "good" : "bad"}
+        />
       </section>
 
-      <div className="rounded-lg border border-zinc-200 bg-white p-4">
-        <h2 className="mb-2 text-sm font-medium text-zinc-600">Price history</h2>
+      <section className="rounded-xl border border-line bg-card p-4 sm:p-6">
+        <h2 className="mb-4 font-medium">Price history</h2>
         <PriceChart points={history} currency={product.currency} />
-      </div>
+      </section>
     </>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-4">
-      <div className="text-sm text-zinc-500">{label}</div>
-      <div className="mt-1 text-xl font-semibold tabular-nums">{value}</div>
-    </div>
   );
 }

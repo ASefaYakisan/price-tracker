@@ -1,26 +1,73 @@
 @import "tailwindcss";
 
+/* Design tokens: every color the UI uses, defined once per theme. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans-fallback);
-  --font-mono: var(--font-mono-fallback);
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --ink: #0f172a;
+  --muted: #5b6475;
+  --faint: #8a93a3;
+  --line: #e3e6eb;
+  --hover: #f1f3f6;
+  --accent: #2a78d6;
+  --accent-ink: #ffffff;
+  --accent-soft: #e8f1fc;
+  --good: #0f7a3d;
+  --good-soft: #e5f5ec;
+  --bad: #b42318;
+  --bad-soft: #fdecea;
+  --warn: #8a5a00;
+  --warn-soft: #fff4dc;
+  --grid: #e9ecf0;
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --bg: #0b0d12;
+    --card: #151922;
+    --ink: #eef1f6;
+    --muted: #a3acbb;
+    --faint: #7c8696;
+    --line: #262c38;
+    --hover: #1c212c;
+    --accent: #3987e5;
+    --accent-ink: #ffffff;
+    --accent-soft: #16263d;
+    --good: #4cc38a;
+    --good-soft: #12291e;
+    --bad: #f07a6f;
+    --bad-soft: #33191a;
+    --warn: #e7b65c;
+    --warn-soft: #2e2512;
+    --grid: #232937;
+    color-scheme: dark;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-hover: var(--hover);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  body {
+    background: var(--bg);
+    color: var(--ink);
+  }
 }

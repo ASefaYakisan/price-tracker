@@ -1,87 +1,69 @@
-import Link from "next/link";
-import { getProducts, isDemo, type ProductRow } from "@/lib/data";
-
-const money = (value: number | null, currency: string | null) =>
-  value == null
-    ? "–"
-    : new Intl.NumberFormat("en-GB", { style: "currency", currency: currency ?? "USD" }).format(value);
+import { getProducts, isDemo } from "@/lib/data";
+import { dateTime, percentChange } from "@/lib/format";
+import { ProductTable } from "@/components/ProductTable";
+import { Stat } from "@/components/Stat";
 
 export default async function Home() {
   const products = await getProducts();
-  const drops = products.filter((p) => (p.price_change ?? 0) < 0);
+  const changes = products.map((p) => percentChange(p.price, p.previous_price)).filter((c): c is number => c != null);
+  const drops = changes.filter((c) => c < 0).length;
+  const rises = changes.filter((c) => c > 0).length;
+  const avg = changes.length ? changes.reduce((a, b) => a + b, 0) / changes.length : 0;
   const outOfStock = products.filter((p) => p.in_stock === false).length;
-  const lastRun = products.map((p) => p.scraped_at).filter(Boolean).sort().at(-1);
+  const lastRun = products.map((p) => p.scraped_at).filter((d): d is string => !!d).sort().at(-1);
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-10">
-      <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <main className="mx-auto w-full max-w-6xl px-4 py-8">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-        <h1 className="text-2xl font-semibold">Price Tracker</h1>
-        <p className="text-sm text-zinc-500">
-          Last scrape: {lastRun ? new Date(lastRun).toLocaleString("en-GB") : "never"}
-          {isDemo && " · demo data (connect Supabase to see live prices)"}
-        </p>
+          <h1 className="text-2xl font-semibold tracking-tight">Products</h1>
+          <p className="mt-1 text-sm text-muted">
+            {lastRun ? `Last scrape ${dateTime(lastRun)}` : "No scrapes yet"} · {products.length} products tracked
+          </p>
         </div>
-        <a
-          href="/api/export"
-          className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-zinc-100"
-        >
-          Export CSV
-        </a>
-      </header>
+        <div className="flex gap-2">
+          <a
+            href="/api/export?format=xlsx"
+            className="inline-flex h-9 items-center gap-2 rounded-lg bg-accent px-3 text-sm font-medium text-accent-ink hover:opacity-90"
+          >
+            <DownloadIcon /> Excel
+          </a>
+          <a
+            href="/api/export?format=csv"
+            className="inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-card px-3 text-sm font-medium text-ink hover:bg-hover"
+          >
+            <DownloadIcon /> CSV
+          </a>
+        </div>
+      </div>
 
-      <section className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Stat label="Tracked products" value={products.length} />
-        <Stat label="Price drops since last run" value={drops.length} />
-        <Stat label="Out of stock" value={outOfStock} />
+      {isDemo && (
+        <p className="mb-6 rounded-lg border border-line bg-accent-soft px-4 py-3 text-sm text-ink">
+          You are viewing demo data. Connect Supabase and run the scraper to track live prices.
+        </p>
+      )}
+
+      <section className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <Stat label="Tracked products" value={products.length} hint={`Average change ${avg > 0 ? "+" : ""}${avg.toFixed(1)}%`} />
+        <Stat label="Price drops" value={drops} hint="since the last scrape" tone={drops ? "good" : undefined} />
+        <Stat label="Price rises" value={rises} hint="since the last scrape" tone={rises ? "bad" : undefined} />
+        <Stat
+          label="Out of stock"
+          value={outOfStock}
+          hint="right now"
+          tone={outOfStock ? "warn" : undefined}
+        />
       </section>
 
-      <div className="overflow-x-auto rounded-lg border border-zinc-200 bg-white">
-        <table className="w-full text-sm">
-          <thead className="bg-zinc-100 text-left text-zinc-600">
-            <tr>
-              <th className="px-4 py-2 font-medium">Product</th>
-              <th className="px-4 py-2 text-right font-medium">Price</th>
-              <th className="px-4 py-2 text-right font-medium">Change</th>
-              <th className="px-4 py-2 font-medium">Stock</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((p) => (
-              <Row key={p.id} product={p} />
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ProductTable products={products} />
     </main>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function DownloadIcon() {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-4">
-      <div className="text-sm text-zinc-500">{label}</div>
-      <div className="mt-1 text-2xl font-semibold tabular-nums">{value}</div>
-    </div>
-  );
-}
-
-function Row({ product: p }: { product: ProductRow }) {
-  const change = p.price_change ?? 0;
-  const tone = change < 0 ? "text-green-700" : change > 0 ? "text-red-700" : "text-zinc-400";
-  return (
-    <tr className="border-t border-zinc-100">
-      <td className="px-4 py-2">
-        <Link href={`/products/${p.id}`} className="hover:underline">
-          {p.title}
-        </Link>
-        <div className="text-xs text-zinc-400">{p.source}</div>
-      </td>
-      <td className="px-4 py-2 text-right tabular-nums">{money(p.price, p.currency)}</td>
-      <td className={`px-4 py-2 text-right tabular-nums ${tone}`}>
-        {change === 0 ? "–" : `${change > 0 ? "+" : "−"}${money(Math.abs(change), p.currency)}`}
-      </td>
-      <td className="px-4 py-2">{p.in_stock === false ? "Out of stock" : "In stock"}</td>
-    </tr>
+    <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+      <path d="M10 3v10m0 0l-4-4m4 4l4-4M4 16h12" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
