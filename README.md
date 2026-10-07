@@ -39,6 +39,17 @@ NEXT_PUBLIC_SUPABASE_URL=... NEXT_PUBLIC_SUPABASE_ANON_KEY=... npm run dev
 
 `.github/workflows/scrape.yml` runs the scraper every day at 06:00 UTC and can be started by hand from the Actions tab. It needs one repository secret: `SUPABASE_SERVICE_ROLE_KEY`.
 
+## Track any product by link
+
+Paste a product page link on the dashboard. The server reads the price from the structured data most shops publish for Google Shopping (JSON-LD `Product`/`Offer`, then `product:price` meta tags), saves it, and the daily job re-checks every added link (`source = custom`). Links that resolve to private network addresses are refused. Needs `SUPABASE_SERVICE_ROLE_KEY` as a server-side environment variable on Vercel.
+
+## Telegram and Google Sheets
+
+Both are optional and switch on when their repository secrets exist:
+
+- **Telegram**: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (and optional `TELEGRAM_MIN_DROP`, default 2%). After each run the bot posts the day's price drops.
+- **Google Sheets**: `GOOGLE_SERVICE_ACCOUNT_JSON`, `GOOGLE_SHEET_ID`. After each run the `Latest` tab is replaced with current prices and a row per item is appended to `History`. Share the sheet with the service account's email as Editor.
+
 ## Public API
 
 Read-only JSON, no key needed, CORS open. Interactive docs (Swagger UI): [`/docs`](https://price-tracker-sefa-yksn.vercel.app/docs), spec at `/api/openapi.json`.
@@ -68,6 +79,8 @@ Create `scraper/src/adapters/<site>.js` exporting `name` and either `startUrl` +
 - [x] Light and dark themes, mobile layout
 - [x] Multiple sources: crypto (CoinGecko), exchange rates (TCMB XML), gold
 - [x] Public JSON API with OpenAPI spec and Swagger UI
-- [ ] Google Sheets sync
+- [x] Track any product by pasting its link (JSON-LD / meta price extraction)
+- [x] Google Sheets sync
+- [x] Telegram price-drop digest
 - [x] Price-drop email alerts (sign up on the product page, sent after each scrape via Resend)
 - [x] Daily schedule (GitHub Actions cron)

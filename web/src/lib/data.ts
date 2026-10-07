@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 export type ProductRow = {
   id: number;
@@ -23,6 +23,7 @@ export const isDemo = !url || !anonKey;
 export async function getProducts(): Promise<ProductRow[]> {
   "use cache";
   cacheLife("minutes");
+  cacheTag("products"); // refreshed right away when someone adds a link
   if (isDemo) return DEMO_PRODUCTS;
   const db = createClient(url!, anonKey!);
   const { data, error } = await db

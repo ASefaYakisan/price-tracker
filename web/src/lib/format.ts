@@ -3,6 +3,7 @@ export const SOURCE_LABELS: Record<string, string> = {
   coingecko: "Crypto",
   tcmb: "Exchange rates",
   gold: "Gold",
+  custom: "Added by link",
 };
 
 export const sourceLabel = (source: string) => SOURCE_LABELS[source] ?? source;

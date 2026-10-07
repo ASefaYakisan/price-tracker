@@ -2,6 +2,7 @@ import { getProducts, isDemo } from "@/lib/data";
 import { dateTime, percentChange } from "@/lib/format";
 import { ProductTable } from "@/components/ProductTable";
 import { Stat } from "@/components/Stat";
+import { TrackForm } from "@/components/TrackForm";
 
 export default async function Home() {
   const products = await getProducts();
@@ -54,6 +55,8 @@ export default async function Home() {
           tone={outOfStock ? "warn" : undefined}
         />
       </section>
+
+      <TrackForm />
 
       <ProductTable products={products} />
     </main>
