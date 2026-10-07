@@ -83,19 +83,24 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
             );
           })}
         </div>
-        <label className="flex items-center gap-2 text-sm text-muted">
-          Sort
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
-            className="h-9 rounded-lg border border-line bg-bg px-2 text-sm text-ink focus:border-accent focus:outline-none"
-          >
-            {Object.entries(SORTS).map(([key, s]) => (
-              <option key={key} value={key}>
-                {s.label}
-              </option>
-            ))}
-          </select>
+        <label className="flex shrink-0 items-center gap-2 text-sm text-muted">
+          <span className="whitespace-nowrap">Sort by</span>
+          <span className="relative">
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+              className="h-9 appearance-none rounded-lg border border-line bg-bg pr-8 pl-3 text-sm text-ink focus:border-accent focus:outline-none"
+            >
+              {Object.entries(SORTS).map(([key, s]) => (
+                <option key={key} value={key}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+            <svg viewBox="0 0 20 20" className="pointer-events-none absolute top-2.5 right-2.5 size-4 text-faint" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <path d="M6 8l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
         </label>
       </div>
 
