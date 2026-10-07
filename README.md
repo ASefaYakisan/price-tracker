@@ -1,5 +1,7 @@
 # Price Tracker
 
+**Live demo:** https://price-tracker-sefa-yksn.vercel.app
+
 A Node.js scraper collects product prices on a schedule and stores every run in Supabase (Postgres). A Next.js dashboard shows current prices, the change since the last run and stock status.
 
 ![Dashboard](panel-onizleme.png)
