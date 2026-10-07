@@ -5,7 +5,7 @@ import { money } from "@/lib/format";
 import { saveAlert } from "@/lib/my-alerts";
 import { MyAlerts } from "@/components/MyAlerts";
 
-type State = { kind: "idle" | "saving" } | { kind: "done"; demo: boolean } | { kind: "error"; message: string };
+type State = { kind: "idle" | "saving" } | { kind: "done"; demo: boolean; updated: boolean } | { kind: "error"; message: string };
 
 export function AlertForm({
   productId,
@@ -43,7 +43,7 @@ export function AlertForm({
           currency,
           createdAt: new Date().toISOString(),
         });
-      setState({ kind: "done", demo: Boolean(json.demo) });
+      setState({ kind: "done", demo: Boolean(json.demo), updated: Boolean(json.updated) });
     } else
       setState({
         kind: "error",
@@ -55,7 +55,7 @@ export function AlertForm({
     return (
       <>
         <p className="rounded-lg bg-good-soft px-4 py-3 text-sm text-ink">
-          Done. We will email <strong>{email}</strong> once the price is at or below <strong>{money(Number(target), currency)}</strong>.
+          {state.updated ? "Alert updated." : "Done."} We will email <strong>{email}</strong> once the price is at or below <strong>{money(Number(target), currency)}</strong>.
           {state.demo && " (Demo mode: nothing is saved.)"}{" "}
           <button type="button" onClick={() => setState({ kind: "idle" })} className="font-medium text-accent hover:underline">
             Add another

@@ -18,7 +18,21 @@ export async function POST(request: Request) {
 
   const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
   const { error: dbError } = await db.from("alerts").insert({ product_id: productId, email, target_price: target });
-  if (dbError?.code === "23505") return error("You already have an alert on this item.", 409);
+  if (dbError?.code === "23505") {
+    // Same item and address: move the target instead of refusing. Needs the server-side key,
+    // because visitors can only insert alerts, never change them.
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!serviceKey) return error("You already have an alert on this item.", 409);
+    const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey, { auth: { persistSession: false } });
+    const { error: updateError } = await admin
+      .from("alerts")
+      .update({ target_price: target })
+      .eq("product_id", productId)
+      .ilike("email", email.replace(/[%_\\]/g, "\\$&"))
+      .is("last_sent_at", null);
+    if (updateError) return error("Could not update the alert. Please try again.", 500);
+    return Response.json({ ok: true, updated: true });
+  }
   if (dbError) return error("Could not save the alert. Please try again.", 500);
   return Response.json({ ok: true });
 }

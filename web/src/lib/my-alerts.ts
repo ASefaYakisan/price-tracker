@@ -30,7 +30,9 @@ function read(): SavedAlert[] {
 }
 
 export function saveAlert(alert: SavedAlert) {
-  cache = [alert, ...read()].slice(0, 50);
+  // One entry per item and address, like the server: a new target replaces the old one.
+  const same = (a: SavedAlert) => a.productId === alert.productId && a.email.toLowerCase() === alert.email.toLowerCase();
+  cache = [alert, ...read().filter((a) => !same(a))].slice(0, 50);
   try {
     localStorage.setItem(KEY, JSON.stringify(cache));
   } catch {

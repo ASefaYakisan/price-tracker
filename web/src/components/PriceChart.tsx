@@ -10,6 +10,11 @@ const PAD = { top: 16, right: 12, bottom: 28, left: 76 };
 
 // Round axis ticks to 1, 2 or 5 × 10^n so labels read £45, £50, £55.
 function niceTicks(min: number, max: number, count = 4) {
+  if (min === max) {
+    // A flat line still needs a range, otherwise every point sits on the top edge.
+    const pad = Math.abs(min) * 0.05 || 1;
+    [min, max] = [min - pad, max + pad];
+  }
   const raw = (max - min) / count || 1;
   const mag = 10 ** Math.floor(Math.log10(raw));
   const step = [1, 2, 5, 10].map((m) => m * mag).find((s) => s >= raw)!;
@@ -37,6 +42,18 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
   const line = data.map((p, i) => `${i ? "L" : "M"}${x(times[i]).toFixed(1)},${y(p.price).toFixed(1)}`).join("");
   const area = `${line}L${x(t1).toFixed(1)},${y(lo)}L${x(t0).toFixed(1)},${y(lo)}Z`;
   const midT = times[Math.floor(times.length / 2)];
+  // Within a day the date is the same at every tick, so show the time instead; drop repeated labels.
+  const sameDay = t1 - t0 < 36 * 3_600_000;
+  const xLabel = (t: number) =>
+    sameDay ? new Date(t).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : shortDate(t);
+  // Ends first, so a middle tick that repeats an end label is the one dropped.
+  const xTicks = [
+    { t: t0, i: 0 },
+    { t: t1, i: 2 },
+    { t: midT, i: 1 },
+  ]
+    .map((tick) => ({ ...tick, label: xLabel(tick.t) }))
+    .filter((tick, k, all) => all.findIndex((o) => o.label === tick.label) === k);
 
   function onMove(e: React.PointerEvent<SVGSVGElement>) {
     const box = svgRef.current!.getBoundingClientRect();
@@ -74,9 +91,9 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
             </text>
           </g>
         ))}
-        {[t0, midT, t1].map((t, i) => (
+        {xTicks.map(({ t, i, label }) => (
           <text key={i} x={x(t)} y={H - 6} textAnchor={(["start", "middle", "end"] as const)[i]} fontSize="12" fill="var(--faint)">
-            {shortDate(t)}
+            {label}
           </text>
         ))}
         <path d={area} fill="url(#area)" />
