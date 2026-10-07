@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { money } from "@/lib/format";
 import { saveAlert } from "@/lib/my-alerts";
 import { MyAlerts } from "@/components/MyAlerts";
@@ -23,6 +23,11 @@ export function AlertForm({
   const [email, setEmail] = useState("");
   const [target, setTarget] = useState(suggested);
   const [state, setState] = useState<State>({ kind: "idle" });
+
+  // The page streams in, so the browser's own jump to #alert fires before this section exists.
+  useEffect(() => {
+    if (location.hash === "#alert") document.getElementById("alert")?.scrollIntoView({ behavior: "smooth" });
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();

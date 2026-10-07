@@ -6,6 +6,8 @@ import Link from "next/link";
 import type { ProductRow } from "@/lib/data";
 import { money, percentChange, sourceLabel } from "@/lib/format";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
+import { BellIcon } from "@/components/BellIcon";
+import { useMyAlerts } from "@/lib/my-alerts";
 
 const FILTERS = [
   { key: "all", label: "All" },
@@ -36,6 +38,8 @@ function matches(p: ProductRow, filter: FilterKey) {
 
 export function ProductTable({ products }: { products: ProductRow[] }) {
   const router = useRouter();
+  const myAlerts = useMyAlerts();
+  const alertIds = new Set(myAlerts.map((a) => a.productId));
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<FilterKey>("all");
   const [sort, setSort] = useState<SortKey>("drop");
@@ -55,7 +59,14 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
       <div className="flex flex-col gap-3 border-b border-line p-4 lg:flex-row lg:items-center">
         <label className="relative flex-1">
           <span className="sr-only">Search products</span>
-          <svg viewBox="0 0 20 20" className="pointer-events-none absolute top-2.5 left-3 size-4 text-faint" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+          <svg
+            viewBox="0 0 20 20"
+            className="pointer-events-none absolute top-2.5 left-3 size-4 text-faint"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden
+          >
             <circle cx="9" cy="9" r="6" />
             <path d="M14 14l4 4" strokeLinecap="round" />
           </svg>
@@ -82,7 +93,14 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
                 </option>
               ))}
             </select>
-            <svg viewBox="0 0 20 20" className="pointer-events-none absolute top-2.5 right-2.5 size-4 text-faint" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+            <svg
+              viewBox="0 0 20 20"
+              className="pointer-events-none absolute top-2.5 right-2.5 size-4 text-faint"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden
+            >
               <path d="M6 8l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </label>
@@ -120,7 +138,14 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
                 </option>
               ))}
             </select>
-            <svg viewBox="0 0 20 20" className="pointer-events-none absolute top-2.5 right-2.5 size-4 text-faint" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+            <svg
+              viewBox="0 0 20 20"
+              className="pointer-events-none absolute top-2.5 right-2.5 size-4 text-faint"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden
+            >
               <path d="M6 8l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
@@ -163,7 +188,25 @@ export function ProductTable({ products }: { products: ProductRow[] }) {
                   <ChangeBadge price={p.price} previous={p.previous_price} currency={p.currency} source={p.source} />
                 </div>
               </div>
-              <svg viewBox="0 0 20 20" className="hidden size-4 text-faint sm:block" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <Link
+                href={`/products/${p.id}#alert`}
+                onClick={(e) => e.stopPropagation()}
+                className={`grid size-9 shrink-0 place-items-center rounded-lg border border-line hover:bg-hover ${
+                  alertIds.has(p.id) ? "text-accent" : "text-muted hover:text-ink"
+                }`}
+                title={alertIds.has(p.id) ? "You have an alert on this item" : "Set a price alert"}
+                aria-label={`${alertIds.has(p.id) ? "Edit" : "Set"} price alert for ${p.title}`}
+              >
+                <BellIcon filled={alertIds.has(p.id)} />
+              </Link>
+              <svg
+                viewBox="0 0 20 20"
+                className="hidden size-4 text-faint sm:block"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden
+              >
                 <path d="M8 5l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </li>

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BellIcon } from "@/components/BellIcon";
 import { AlertForm } from "@/components/AlertForm";
 import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
@@ -42,14 +43,22 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
             {product.scraped_at && <span>Updated {dateTime(product.scraped_at)}</span>}
           </div>
         </div>
-        <a
-          href={product.url}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-card px-3 text-sm font-medium text-ink hover:bg-hover"
-        >
-          View source <span aria-hidden>↗</span>
-        </a>
+        <div className="flex gap-2">
+          <a
+            href="#alert"
+            className="inline-flex h-9 items-center gap-2 rounded-lg bg-accent px-3 text-sm font-medium text-white hover:opacity-90"
+          >
+            <BellIcon /> Set price alert
+          </a>
+          <a
+            href={product.url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-card px-3 text-sm font-medium text-ink hover:bg-hover"
+          >
+            View source <span aria-hidden>↗</span>
+          </a>
+        </div>
       </div>
 
       <section className="my-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -75,7 +84,7 @@ async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
         <PriceChart points={history} currency={product.currency} />
       </section>
 
-      <section className="mt-6 rounded-xl border border-line bg-card p-4 sm:p-6">
+      <section id="alert" className="mt-6 scroll-mt-6 rounded-xl border border-line bg-card p-4 sm:p-6">
         <h2 className="font-medium">Price alert</h2>
         <p className="mb-4 mt-1 text-sm text-muted">Get one email when the price reaches your target. Checked after every daily scrape.</p>
         <AlertForm productId={product.id} title={product.title} price={product.price} currency={product.currency} />
