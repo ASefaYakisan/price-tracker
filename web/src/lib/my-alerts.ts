@@ -21,7 +21,7 @@ const EMPTY: SavedAlert[] = [];
 let cache: SavedAlert[] | null = null;
 const listeners = new Set<() => void>();
 
-function read(): SavedAlert[] {
+export function read(): SavedAlert[] {
   if (cache) return cache;
   try {
     const parsed = JSON.parse(localStorage.getItem(KEY) ?? "[]");

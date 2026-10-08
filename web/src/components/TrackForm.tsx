@@ -5,10 +5,7 @@ import { useState } from "react";
 import { money } from "@/lib/format";
 
 type Preview = { title: string; price: number; currency: string | null };
-type State =
-  | { kind: "idle" | "saving" }
-  | { kind: "demo"; product: Preview }
-  | { kind: "error"; message: string };
+type State = { kind: "idle" | "saving" } | { kind: "demo"; product: Preview } | { kind: "error"; message: string };
 
 export function TrackForm() {
   const router = useRouter();
@@ -63,8 +60,8 @@ export function TrackForm() {
       )}
       {state.kind === "demo" && (
         <p className="mt-3 text-sm text-ink">
-          Found <strong>{state.product.title}</strong> at <strong>{money(state.product.price, state.product.currency)}</strong>. (Demo
-          mode: not saved.)
+          Found <strong>{state.product.title}</strong> at <strong>{money(state.product.price, state.product.currency)}</strong>. (Demo mode:
+          not saved.)
         </p>
       )}
       <p className="mt-2 text-xs text-faint">Works with shops that publish product data for Google Shopping. Checked again every day.</p>

@@ -1,11 +1,23 @@
 import { isDemo } from "@/lib/data";
 import { adminDb, alertError as error, EMAIL, UUID } from "@/lib/alerts-server";
+import { currentUser } from "@/lib/supabase/server";
 
 async function parse(request: Request, ctx: RouteContext<"/api/alerts/[id]">) {
   const id = Number((await ctx.params).id);
   const body = await request.json().catch(() => null);
   const token = String(body?.token ?? "");
-  return { id, token, body, valid: Number.isInteger(id) && id > 0 && UUID.test(token) };
+  return { id, token, body, valid: Number.isInteger(id) && id > 0 };
+}
+
+// An alert can be changed by whoever holds its manage token, or by the account that owns it.
+// The token path uses the server key; the account path runs as the user under row level security.
+async function scoped(id: number, token: string) {
+  if (UUID.test(token)) {
+    const admin = adminDb();
+    return admin ? { db: admin, filter: { id, manage_token: token } } : null;
+  }
+  const user = await currentUser();
+  return user ? { db: user.db, filter: { id } } : null;
 }
 
 // Change the target or email. Saving also re-arms an alert that already sent its email.
@@ -18,13 +30,12 @@ export async function PATCH(request: Request, ctx: RouteContext<"/api/alerts/[id
   if (!Number.isFinite(target) || target <= 0) return error("Enter a target price above zero.");
   if (isDemo) return Response.json({ ok: true, demo: true });
 
-  const admin = adminDb();
-  if (!admin) return error("Editing alerts is not available right now.", 503);
-  const { data, error: dbError } = await admin
+  const scope = await scoped(id, token);
+  if (!scope) return error("This alert can't be changed from here.", 404);
+  const { data, error: dbError } = await scope.db
     .from("alerts")
     .update({ email, target_price: target, last_sent_at: null })
-    .eq("id", id)
-    .eq("manage_token", token)
+    .match(scope.filter)
     .select("id")
     .maybeSingle();
   if (dbError?.code === "23505") return error("You already have another alert on this item for that email.", 409);
@@ -38,9 +49,9 @@ export async function DELETE(request: Request, ctx: RouteContext<"/api/alerts/[i
   if (!valid) return error("This alert can't be deleted from here.", 404);
   if (isDemo) return Response.json({ ok: true, demo: true });
 
-  const admin = adminDb();
-  if (!admin) return error("Deleting alerts is not available right now.", 503);
-  const { error: dbError } = await admin.from("alerts").delete().eq("id", id).eq("manage_token", token);
+  const scope = await scoped(id, token);
+  if (!scope) return error("This alert can't be deleted from here.", 404);
+  const { error: dbError } = await scope.db.from("alerts").delete().match(scope.filter);
   if (dbError) return error("Could not delete the alert. Please try again.", 500);
   // Already gone counts as deleted.
   return Response.json({ ok: true });

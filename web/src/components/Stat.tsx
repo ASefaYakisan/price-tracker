@@ -1,4 +1,14 @@
-export function Stat({ label, value, hint, tone }: { label: string; value: string | number; hint?: string; tone?: "good" | "bad" | "warn" }) {
+export function Stat({
+  label,
+  value,
+  hint,
+  tone,
+}: {
+  label: string;
+  value: string | number;
+  hint?: string;
+  tone?: "good" | "bad" | "warn";
+}) {
   const color = tone === "good" ? "text-good" : tone === "bad" ? "text-bad" : tone === "warn" ? "text-warn" : "text-ink";
   return (
     <div className="rounded-xl border border-line bg-card p-4">

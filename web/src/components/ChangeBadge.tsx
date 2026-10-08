@@ -26,8 +26,7 @@ export function ChangeBadge({
       title={`${down ? "Down" : "Up"} ${money(diff, currency)} since last scrape`}
     >
       <span aria-hidden>{down ? "▼" : "▲"}</span>
-      {Math.abs(pct).toFixed(1)}%
-      <span className="sr-only">{down ? "decrease" : "increase"}</span>
+      {Math.abs(pct).toFixed(1)}%<span className="sr-only">{down ? "decrease" : "increase"}</span>
     </span>
   );
 }

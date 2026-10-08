@@ -14,7 +14,7 @@ export const riseIsGood = (source: string) => MARKET_SOURCES.has(source);
 
 // "good" | "bad" tone for a percentage move, from the viewer's side of the trade.
 export function changeTone(pct: number, source: string): "good" | "bad" {
-  return (pct > 0) === riseIsGood(source) ? "good" : "bad";
+  return pct > 0 === riseIsGood(source) ? "good" : "bad";
 }
 
 export function money(value: number | null | undefined, currency: string | null) {

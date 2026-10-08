@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { money } from "@/lib/format";
+import { refreshAccountAlerts } from "@/lib/account-alerts";
+import { useUser } from "@/lib/auth";
 import { saveAlert } from "@/lib/my-alerts";
 import { MyAlerts } from "@/components/MyAlerts";
 
@@ -20,9 +22,12 @@ export function AlertForm({
 }) {
   // Suggest 5% under today's price, rounded to something a person would type.
   const suggested = price == null ? "" : String(Number((price * 0.95).toPrecision(price >= 1 ? 4 : 3)));
-  const [email, setEmail] = useState("");
+  // null until the visitor types, so a signed-in user starts from their account's email.
+  const [typedEmail, setEmail] = useState<string | null>(null);
   const [target, setTarget] = useState(suggested);
   const [state, setState] = useState<State>({ kind: "idle" });
+  const user = useUser();
+  const email = typedEmail ?? user?.email ?? "";
 
   // The page streams in, so the browser's own jump to #alert fires before this section exists.
   useEffect(() => {
@@ -39,7 +44,8 @@ export function AlertForm({
     }).catch(() => null);
     const json = await res?.json().catch(() => null);
     if (res?.ok && json?.ok) {
-      if (!json.demo)
+      if (json.account) refreshAccountAlerts();
+      else if (!json.demo)
         saveAlert({
           productId,
           title,

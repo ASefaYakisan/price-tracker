@@ -102,7 +102,14 @@ const DEMO_PRODUCTS: ProductRow[] = [
   demo(5, "sapiens-a-brief-history-of-humankind_996", "Sapiens: A Brief History of Humankind", 54.23, 54.23),
   demo(6, "the-requiem-red_995", "The Requiem Red", 22.65, 22.65),
   demo(7, "the-dirty-little-secrets-of-getting-your-dream-job_994", "The Dirty Little Secrets of Getting Your Dream Job", 33.34, 35.02),
-  demo(8, "the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993", "The Coming Woman", 17.93, 17.93, false),
+  demo(
+    8,
+    "the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993",
+    "The Coming Woman",
+    17.93,
+    17.93,
+    false,
+  ),
 ];
 
 // Deterministic daily series ending at the demo product's current price.
@@ -111,7 +118,7 @@ function demoHistory(id: number, days: number): PricePoint[] {
   if (!product?.price) return [];
   const end = Date.parse(product.scraped_at!);
   let seed = id * 9301;
-  const rand = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+  const rand = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
   const points: PricePoint[] = [];
   let price = product.previous_price ?? product.price;
   for (let i = Math.min(days, 30) - 1; i >= 1; i--) {

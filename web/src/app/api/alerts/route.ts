@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { isDemo } from "@/lib/data";
 import { adminDb, alertError as error, EMAIL, escapeLike } from "@/lib/alerts-server";
+import { currentUser } from "@/lib/supabase/server";
 
 // Price-drop signup. Returns the alert's id and manage token so this browser can edit or delete it later.
 export async function POST(request: Request) {
@@ -14,6 +15,29 @@ export async function POST(request: Request) {
   if (!Number.isFinite(target) || target <= 0) return error("Enter a target price above zero.");
 
   if (isDemo) return Response.json({ ok: true, demo: true, id: Date.now(), token: crypto.randomUUID() });
+
+  const user = await currentUser();
+  if (user) {
+    // Signed in: the alert belongs to the account. Runs as the user, so row level security checks ownership.
+    const { data, error: dbError } = await user.db
+      .from("alerts")
+      .insert({ product_id: productId, email, target_price: target, user_id: user.id })
+      .select("id, manage_token")
+      .single();
+    if (dbError?.code === "23505") {
+      const { data: updated } = await user.db
+        .from("alerts")
+        .update({ target_price: target })
+        .eq("product_id", productId)
+        .ilike("email", escapeLike(email))
+        .is("last_sent_at", null)
+        .select("id, manage_token");
+      if (!updated?.length) return error("This email already has an alert on this item.", 409);
+      return Response.json({ ok: true, updated: true, account: true, id: updated[0].id, token: updated[0].manage_token });
+    }
+    if (dbError) return error("Could not save the alert. Please try again.", 500);
+    return Response.json({ ok: true, account: true, id: data.id, token: data.manage_token });
+  }
 
   const admin = adminDb();
   if (!admin) {

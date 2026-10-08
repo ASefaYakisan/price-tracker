@@ -1,6 +1,6 @@
 import { getProduct, isDemo } from "@/lib/data";
 import type { AlertStatus } from "@/lib/alert-status";
-import { adminDb, alertError as error, EMAIL, escapeLike, UUID } from "@/lib/alerts-server";
+import { adminDb, ALERT_COLUMNS, alertError as error, EMAIL, escapeLike, toStatus, UUID } from "@/lib/alerts-server";
 
 type Ask = { id?: number; token?: string; productId?: number; email?: string };
 
@@ -19,29 +19,14 @@ export async function POST(request: Request) {
     asks.map(async (ask, i): Promise<AlertStatus> => {
       const key = String(i);
       if (isDemo) return demoStatus(key, ask);
-      let q = admin!.from("alerts").select("id, manage_token, product_id, email, target_price, last_sent_at, created_at");
+      let q = admin!.from("alerts").select(ALERT_COLUMNS);
       if (Number.isInteger(ask.id) && UUID.test(String(ask.token))) q = q.eq("id", ask.id!).eq("manage_token", ask.token!);
       else if (Number.isInteger(ask.productId) && EMAIL.test(String(ask.email)))
         q = q.eq("product_id", ask.productId!).ilike("email", escapeLike(ask.email!)).is("last_sent_at", null);
       else return { key, missing: true };
       const { data } = await q.order("created_at", { ascending: false }).limit(1).maybeSingle();
       if (!data) return { key, missing: true };
-      const product = await getProduct(Number(data.product_id));
-      return {
-        key,
-        id: Number(data.id),
-        token: data.manage_token,
-        productId: Number(data.product_id),
-        email: data.email,
-        target: Number(data.target_price),
-        sentAt: data.last_sent_at,
-        createdAt: data.created_at,
-        title: product?.title ?? "Removed item",
-        source: product?.source ?? "",
-        imageUrl: product?.image_url ?? null,
-        currency: product?.currency ?? null,
-        price: product?.price ?? null,
-      };
+      return toStatus(key, data);
     }),
   );
   return Response.json({ ok: true, alerts });

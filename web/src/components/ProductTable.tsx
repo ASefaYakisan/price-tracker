@@ -7,7 +7,7 @@ import type { ProductRow } from "@/lib/data";
 import { money, percentChange, sourceLabel } from "@/lib/format";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 import { BellIcon } from "@/components/BellIcon";
-import { useMyAlerts } from "@/lib/my-alerts";
+import { useVisibleAlerts } from "@/lib/account-alerts";
 
 const FILTERS = [
   { key: "all", label: "All" },
@@ -38,7 +38,7 @@ function matches(p: ProductRow, filter: FilterKey) {
 
 export function ProductTable({ products }: { products: ProductRow[] }) {
   const router = useRouter();
-  const myAlerts = useMyAlerts();
+  const myAlerts = useVisibleAlerts();
   const alertIds = new Set(myAlerts.map((a) => a.productId));
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<FilterKey>("all");

@@ -5,18 +5,25 @@ import { useEffect, useState } from "react";
 import type { AlertStatus } from "@/lib/alert-status";
 import { BellIcon } from "@/components/BellIcon";
 import { money, shortDate, sourceLabel } from "@/lib/format";
+import { refreshAccountAlerts, useAccountAlerts, useVisibleAlerts } from "@/lib/account-alerts";
 import { removeAlert, replaceAlert, type SavedAlert, useMyAlerts } from "@/lib/my-alerts";
 
 type Live = Exclude<AlertStatus, { missing: true }>;
 
 export function AlertsOverview() {
-  const saved = useMyAlerts();
-  const [live, setLive] = useState<(AlertStatus | null)[] | null>(null);
-  const signature = JSON.stringify(saved.map((a) => [a.id, a.token, a.productId, a.email, a.target]));
+  const { user, rows: accountRows } = useAccountAlerts();
+  const signedIn = Boolean(user);
+  const local = useMyAlerts();
+  const saved = useVisibleAlerts();
+  const [localLive, setLive] = useState<(AlertStatus | null)[] | null>(null);
+  const live = signedIn ? accountRows : localLive;
+  const signature = JSON.stringify(local.map((a) => [a.id, a.token, a.productId, a.email, a.target]));
 
-  // Ask the server for each alert's live state; it is the source of truth for target, email and sent date.
+  // Guests: ask the server for each saved alert's live state; it is the source of truth for target, email and sent date.
+  // Signed-in users get the same data straight from their account.
   useEffect(() => {
-    if (!saved.length) return;
+    if (user !== null || !local.length) return;
+    const saved = local;
     let cancelled = false;
     fetch("/api/alerts/lookup", {
       method: "POST",
@@ -40,7 +47,17 @@ export function AlertsOverview() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- refetch only when the saved alerts actually change
-  }, [signature]);
+  }, [signature, user]);
+
+  if (user === undefined || (signedIn && !accountRows)) {
+    return (
+      <div className="space-y-3" aria-busy>
+        {[0, 1].map((i) => (
+          <div key={i} className="h-40 animate-pulse rounded-xl border border-line bg-card" />
+        ))}
+      </div>
+    );
+  }
 
   if (!saved.length) {
     return (
@@ -71,11 +88,22 @@ export function AlertsOverview() {
       </div>
       <ul className="space-y-3">
         {rows.map(({ saved, live }) => (
-          <AlertCard key={`${saved.id ?? ""}-${saved.productId}-${saved.email}`} saved={saved} live={live} />
+          <AlertCard key={`${saved.id ?? ""}-${saved.productId}-${saved.email}`} saved={saved} live={live} account={signedIn} />
         ))}
       </ul>
       <p className="mt-4 text-xs text-faint">
-        This list is kept in this browser. Each alert sends one email when the price is at or below the target; edit it to watch again.
+        {signedIn ? (
+          <>Saved to your account ({user?.email}), so you see them on every device.</>
+        ) : (
+          <>
+            This list is kept in this browser.{" "}
+            <Link href="/login" className="text-accent hover:underline">
+              Sign in
+            </Link>{" "}
+            to keep your alerts on every device.
+          </>
+        )}{" "}
+        Each alert sends one email when the price is at or below the target; edit it to watch again.
       </p>
     </>
   );
@@ -92,7 +120,7 @@ function Summary({ label, value, tone }: { label: string; value: number | string
 
 const isReached = (l: Live) => l.price != null && l.price <= l.target;
 
-function AlertCard({ saved, live }: { saved: SavedAlert; live: AlertStatus | null | undefined }) {
+function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertStatus | null | undefined; account: boolean }) {
   const [mode, setMode] = useState<"view" | "edit" | "delete">("view");
   const [email, setEmail] = useState(saved.email);
   const [target, setTarget] = useState(String(saved.target));
@@ -123,13 +151,16 @@ function AlertCard({ saved, live }: { saved: SavedAlert; live: AlertStatus | nul
     e.preventDefault();
     const next = Number(target);
     if (await call("PATCH", { email: email.trim(), targetPrice: next })) {
-      replaceAlert(saved, { ...saved, email: email.trim(), target: next });
+      if (account) await refreshAccountAlerts();
+      else replaceAlert(saved, { ...saved, email: email.trim(), target: next });
       setMode("view");
     }
   }
 
   async function remove() {
-    if (await call("DELETE", {})) removeAlert(saved);
+    if (!(await call("DELETE", {}))) return;
+    if (account) await refreshAccountAlerts();
+    else removeAlert(saved);
   }
 
   const status = missing

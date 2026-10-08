@@ -11,7 +11,11 @@ export default async function Home() {
   const rises = changes.filter((c) => c > 0).length;
   const avg = changes.length ? changes.reduce((a, b) => a + b, 0) / changes.length : 0;
   const outOfStock = products.filter((p) => p.in_stock === false).length;
-  const lastRun = products.map((p) => p.scraped_at).filter((d): d is string => !!d).sort().at(-1);
+  const lastRun = products
+    .map((p) => p.scraped_at)
+    .filter((d): d is string => !!d)
+    .sort()
+    .at(-1);
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-8">
@@ -19,7 +23,8 @@ export default async function Home() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Tracked prices</h1>
           <p className="mt-1 text-sm text-muted">
-            {lastRun ? `Last scrape ${dateTime(lastRun)}` : "No scrapes yet"} · {products.length} items across {new Set(products.map((p) => p.source)).size} sources
+            {lastRun ? `Last scrape ${dateTime(lastRun)}` : "No scrapes yet"} · {products.length} items across{" "}
+            {new Set(products.map((p) => p.source)).size} sources
           </p>
         </div>
         <div className="flex gap-2">
@@ -48,16 +53,10 @@ export default async function Home() {
         <Stat label="Tracked items" value={products.length} hint={`Average change ${avg > 0 ? "+" : ""}${avg.toFixed(1)}%`} />
         <Stat label="Price drops" value={drops} hint="since the last scrape" />
         <Stat label="Price rises" value={rises} hint="since the last scrape" />
-        <Stat
-          label="Out of stock"
-          value={outOfStock}
-          hint="right now"
-          tone={outOfStock ? "warn" : undefined}
-        />
+        <Stat label="Out of stock" value={outOfStock} hint="right now" tone={outOfStock ? "warn" : undefined} />
       </section>
 
       <TrackForm />
-
 
       <ProductTable products={products} />
     </main>

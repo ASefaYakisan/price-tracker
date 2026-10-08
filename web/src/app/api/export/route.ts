@@ -57,8 +57,7 @@ export async function GET(request: Request) {
   const body = format === "xlsx" ? await toXlsx(products) : toCsv(products);
   return new Response(body, {
     headers: {
-      "content-type":
-        format === "xlsx" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "text/csv; charset=utf-8",
+      "content-type": format === "xlsx" ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "text/csv; charset=utf-8",
       "content-disposition": `attachment; filename="${filename}"`,
     },
   });

@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { money, shortDate } from "@/lib/format";
-import { useMyAlerts } from "@/lib/my-alerts";
+import { useVisibleAlerts } from "@/lib/account-alerts";
+import { useUser } from "@/lib/auth";
 
 // "Your alerts" list; on the product page it shows only that item's alerts.
 export function MyAlerts({ productId, title = "Your alerts" }: { productId?: number; title?: string }) {
-  const alerts = useMyAlerts(productId);
+  const alerts = useVisibleAlerts(productId);
+  const user = useUser();
   if (!alerts.length) return null;
   return (
     <section className={productId == null ? "mb-6 rounded-xl border border-line bg-card p-4" : "mt-4 border-t border-line pt-4"}>
@@ -28,7 +30,9 @@ export function MyAlerts({ productId, title = "Your alerts" }: { productId?: num
           </li>
         ))}
       </ul>
-      <p className="mt-2 text-xs text-faint">Saved in this browser. You get one email when the price reaches the target.</p>
+      <p className="mt-2 text-xs text-faint">
+        {user ? "Saved to your account." : "Saved in this browser."} You get one email when the price reaches the target.
+      </p>
     </section>
   );
 }

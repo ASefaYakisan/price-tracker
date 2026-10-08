@@ -44,8 +44,7 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
   const midT = times[Math.floor(times.length / 2)];
   // Within a day the date is the same at every tick, so show the time instead; drop repeated labels.
   const sameDay = t1 - t0 < 36 * 3_600_000;
-  const xLabel = (t: number) =>
-    sameDay ? new Date(t).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : shortDate(t);
+  const xLabel = (t: number) => (sameDay ? new Date(t).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : shortDate(t));
   // Ends first, so a middle tick that repeats an end label is the one dropped.
   const xTicks = [
     { t: t0, i: 0 },
