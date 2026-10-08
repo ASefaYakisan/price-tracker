@@ -11,6 +11,9 @@ on:
       pages:
         description: Listing pages to crawl for HTML sources
         default: "3"
+      telegram_min_drop:
+        description: Smallest drop in % that goes into the Telegram message (lower it to test)
+        default: "2"
 
 jobs:
   scrape:
@@ -39,6 +42,7 @@ jobs:
           # Optional: daily Telegram message with the day's price drops.
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_MIN_DROP: ${{ inputs.telegram_min_drop || '2' }}
           # Optional: copy prices to a Google Sheet (service account JSON + sheet id).
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
