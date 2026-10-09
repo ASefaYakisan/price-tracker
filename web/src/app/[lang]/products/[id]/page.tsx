@@ -6,6 +6,7 @@ import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 import { SourceChip } from "@/components/SourceChip";
 import { Stat } from "@/components/Stat";
+import { StopTracking } from "@/components/StopTracking";
 import { fill } from "@/i18n/config";
 import { BackLink } from "@/components/BackLink";
 import { getDictionary, resolveLang } from "@/i18n/server";
@@ -98,6 +99,8 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
         <p className="mt-2 mb-4 text-sm text-muted">{t.product.alertText}</p>
         <AlertForm productId={product.id} title={product.title} price={product.price} currency={cur} />
       </section>
+
+      {product.source === "custom" && <StopTracking productId={product.id} />}
     </>
   );
 }

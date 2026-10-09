@@ -5,6 +5,8 @@ import { useI18n } from "@/i18n/client";
 import { money } from "@/lib/format";
 import { refreshAccountAlerts } from "@/lib/account-alerts";
 import { useUser } from "@/lib/auth";
+import { authEnabled } from "@/lib/supabase/client";
+import { BellIcon } from "@/components/BellIcon";
 import { saveAlert } from "@/lib/my-alerts";
 import { MyAlerts } from "@/components/MyAlerts";
 
@@ -28,7 +30,7 @@ export function AlertForm({
   const [target, setTarget] = useState(suggested);
   const [state, setState] = useState<State>({ kind: "idle" });
   const user = useUser();
-  const { t, lang, fill, apiError } = useI18n();
+  const { t, lang, href, fill, apiError } = useI18n();
   const email = typedEmail ?? user?.email ?? "";
 
   // The page streams in, so the browser's own jump to #alert fires before this section exists.
@@ -64,6 +66,28 @@ export function AlertForm({
         kind: "error",
         message: apiError(json?.error),
       });
+  }
+
+  if (authEnabled && user === undefined) return <div className="h-24 animate-pulse rounded-xl bg-hover" />;
+  if (authEnabled && !user) {
+    const next = encodeURIComponent(`/products/${productId}#alert`);
+    return (
+      <div className="flex flex-col items-start gap-4 rounded-xl border border-dashed border-line bg-bg p-5 sm:flex-row sm:items-center">
+        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-accent-soft text-accent" aria-hidden>
+          <BellIcon className="size-5" />
+        </span>
+        <div className="flex-1">
+          <div className="font-medium">{t.alertForm.signInTitle}</div>
+          <p className="mt-0.5 text-sm text-muted">{t.alertForm.signInText}</p>
+        </div>
+        <a
+          href={href(`/login?next=${next}`)}
+          className="shrink-0 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90"
+        >
+          {t.alertForm.signInButton}
+        </a>
+      </div>
+    );
   }
 
   if (state.kind === "done") {

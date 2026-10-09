@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PasswordInput } from "@/components/PasswordInput";
+import { NewPasswordField } from "@/components/NewPasswordField";
+import { isStrong } from "@/lib/password";
 import { useUser } from "@/lib/auth";
 import { useI18n } from "@/i18n/client";
 import { authEnabled, createClient } from "@/lib/supabase/client";
@@ -30,6 +32,9 @@ export function AuthForm() {
   const params = useSearchParams();
   const { t, href, fill } = useI18n();
   const urlError = params.get("error");
+  // Where to go after signing in, e.g. back to the item whose alert the visitor wanted to set.
+  const nextParam = params.get("next");
+  const next = nextParam?.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/";
   const user = useUser();
   const google = useGoogleEnabled();
   const [mode, setMode] = useState<Mode>(params.get("mode") === "forgot" ? "forgot" : "sign-in");
@@ -41,7 +46,7 @@ export function AuthForm() {
 
   // Already signed in (or just signed in): go to the alerts.
   useEffect(() => {
-    if (user) router.replace(href("/"));
+    if (user) router.replace(href(next));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- href only changes with the language
   }, [user, router]);
 
@@ -63,8 +68,13 @@ export function AuthForm() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setError(error.message === "Invalid login credentials" ? t.auth.wrong : error.message);
     } else if (mode === "sign-up") {
-      const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: callback("/") } });
-      if (error) setError(error.message);
+      if (!isStrong(password)) {
+        setError(t.auth.weakPassword);
+        setBusy(false);
+        return;
+      }
+      const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: callback(next) } });
+      if (error) setError(error.code === "weak_password" ? t.auth.weakPassword : error.message);
       // With email confirmation on there is no session yet: the user has to click the link first.
       else if (!data.session) setNotice(fill(t.auth.confirmSent, { email }));
     } else {
@@ -79,7 +89,7 @@ export function AuthForm() {
 
   async function signInWithGoogle() {
     setBusy(true);
-    const { error } = await createClient().auth.signInWithOAuth({ provider: "google", options: { redirectTo: callback("/") } });
+    const { error } = await createClient().auth.signInWithOAuth({ provider: "google", options: { redirectTo: callback(next) } });
     if (error) {
       setError(t.auth.googleFailed);
       setBusy(false);
@@ -157,20 +167,19 @@ export function AuthForm() {
             className={input}
           />
         </label>
-        {mode !== "forgot" && (
+        {mode === "sign-in" && (
           <label className="flex flex-col gap-1.5 text-sm text-muted">
             {t.auth.password}
             <PasswordInput
               required
-              minLength={6}
-              autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={input}
             />
-            {mode === "sign-up" && <span className="text-xs text-faint">{t.auth.minLength}</span>}
           </label>
         )}
+        {mode === "sign-up" && <NewPasswordField label={t.auth.password} value={password} onChange={setPassword} className={input} />}
         {mode === "sign-in" && (
           <button type="button" onClick={() => switchTo("forgot")} className="-mt-2 self-end text-xs text-accent hover:underline">
             {t.auth.forgot}
@@ -191,7 +200,6 @@ export function AuthForm() {
         </button>
       ) : (
         <p className="mt-6 text-center text-xs text-faint">
-          {t.auth.noAccountNeeded}{" "}
           <Link href={href("/")} className="text-accent hover:underline">
             {t.common.browseItems}
           </Link>

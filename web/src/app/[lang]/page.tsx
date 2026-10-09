@@ -52,6 +52,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <section className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Stat
           label={t.home.trackedItems}
+          iconTone="gray"
           value={products.length}
           hint={fill(t.home.averageChange, { value: percent(avg, lang) })}
           icon={<path d="M4 7h16M4 12h16M4 17h10" />}
@@ -60,14 +61,14 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           label={t.home.priceDrops}
           value={drops}
           hint={t.home.sinceLastScrape}
-          iconTone="good"
+          iconTone="teal"
           icon={<path d="M4 7l6 6 4-4 6 6M20 10v5h-5" />}
         />
         <Stat
           label={t.home.priceRises}
           value={rises}
           hint={t.home.sinceLastScrape}
-          iconTone="bad"
+          iconTone="accent"
           icon={<path d="M4 17l6-6 4 4 6-6M20 14V9h-5" />}
         />
         <Stat

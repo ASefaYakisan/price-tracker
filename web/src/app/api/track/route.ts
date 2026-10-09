@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { revalidateTag } from "next/cache";
+import { currentUser } from "@/lib/supabase/server";
 import { isDemo } from "@/lib/data";
 import { extractProduct } from "@/lib/extract-price";
 import { assertPublicUrl } from "@/lib/safe-url";
@@ -43,6 +44,8 @@ export async function POST(request: Request) {
   const product = extractProduct(html, url.href);
   if (!product) return fail("No price found on that page. Paste the link of a single product page.", 422);
   if (isDemo) return Response.json({ ok: true, demo: true, product });
+  const user = await currentUser();
+  if (!user) return fail("Sign in to track a link.", 401);
 
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!serviceKey) return fail("Adding links is not switched on for this site yet.", 503);
@@ -60,6 +63,8 @@ export async function POST(request: Request) {
   if (error) return fail("Could not save the product. Please try again.", 500);
   const { error: histError } = await db.from("price_history").insert({ product_id: row.id, price, in_stock });
   if (histError) return fail("Could not save the price. Please try again.", 500);
+  // The first person to add a link owns it; adding the same link again keeps the original owner.
+  await db.from("products").update({ added_by: user.id }).eq("id", row.id).is("added_by", null);
 
   revalidateTag("products", { expire: 0 });
   return Response.json({ ok: true, id: row.id, product });

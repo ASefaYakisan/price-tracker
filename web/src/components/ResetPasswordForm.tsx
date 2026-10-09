@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { PasswordInput } from "@/components/PasswordInput";
+import { NewPasswordField } from "@/components/NewPasswordField";
+import { isStrong } from "@/lib/password";
 import { createRecoveryClient } from "@/lib/supabase/recovery";
 import { useI18n } from "@/i18n/client";
 
@@ -34,12 +36,21 @@ export function ResetPasswordForm() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!link) return;
+    if (!isStrong(password)) return setError(t.auth.weakPassword);
     if (password !== repeat) return setError(t.reset.mismatch);
     setBusy(true);
     setError(null);
     const auth = createRecoveryClient().auth;
     const session = await auth.setSession(link);
-    const error = session.error ? t.reset.expired : (await auth.updateUser({ password })).error?.message;
+    const update = session.error ? null : (await auth.updateUser({ password })).error;
+    // Supabase refuses the current password as the new one ("same_password").
+    const error = session.error
+      ? t.reset.expired
+      : update?.code === "same_password"
+        ? t.auth.samePassword
+        : update?.code === "weak_password"
+          ? t.auth.weakPassword
+          : update?.message;
     if (error) {
       setError(error);
       setBusy(false);
@@ -88,23 +99,12 @@ export function ResetPasswordForm() {
           <h1 className="text-lg font-semibold">{t.reset.title}</h1>
           <p className="mt-1 text-sm text-muted">{t.reset.text}</p>
           <form onSubmit={submit} className="mt-5 flex flex-col gap-4">
-            <label className="flex flex-col gap-1.5 text-sm text-muted">
-              {t.reset.newPassword}
-              <PasswordInput
-                required
-                minLength={6}
-                autoComplete="new-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={input}
-              />
-              <span className="text-xs text-faint">{t.auth.minLength}</span>
-            </label>
+            <NewPasswordField label={t.reset.newPassword} value={password} onChange={setPassword} className={input} />
             <label className="flex flex-col gap-1.5 text-sm text-muted">
               {t.reset.repeat}
               <PasswordInput
                 required
-                minLength={6}
+                minLength={8}
                 autoComplete="new-password"
                 value={repeat}
                 onChange={(e) => setRepeat(e.target.value)}

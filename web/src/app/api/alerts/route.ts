@@ -1,9 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
 import { isDemo } from "@/lib/data";
-import { adminDb, alertError as error, EMAIL, escapeLike } from "@/lib/alerts-server";
+import { alertError as error, EMAIL, escapeLike } from "@/lib/alerts-server";
 import { currentUser } from "@/lib/supabase/server";
 
-// Price-drop signup. Returns the alert's id and manage token so this browser can edit or delete it later.
+// Price-drop signup for the signed-in account. Returns the alert's id and manage token.
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const productId = Number(body?.productId);
@@ -39,34 +38,6 @@ export async function POST(request: Request) {
     return Response.json({ ok: true, account: true, id: data.id, token: data.manage_token });
   }
 
-  const admin = adminDb();
-  if (!admin) {
-    // Without the server key we can still sign people up, just not hand back a way to manage the alert.
-    const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-    const { error: dbError } = await db.from("alerts").insert({ product_id: productId, email, target_price: target });
-    if (dbError?.code === "23505") return error("You already have an alert on this item.", 409);
-    if (dbError) return error("Could not save the alert. Please try again.", 500);
-    return Response.json({ ok: true });
-  }
-
-  const { data, error: dbError } = await admin
-    .from("alerts")
-    .insert({ product_id: productId, email, target_price: target })
-    .select("id, manage_token")
-    .single();
-  if (dbError?.code === "23505") {
-    // Same item and address: move the target instead of refusing.
-    const { data: updated, error: updateError } = await admin
-      .from("alerts")
-      .update({ target_price: target })
-      .eq("product_id", productId)
-      .ilike("email", escapeLike(email))
-      .is("last_sent_at", null)
-      .select("id, manage_token")
-      .single();
-    if (updateError) return error("Could not update the alert. Please try again.", 500);
-    return Response.json({ ok: true, updated: true, id: updated.id, token: updated.manage_token });
-  }
-  if (dbError) return error("Could not save the alert. Please try again.", 500);
-  return Response.json({ ok: true, id: data.id, token: data.manage_token });
+  // Alerts belong to accounts: guests are asked to sign in first.
+  return error("Sign in to create an alert.", 401);
 }

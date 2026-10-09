@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AlertsLink } from "@/components/AlertsLink";
+import { AppearanceMenu } from "@/components/AppearanceMenu";
+import { APPEARANCE_SCRIPT } from "@/lib/appearance";
 import { LanguagePicker } from "@/components/LanguagePicker";
 import { UserMenu } from "@/components/UserMenu";
 import { I18nProvider } from "@/i18n/client";
@@ -25,7 +27,10 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   const lang = await resolveLang(params);
   const t = await getDictionary(lang);
   return (
-    <html lang={lang} dir={isRtl(lang) ? "rtl" : "ltr"} className="h-full antialiased">
+    <html lang={lang} dir={isRtl(lang) ? "rtl" : "ltr"} className="h-full antialiased" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: APPEARANCE_SCRIPT }} />
+      </head>
       <body className="flex min-h-full flex-col font-sans">
         <I18nProvider lang={lang} dict={t}>
           <header className="sticky top-0 z-20 border-b border-line bg-card/90 backdrop-blur">
@@ -43,19 +48,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
               </Link>
               <nav className="ms-auto flex items-center gap-1 text-sm">
                 <AlertsLink />
-                {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- /docs is a route handler (Swagger UI), not a page */}
-                <a href="/docs" className="hidden rounded-lg px-3 py-2 text-muted hover:bg-hover hover:text-ink md:block">
-                  {t.nav.api}
-                </a>
-                <a
-                  href="https://github.com/ASefaYakisan/price-tracker"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hidden rounded-lg px-3 py-2 text-muted hover:bg-hover hover:text-ink md:block"
-                >
-                  {t.nav.source}
-                </a>
               </nav>
+              <AppearanceMenu />
               <LanguagePicker />
               <UserMenu />
             </div>

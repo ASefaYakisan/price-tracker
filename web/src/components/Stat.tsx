@@ -4,6 +4,7 @@ const TONES = {
   bad: "bg-bad-soft text-bad",
   warn: "bg-warn-soft text-warn",
   teal: "bg-teal-soft text-teal",
+  gray: "bg-hover text-muted",
 } as const;
 
 export function Stat({

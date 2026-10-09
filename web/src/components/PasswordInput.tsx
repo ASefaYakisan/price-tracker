@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useI18n } from "@/i18n/client";
 
-type Props = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & { className: string };
+type Props = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & { className: string; forceShown?: boolean };
 
 // Password field with a show / hide toggle on the right.
-export function PasswordInput({ className, ...props }: Props) {
-  const [shown, setShown] = useState(false);
+export function PasswordInput({ className, forceShown = false, ...props }: Props) {
+  const [toggled, setShown] = useState(false);
+  // A suggested password is shown so the visitor can see (and note) what was filled in.
+  const shown = toggled || forceShown;
   const { t } = useI18n();
   return (
     <span className="relative flex">

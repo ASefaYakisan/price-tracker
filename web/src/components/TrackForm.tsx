@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useI18n } from "@/i18n/client";
 import { money } from "@/lib/format";
+import { useUser } from "@/lib/auth";
+import { authEnabled } from "@/lib/supabase/client";
 
 type Preview = { title: string; price: number; currency: string | null };
 type State = { kind: "idle" | "saving" } | { kind: "demo"; product: Preview } | { kind: "error"; message: string };
@@ -13,6 +15,7 @@ export function TrackForm() {
   const { t, lang, href, fill, apiError } = useI18n();
   const [url, setUrl] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
+  const user = useUser();
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,6 +34,25 @@ export function TrackForm() {
       router.refresh();
     } else if (res?.ok && json?.demo) setState({ kind: "demo", product: json.product });
     else setState({ kind: "error", message: apiError(json?.error) });
+  }
+
+  if (authEnabled && !user) {
+    return (
+      <section className="mb-6 flex flex-col gap-3 rounded-2xl border border-line bg-card p-4 shadow-soft sm:flex-row sm:items-center sm:p-5">
+        <div className="flex-1">
+          <div className="text-sm font-medium">{t.track.label}</div>
+          <p className="mt-0.5 text-sm text-muted">{t.track.signIn}</p>
+        </div>
+        {user === null && (
+          <a
+            href={href("/login")}
+            className="shrink-0 rounded-lg bg-accent px-4 py-2 text-center text-sm font-medium text-accent-ink hover:opacity-90"
+          >
+            {t.alertForm.signInButton}
+          </a>
+        )}
+      </section>
+    );
   }
 
   return (

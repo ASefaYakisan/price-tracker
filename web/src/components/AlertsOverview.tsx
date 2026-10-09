@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { AlertStatus } from "@/lib/alert-status";
 import { BellIcon } from "@/components/BellIcon";
+import { authEnabled } from "@/lib/supabase/client";
 import { money, percent, shortDate } from "@/lib/format";
 import { useI18n } from "@/i18n/client";
 import { SourceChip } from "@/components/SourceChip";
@@ -59,6 +60,24 @@ export function AlertsOverview() {
           <div key={i} className="h-40 animate-pulse rounded-2xl border border-line bg-card" />
         ))}
       </div>
+    );
+  }
+
+  if (authEnabled && !user) {
+    return (
+      <section className="flex flex-col items-center rounded-2xl border border-line bg-card px-6 py-12 text-center shadow-soft">
+        <span className="grid size-12 place-items-center rounded-full bg-accent-soft text-accent">
+          <BellIcon className="size-6" />
+        </span>
+        <h2 className="mt-4 font-medium">{t.alerts.signInTitle}</h2>
+        <p className="mt-1 max-w-md text-sm text-muted">{t.alerts.signInText}</p>
+        <Link
+          href={href("/login?next=%2Falerts")}
+          className="mt-5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90"
+        >
+          {t.alertForm.signInButton}
+        </Link>
+      </section>
     );
   }
 
