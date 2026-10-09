@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { PasswordInput } from "@/components/PasswordInput";
 import { useUser } from "@/lib/auth";
 import { authEnabled, createClient } from "@/lib/supabase/client";
+import { createRecoveryClient } from "@/lib/supabase/recovery";
 
 type Mode = "sign-in" | "sign-up" | "forgot";
 
@@ -68,9 +69,9 @@ export function AuthForm() {
       // With email confirmation on there is no session yet: the user has to click the link first.
       else if (!data.session) setNotice(`We sent a confirmation link to ${email}. Open it to finish creating your account.`);
     } else {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: callback("/reset-password") });
+      const { error } = await createRecoveryClient().auth.resetPasswordForEmail(email, { redirectTo: `${location.origin}/reset-password` });
       if (error) setError(error.message);
-      else setNotice(`If ${email} has an account, a reset link is on its way. Open it in this browser.`);
+      else setNotice(`If ${email} has an account, a reset link is on its way.`);
     }
     setBusy(false);
   }
@@ -97,7 +98,7 @@ export function AuthForm() {
   );
 
   return (
-    <section className="rounded-xl border border-line bg-card p-6 sm:p-8">
+    <section className="p-6 sm:p-10">
       {mode === "forgot" ? (
         <div>
           <h2 className="text-lg font-semibold">Reset your password</h2>
@@ -159,14 +160,7 @@ export function AuthForm() {
         </label>
         {mode !== "forgot" && (
           <label className="flex flex-col gap-1.5 text-sm text-muted">
-            <span className="flex items-center justify-between">
-              Password
-              {mode === "sign-in" && (
-                <button type="button" onClick={() => switchTo("forgot")} className="text-xs text-accent hover:underline">
-                  Forgot password?
-                </button>
-              )}
-            </span>
+            Password
             <PasswordInput
               required
               minLength={6}
@@ -177,6 +171,11 @@ export function AuthForm() {
             />
             {mode === "sign-up" && <span className="text-xs text-faint">At least 6 characters.</span>}
           </label>
+        )}
+        {mode === "sign-in" && (
+          <button type="button" onClick={() => switchTo("forgot")} className="-mt-2 self-end text-xs text-accent hover:underline">
+            Forgot password?
+          </button>
         )}
         {error && <p className="rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad">{error}</p>}
         {notice && <p className="rounded-lg bg-good-soft px-3 py-2 text-sm text-ink">{notice}</p>}

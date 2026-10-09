@@ -29,39 +29,41 @@ const FEATURES = [
 
 export default function LoginPage() {
   return (
-    <main className="mx-auto grid w-full max-w-5xl items-center gap-10 px-4 py-10 md:grid-cols-2 md:py-16">
-      <section className="order-2 md:order-1">
-        <p className="text-sm font-medium text-accent">Price Tracker</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Know when the price is right.</h1>
-        <p className="mt-3 text-muted">Track prices every day and get told the moment they drop to what you want to pay.</p>
-        <ul className="mt-8 flex flex-col gap-5">
-          {FEATURES.map((f) => (
-            <li key={f.title} className="flex gap-4">
-              <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent" aria-hidden>
-                <svg
-                  viewBox="0 0 24 24"
-                  className="size-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  {f.icon}
-                </svg>
-              </span>
-              <span>
-                <span className="block font-medium">{f.title}</span>
-                <span className="block text-sm text-muted">{f.text}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-      <div className="order-1 w-full md:order-2">
-        <Suspense fallback={<div className="h-[28rem] animate-pulse rounded-xl border border-line bg-card" />}>
-          <AuthForm />
-        </Suspense>
+    <main className="mx-auto flex min-h-[calc(100dvh-10rem)] w-full max-w-4xl items-center px-4 py-8">
+      <div className="grid w-full overflow-hidden rounded-2xl border border-line bg-card shadow-sm md:grid-cols-[1fr_1.1fr]">
+        <section className="order-2 border-t border-line bg-accent-soft/60 p-6 sm:p-10 md:order-1 md:border-t-0 md:border-r">
+          <p className="text-sm font-medium text-accent">Price Tracker</p>
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Know when the price is right.</h1>
+          <p className="mt-2 text-sm text-muted">Track prices every day and get told the moment they drop to what you want to pay.</p>
+          <ul className="mt-8 flex flex-col gap-5">
+            {FEATURES.map((f) => (
+              <li key={f.title} className="flex gap-3">
+                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-card text-accent shadow-sm" aria-hidden>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="size-[18px]"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    {f.icon}
+                  </svg>
+                </span>
+                <span>
+                  <span className="block text-sm font-medium">{f.title}</span>
+                  <span className="block text-sm text-muted">{f.text}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <div className="order-1 md:order-2 md:self-center">
+          <Suspense fallback={<div className="h-[28rem] animate-pulse" />}>
+            <AuthForm />
+          </Suspense>
+        </div>
       </div>
     </main>
   );
