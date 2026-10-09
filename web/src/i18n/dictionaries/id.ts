@@ -219,6 +219,10 @@ const id: Dict = {
     copied: "Disalin",
     samePassword: "Pilih kata sandi yang berbeda dari kata sandi Anda saat ini.",
     weakPassword: "Kata sandi ini terlalu lemah. Ikuti aturan di bawah kolom.",
+    codeLabel: "Kode dari email",
+    codeHint: "Tekan tombol di email, atau ketik kode dari subjek email di sini.",
+    verifyCode: "Lanjutkan",
+    codeWrong: "Kode salah atau sudah kedaluwarsa. Periksa lagi atau minta email baru.",
   },
   reset: {
     title: "Pilih kata sandi baru",
@@ -233,6 +237,7 @@ const id: Dict = {
     invalidTitle: "Tautan kedaluwarsa",
     invalidText: "Tautan atur ulang ini tidak valid atau sudah digunakan.",
     sendNew: "Kirim yang baru",
+    doneSignIn: "Kata sandi diubah. Masuk dengan kata sandi baru.",
   },
   appearance: {
     title: "Tampilan",

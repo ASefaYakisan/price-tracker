@@ -218,6 +218,10 @@ const ja: Dict = {
     copied: "コピーしました",
     samePassword: "現在のパスワードとは異なるパスワードを選んでください。",
     weakPassword: "このパスワードは弱すぎます。入力欄の下にある条件を満たしてください。",
+    codeLabel: "メールのコード",
+    codeHint: "メールのボタンを押すか、件名にあるコードをここに入力してください。",
+    verifyCode: "続行",
+    codeWrong: "コードが正しくないか、期限切れです。確認するか、新しいメールを送ってください。",
   },
   reset: {
     title: "新しいパスワードを設定",
@@ -232,6 +236,7 @@ const ja: Dict = {
     invalidTitle: "リンクの期限切れ",
     invalidText: "このリセットリンクは無効か、すでに使用されています。",
     sendNew: "新しいリンクを送信",
+    doneSignIn: "パスワードを変更しました。新しいパスワードでログインしてください。",
   },
   appearance: {
     title: "外観",

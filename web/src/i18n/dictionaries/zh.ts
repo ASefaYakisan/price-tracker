@@ -218,6 +218,10 @@ const zh: Dict = {
     copied: "已复制",
     samePassword: "请选择与当前密码不同的密码。",
     weakPassword: "此密码太弱。请按照输入框下方的规则设置。",
+    codeLabel: "邮件中的验证码",
+    codeHint: "点击邮件中的按钮，或在此输入邮件标题中的验证码。",
+    verifyCode: "继续",
+    codeWrong: "验证码错误或已过期。请检查，或重新发送邮件。",
   },
   reset: {
     title: "设置新密码",
@@ -232,6 +236,7 @@ const zh: Dict = {
     invalidTitle: "链接已过期",
     invalidText: "此重置链接无效或已被使用。",
     sendNew: "重新发送",
+    doneSignIn: "密码已更改。请使用新密码登录。",
   },
   appearance: {
     title: "外观",

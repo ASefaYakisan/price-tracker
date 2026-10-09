@@ -219,6 +219,10 @@ const de: Dict = {
     copied: "Kopiert",
     samePassword: "Wähle ein anderes Passwort als dein aktuelles.",
     weakPassword: "Dieses Passwort ist zu schwach. Beachte die Regeln unter dem Feld.",
+    codeLabel: "Code aus der E-Mail",
+    codeHint: "Klicke auf den Button in der E-Mail oder gib den Code aus dem Betreff hier ein.",
+    verifyCode: "Weiter",
+    codeWrong: "Der Code ist falsch oder abgelaufen. Prüfe ihn oder fordere eine neue E-Mail an.",
   },
   reset: {
     title: "Neues Passwort festlegen",
@@ -233,6 +237,7 @@ const de: Dict = {
     invalidTitle: "Link abgelaufen",
     invalidText: "Dieser Link ist ungültig oder wurde bereits verwendet.",
     sendNew: "Neuen Link senden",
+    doneSignIn: "Passwort geändert. Melde dich mit deinem neuen Passwort an.",
   },
   appearance: {
     title: "Darstellung",

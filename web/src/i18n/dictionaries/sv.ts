@@ -219,6 +219,10 @@ const sv: Dict = {
     copied: "Kopierat",
     samePassword: "Välj ett annat lösenord än ditt nuvarande.",
     weakPassword: "Lösenordet är för svagt. Följ reglerna under fältet.",
+    codeLabel: "Kod från mejlet",
+    codeHint: "Tryck på knappen i mejlet eller skriv in koden från ämnesraden här.",
+    verifyCode: "Fortsätt",
+    codeWrong: "Koden är fel eller har gått ut. Kontrollera den eller be om ett nytt mejl.",
   },
   reset: {
     title: "Välj ett nytt lösenord",
@@ -233,6 +237,7 @@ const sv: Dict = {
     invalidTitle: "Länken har gått ut",
     invalidText: "Återställningslänken är ogiltig eller har redan använts.",
     sendNew: "Skicka en ny",
+    doneSignIn: "Lösenordet är ändrat. Logga in med ditt nya lösenord.",
   },
   appearance: {
     title: "Utseende",

@@ -219,6 +219,10 @@ const ro: Dict = {
     copied: "Copiat",
     samePassword: "Alege o parolă diferită de cea actuală.",
     weakPassword: "Această parolă este prea slabă. Respectă regulile de sub câmp.",
+    codeLabel: "Codul din e-mail",
+    codeHint: "Apasă butonul din e-mail sau introdu aici codul din subiectul lui.",
+    verifyCode: "Continuă",
+    codeWrong: "Codul este greșit sau a expirat. Verifică-l sau cere un e-mail nou.",
   },
   reset: {
     title: "Alege o parolă nouă",
@@ -233,6 +237,7 @@ const ro: Dict = {
     invalidTitle: "Link expirat",
     invalidText: "Acest link de resetare este invalid sau a fost deja folosit.",
     sendNew: "Trimite unul nou",
+    doneSignIn: "Parola a fost schimbată. Conectează-te cu noua parolă.",
   },
   appearance: {
     title: "Aspect",

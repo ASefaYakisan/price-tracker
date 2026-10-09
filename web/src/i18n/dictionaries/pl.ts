@@ -219,6 +219,10 @@ const pl: Dict = {
     copied: "Skopiowano",
     samePassword: "Wybierz hasło inne niż obecne.",
     weakPassword: "To hasło jest za słabe. Postępuj zgodnie z zasadami pod polem.",
+    codeLabel: "Kod z e-maila",
+    codeHint: "Kliknij przycisk w e-mailu albo wpisz tutaj kod z jego tematu.",
+    verifyCode: "Dalej",
+    codeWrong: "Kod jest błędny lub wygasł. Sprawdź go albo poproś o nowy e-mail.",
   },
   reset: {
     title: "Ustaw nowe hasło",
@@ -233,6 +237,7 @@ const pl: Dict = {
     invalidTitle: "Link wygasł",
     invalidText: "Ten link resetujący jest nieprawidłowy lub został już użyty.",
     sendNew: "Wyślij nowy",
+    doneSignIn: "Hasło zmienione. Zaloguj się nowym hasłem.",
   },
   appearance: {
     title: "Wygląd",

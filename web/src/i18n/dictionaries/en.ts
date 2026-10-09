@@ -218,6 +218,10 @@ const en = {
     copied: "Copied",
     samePassword: "Choose a password different from your current one.",
     weakPassword: "This password is too weak. Follow the rules below the field.",
+    codeLabel: "Code from the email",
+    codeHint: "Press the button in the email, or type the code shown in its subject here.",
+    verifyCode: "Continue",
+    codeWrong: "That code is wrong or has expired. Check it or ask for a new email.",
   },
   reset: {
     title: "Choose a new password",
@@ -232,6 +236,7 @@ const en = {
     invalidTitle: "Link expired",
     invalidText: "This reset link is invalid or has already been used.",
     sendNew: "Send a new one",
+    doneSignIn: "Password changed. Sign in with your new password.",
   },
   appearance: {
     title: "Appearance",

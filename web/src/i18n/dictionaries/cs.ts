@@ -219,6 +219,10 @@ const cs: Dict = {
     copied: "Zkopírováno",
     samePassword: "Zvolte heslo odlišné od současného.",
     weakPassword: "Toto heslo je příliš slabé. Dodržte pravidla pod polem.",
+    codeLabel: "Kód z e-mailu",
+    codeHint: "Klikni na tlačítko v e-mailu, nebo sem zadej kód z jeho předmětu.",
+    verifyCode: "Pokračovat",
+    codeWrong: "Kód je špatný nebo vypršel. Zkontroluj ho, nebo si vyžádej nový e-mail.",
   },
   reset: {
     title: "Zvolte nové heslo",
@@ -233,6 +237,7 @@ const cs: Dict = {
     invalidTitle: "Odkaz vypršel",
     invalidText: "Tento odkaz pro obnovení je neplatný nebo již byl použit.",
     sendNew: "Poslat nový",
+    doneSignIn: "Heslo bylo změněno. Přihlas se novým heslem.",
   },
   appearance: {
     title: "Vzhled",

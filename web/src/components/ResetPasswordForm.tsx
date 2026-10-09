@@ -8,11 +8,13 @@ import { isStrong } from "@/lib/password";
 import { createRecoveryClient } from "@/lib/supabase/recovery";
 import { useI18n } from "@/i18n/client";
 
+const noSubscribe = () => () => {};
+
+type Auth = ReturnType<typeof createRecoveryClient>["auth"];
+
 // The reset email links here with the one-time session in the URL hash (#access_token=…&type=recovery).
 // That session is used once, in memory, to save the new password and is then signed out,
 // so the tab where the user asked for the link stays on the sign-in page.
-const noSubscribe = () => () => {};
-
 export function ResetPasswordForm() {
   const { t, href } = useI18n();
   const hash = useSyncExternalStore(
@@ -27,44 +29,20 @@ export function ResetPasswordForm() {
     const refresh_token = p.get("refresh_token");
     return access_token && refresh_token && p.get("type") === "recovery" ? { access_token, refresh_token } : null;
   }, [hash]);
-  const [password, setPassword] = useState("");
-  const [repeat, setRepeat] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!link) return;
-    if (!isStrong(password)) return setError(t.auth.weakPassword);
-    if (password !== repeat) return setError(t.reset.mismatch);
-    setBusy(true);
-    setError(null);
+  async function open() {
+    if (!link) return null;
     const auth = createRecoveryClient().auth;
-    const session = await auth.setSession(link);
-    const update = session.error ? null : (await auth.updateUser({ password })).error;
-    // Supabase refuses the current password as the new one ("same_password").
-    const error = session.error
-      ? t.reset.expired
-      : update?.code === "same_password"
-        ? t.auth.samePassword
-        : update?.code === "weak_password"
-          ? t.auth.weakPassword
-          : update?.message;
-    if (error) {
-      setError(error);
-      setBusy(false);
-      return;
-    }
-    await auth.signOut({ scope: "local" });
+    return (await auth.setSession(link)).error ? null : auth;
+  }
+
+  function finish() {
     setDone(true);
     history.replaceState(null, "", location.pathname);
     // Works when the browser allows it; otherwise the message below says to close the tab.
     window.close();
   }
-
-  const input =
-    "h-11 rounded-lg border border-line bg-bg px-3 text-sm text-ink placeholder:text-faint focus:border-accent focus:outline-none";
 
   if (link === undefined && !done) return <div className="h-80 animate-pulse rounded-xl border border-line bg-card" />;
 
@@ -98,27 +76,7 @@ export function ResetPasswordForm() {
         <>
           <h1 className="text-lg font-semibold">{t.reset.title}</h1>
           <p className="mt-1 text-sm text-muted">{t.reset.text}</p>
-          <form onSubmit={submit} className="mt-5 flex flex-col gap-4">
-            <NewPasswordField label={t.reset.newPassword} value={password} onChange={setPassword} className={input} />
-            <label className="flex flex-col gap-1.5 text-sm text-muted">
-              {t.reset.repeat}
-              <PasswordInput
-                required
-                minLength={8}
-                autoComplete="new-password"
-                value={repeat}
-                onChange={(e) => setRepeat(e.target.value)}
-                className={input}
-              />
-            </label>
-            {error && <p className="rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad">{error}</p>}
-            <button
-              disabled={busy}
-              className="h-11 rounded-lg bg-accent text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
-            >
-              {busy ? t.common.pleaseWait : t.reset.save}
-            </button>
-          </form>
+          <ChoosePassword open={open} onDone={finish} />
         </>
       ) : (
         <>
@@ -132,5 +90,67 @@ export function ResetPasswordForm() {
         </>
       )}
     </section>
+  );
+}
+
+// New password + repeat. `open` returns the one-time recovery session (from the email link or the code),
+// or null when it has expired. The session is signed out right after saving.
+export function ChoosePassword({ open, onDone }: { open: () => Promise<Auth | null>; onDone: () => void }) {
+  const { t } = useI18n();
+  const [password, setPassword] = useState("");
+  const [repeat, setRepeat] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!isStrong(password)) return setError(t.auth.weakPassword);
+    if (password !== repeat) return setError(t.reset.mismatch);
+    setBusy(true);
+    setError(null);
+    const auth = await open();
+    const update = auth ? (await auth.updateUser({ password })).error : null;
+    // Supabase refuses the current password as the new one ("same_password").
+    const error = !auth
+      ? t.reset.expired
+      : update?.code === "same_password"
+        ? t.auth.samePassword
+        : update?.code === "weak_password"
+          ? t.auth.weakPassword
+          : update?.message;
+    if (error || !auth) {
+      setError(error ?? t.reset.expired);
+      setBusy(false);
+      return;
+    }
+    await auth.signOut({ scope: "local" });
+    onDone();
+  }
+
+  const input =
+    "h-11 rounded-lg border border-line bg-bg px-3 text-sm text-ink placeholder:text-faint focus:border-accent focus:outline-none";
+
+  return (
+    <form onSubmit={submit} className="mt-5 flex flex-col gap-4">
+      <NewPasswordField label={t.reset.newPassword} value={password} onChange={setPassword} className={input} />
+      <label className="flex flex-col gap-1.5 text-sm text-muted">
+        {t.reset.repeat}
+        <PasswordInput
+          required
+          minLength={8}
+          autoComplete="new-password"
+          value={repeat}
+          onChange={(e) => setRepeat(e.target.value)}
+          className={input}
+        />
+      </label>
+      {error && <p className="rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad">{error}</p>}
+      <button
+        disabled={busy}
+        className="h-11 rounded-lg bg-accent text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
+      >
+        {busy ? t.common.pleaseWait : t.reset.save}
+      </button>
+    </form>
   );
 }
