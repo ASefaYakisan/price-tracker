@@ -219,7 +219,6 @@ const ko: Dict = {
     samePassword: "현재 비밀번호와 다른 비밀번호를 선택하세요.",
     weakPassword: "비밀번호가 너무 약합니다. 입력란 아래의 조건을 따르세요.",
     codeLabel: "이메일의 코드",
-    codeHint: "이메일의 버튼을 누르거나 제목에 있는 코드를 여기에 입력하세요.",
     verifyCode: "계속",
     codeWrong: "코드가 틀렸거나 만료되었습니다. 확인하거나 새 이메일을 요청하세요.",
   },
@@ -237,6 +236,8 @@ const ko: Dict = {
     invalidText: "이 재설정 링크는 유효하지 않거나 이미 사용되었습니다.",
     sendNew: "새 링크 보내기",
     doneSignIn: "비밀번호가 변경되었습니다. 새 비밀번호로 로그인하세요.",
+    codeTitle: "코드 입력",
+    codeText: "계속하려면 재설정 이메일에 있는 코드를 입력하세요.",
   },
   appearance: {
     title: "화면 설정",

@@ -219,7 +219,6 @@ const tr: Dict = {
     samePassword: "Mevcut şifrenden farklı bir şifre seç.",
     weakPassword: "Bu şifre çok zayıf. Alanın altındaki kurallara uy.",
     codeLabel: "E-postadaki kod",
-    codeHint: "E-postadaki düğmeye bas ya da konusunda yazan kodu buraya gir.",
     verifyCode: "Devam et",
     codeWrong: "Kod yanlış veya süresi dolmuş. Kontrol et ya da yeni bir e-posta iste.",
   },
@@ -237,6 +236,8 @@ const tr: Dict = {
     invalidText: "Bu sıfırlama bağlantısı geçersiz veya zaten kullanılmış.",
     sendNew: "Yenisini gönder",
     doneSignIn: "Şifren değişti. Yeni şifrenle giriş yap.",
+    codeTitle: "Kodu gir",
+    codeText: "Devam etmek için sıfırlama e-postasındaki kodu yaz.",
   },
   appearance: {
     title: "Görünüm",

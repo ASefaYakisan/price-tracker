@@ -219,7 +219,6 @@ const it: Dict = {
     samePassword: "Scegli una password diversa da quella attuale.",
     weakPassword: "Questa password è troppo debole. Segui le regole sotto il campo.",
     codeLabel: "Codice dell'email",
-    codeHint: "Premi il pulsante nell'email oppure inserisci qui il codice indicato nell'oggetto.",
     verifyCode: "Continua",
     codeWrong: "Il codice è errato o scaduto. Controllalo o richiedi una nuova email.",
   },
@@ -237,6 +236,8 @@ const it: Dict = {
     invalidText: "Questo link di reimpostazione non è valido o è già stato usato.",
     sendNew: "Invia un nuovo link",
     doneSignIn: "Password cambiata. Accedi con la nuova password.",
+    codeTitle: "Inserisci il codice",
+    codeText: "Inserisci il codice dell'email di reimpostazione per continuare.",
   },
   appearance: {
     title: "Aspetto",

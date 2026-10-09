@@ -219,7 +219,6 @@ const pt: Dict = {
     samePassword: "Escolha uma senha diferente da atual.",
     weakPassword: "Esta senha é fraca demais. Siga as regras abaixo do campo.",
     codeLabel: "Código do e-mail",
-    codeHint: "Clique no botão do e-mail ou digite aqui o código que aparece no assunto.",
     verifyCode: "Continuar",
     codeWrong: "Código incorreto ou expirado. Confira ou peça um novo e-mail.",
   },
@@ -237,6 +236,8 @@ const pt: Dict = {
     invalidText: "Este link de redefinição é inválido ou já foi usado.",
     sendNew: "Enviar um novo",
     doneSignIn: "Senha alterada. Entre com a nova senha.",
+    codeTitle: "Digite o código",
+    codeText: "Digite o código do e-mail de redefinição para continuar.",
   },
   appearance: {
     title: "Aparência",

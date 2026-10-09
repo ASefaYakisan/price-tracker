@@ -220,7 +220,6 @@ const fr: Dict = {
     samePassword: "Choisissez un mot de passe différent de l'actuel.",
     weakPassword: "Ce mot de passe est trop faible. Suivez les règles sous le champ.",
     codeLabel: "Code reçu par e-mail",
-    codeHint: "Clique sur le bouton de l'e-mail, ou saisis ici le code indiqué dans son objet.",
     verifyCode: "Continuer",
     codeWrong: "Ce code est incorrect ou a expiré. Vérifie-le ou demande un nouvel e-mail.",
   },
@@ -238,6 +237,8 @@ const fr: Dict = {
     invalidText: "Ce lien de réinitialisation est invalide ou a déjà été utilisé.",
     sendNew: "En envoyer un nouveau",
     doneSignIn: "Mot de passe modifié. Connecte-toi avec ton nouveau mot de passe.",
+    codeTitle: "Saisis le code",
+    codeText: "Saisis le code indiqué dans l'e-mail de réinitialisation pour continuer.",
   },
   appearance: {
     title: "Apparence",

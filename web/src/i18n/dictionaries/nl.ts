@@ -219,7 +219,6 @@ const nl: Dict = {
     samePassword: "Kies een ander wachtwoord dan je huidige.",
     weakPassword: "Dit wachtwoord is te zwak. Volg de regels onder het veld.",
     codeLabel: "Code uit de e-mail",
-    codeHint: "Klik op de knop in de e-mail of typ hier de code uit de onderwerpregel.",
     verifyCode: "Doorgaan",
     codeWrong: "Die code is onjuist of verlopen. Controleer hem of vraag een nieuwe e-mail aan.",
   },
@@ -237,6 +236,8 @@ const nl: Dict = {
     invalidText: "Deze resetlink is ongeldig of al gebruikt.",
     sendNew: "Nieuwe versturen",
     doneSignIn: "Wachtwoord gewijzigd. Log in met je nieuwe wachtwoord.",
+    codeTitle: "Voer de code in",
+    codeText: "Typ de code uit de herstelmail om verder te gaan.",
   },
   appearance: {
     title: "Weergave",

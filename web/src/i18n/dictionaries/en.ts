@@ -219,7 +219,6 @@ const en = {
     samePassword: "Choose a password different from your current one.",
     weakPassword: "This password is too weak. Follow the rules below the field.",
     codeLabel: "Code from the email",
-    codeHint: "Press the button in the email, or type the code shown in its subject here.",
     verifyCode: "Continue",
     codeWrong: "That code is wrong or has expired. Check it or ask for a new email.",
   },
@@ -237,6 +236,8 @@ const en = {
     invalidText: "This reset link is invalid or has already been used.",
     sendNew: "Send a new one",
     doneSignIn: "Password changed. Sign in with your new password.",
+    codeTitle: "Enter the code",
+    codeText: "Type the code shown in the reset email to continue.",
   },
   appearance: {
     title: "Appearance",

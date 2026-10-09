@@ -220,7 +220,6 @@ const da: Dict = {
     samePassword: "Vælg en anden adgangskode end din nuværende.",
     weakPassword: "Denne adgangskode er for svag. Følg reglerne under feltet.",
     codeLabel: "Kode fra e-mailen",
-    codeHint: "Tryk på knappen i e-mailen, eller skriv koden fra emnelinjen her.",
     verifyCode: "Fortsæt",
     codeWrong: "Koden er forkert eller udløbet. Tjek den, eller bed om en ny e-mail.",
   },
@@ -238,6 +237,8 @@ const da: Dict = {
     invalidText: "Nulstillingslinket er ugyldigt eller allerede brugt.",
     sendNew: "Send et nyt",
     doneSignIn: "Adgangskoden er ændret. Log ind med din nye adgangskode.",
+    codeTitle: "Indtast koden",
+    codeText: "Skriv koden fra nulstillingsmailen for at fortsætte.",
   },
   appearance: {
     title: "Udseende",

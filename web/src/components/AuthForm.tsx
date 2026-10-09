@@ -10,7 +10,7 @@ import { useUser } from "@/lib/auth";
 import { useI18n } from "@/i18n/client";
 import { authEnabled, createClient } from "@/lib/supabase/client";
 import { createRecoveryClient } from "@/lib/supabase/recovery";
-import { ChoosePassword } from "@/components/ResetPasswordForm";
+import { ChoosePassword, CodeStep } from "@/components/ResetPasswordForm";
 
 type Mode = "sign-in" | "sign-up" | "forgot";
 
@@ -57,7 +57,6 @@ export function AuthForm() {
   const [notice, setNotice] = useState<string | null>(null);
   // Forgot password: after the email is sent, the code from its subject can be typed here instead of opening the link.
   const [sent, setSent] = useState(false);
-  const [code, setCode] = useState("");
   const [recovery, setRecovery] = useState<
     ReturnType<typeof createRecoveryClient>["auth"] | null
   >(null);
@@ -73,26 +72,7 @@ export function AuthForm() {
     setError(null);
     setNotice(null);
     setSent(false);
-    setCode("");
     setRecovery(null);
-  }
-
-  async function verifyCode(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setError(null);
-    const auth = createRecoveryClient().auth;
-    const { error } = await auth.verifyOtp({
-      email,
-      token: code.replace(/\s/g, ""),
-      type: "recovery",
-    });
-    if (error) setError(t.auth.codeWrong);
-    else {
-      setNotice(null);
-      setRecovery(auth);
-    }
-    setBusy(false);
   }
 
   function passwordChanged() {
@@ -241,38 +221,20 @@ export function AuthForm() {
       {recovery ? (
         <ChoosePassword open={async () => recovery} onDone={passwordChanged} />
       ) : sent ? (
-        <form onSubmit={verifyCode} className="mt-5 flex flex-col gap-4">
-          {notice && (
-            <p className="rounded-lg bg-good-soft px-3 py-2 text-sm text-ink">
-              {notice}
-            </p>
-          )}
-          <label className="flex flex-col gap-1.5 text-sm text-muted">
-            {t.auth.codeLabel}
-            <input
-              required
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              pattern="[0-9 ]{6,12}"
-              maxLength={12}
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className={`${input} tracking-[0.3em]`}
-            />
-            <span className="text-xs text-faint">{t.auth.codeHint}</span>
-          </label>
-          {error && (
-            <p className="rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad">
-              {error}
-            </p>
-          )}
-          <button
-            disabled={busy}
-            className="h-11 rounded-lg bg-accent text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
-          >
-            {busy ? t.common.pleaseWait : t.auth.verifyCode}
-          </button>
-        </form>
+        <CodeStep
+          email={email}
+          onVerified={(auth) => {
+            setNotice(null);
+            setRecovery(auth);
+          }}
+          notice={
+            notice && (
+              <p className="rounded-lg bg-good-soft px-3 py-2 text-sm text-ink">
+                {notice}
+              </p>
+            )
+          }
+        />
       ) : (
         <form onSubmit={submit} className="mt-5 flex flex-col gap-4">
           <label className="flex flex-col gap-1.5 text-sm text-muted">

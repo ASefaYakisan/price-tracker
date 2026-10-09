@@ -219,7 +219,6 @@ const es: Dict = {
     samePassword: "Elige una contraseña distinta de la actual.",
     weakPassword: "Esta contraseña es demasiado débil. Sigue las reglas debajo del campo.",
     codeLabel: "Código del correo",
-    codeHint: "Pulsa el botón del correo o escribe aquí el código que aparece en el asunto.",
     verifyCode: "Continuar",
     codeWrong: "El código es incorrecto o ha caducado. Revísalo o pide un correo nuevo.",
   },
@@ -237,6 +236,8 @@ const es: Dict = {
     invalidText: "Este enlace no es válido o ya se ha usado.",
     sendNew: "Enviar uno nuevo",
     doneSignIn: "Contraseña cambiada. Inicia sesión con tu nueva contraseña.",
+    codeTitle: "Introduce el código",
+    codeText: "Escribe el código del correo de restablecimiento para continuar.",
   },
   appearance: {
     title: "Apariencia",

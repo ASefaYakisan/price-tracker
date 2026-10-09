@@ -220,7 +220,6 @@ const vi: Dict = {
     samePassword: "Hãy chọn mật khẩu khác với mật khẩu hiện tại.",
     weakPassword: "Mật khẩu này quá yếu. Hãy làm theo các quy tắc bên dưới ô nhập.",
     codeLabel: "Mã trong email",
-    codeHint: "Nhấn nút trong email, hoặc nhập mã ở tiêu đề email vào đây.",
     verifyCode: "Tiếp tục",
     codeWrong: "Mã không đúng hoặc đã hết hạn. Kiểm tra lại hoặc yêu cầu email mới.",
   },
@@ -238,6 +237,8 @@ const vi: Dict = {
     invalidText: "Liên kết đặt lại này không hợp lệ hoặc đã được sử dụng.",
     sendNew: "Gửi liên kết mới",
     doneSignIn: "Đã đổi mật khẩu. Đăng nhập bằng mật khẩu mới.",
+    codeTitle: "Nhập mã",
+    codeText: "Nhập mã trong email đặt lại để tiếp tục.",
   },
   appearance: {
     title: "Giao diện",
