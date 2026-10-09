@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   let html: string;
   try {
     const res = await fetchPublic(url);
-    if (!res.ok) return fail(`The shop answered with an error (${res.status}). Some shops block automated visits.`, 422);
+    if (!res.ok) return fail("The shop refused the request. Some shops block automated visits.", 422);
     html = (await res.text()).slice(0, 3_000_000);
     url = new URL(res.url || url.href);
   } catch (err) {

@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import type { PricePoint } from "@/lib/data";
+import { useI18n } from "@/i18n/client";
+import { intlLocale } from "@/i18n/config";
 import { axisMoney, money, shortDate } from "@/lib/format";
 
 const W = 720;
@@ -28,9 +30,10 @@ function niceTicks(min: number, max: number, count = 4) {
 export function PriceChart({ points, currency }: { points: PricePoint[]; currency: string | null }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [hover, setHover] = useState<number | null>(null);
+  const { t, lang, fill } = useI18n();
   const data = points.filter((p): p is PricePoint & { price: number } => p.price != null);
   if (data.length < 2) {
-    return <p className="py-10 text-center text-sm text-muted">Not enough history yet. The chart appears after two scrapes.</p>;
+    return <p className="py-10 text-center text-sm text-muted">{t.product.notEnough}</p>;
   }
 
   const times = data.map((p) => Date.parse(p.scraped_at));
@@ -44,7 +47,8 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
   const midT = times[Math.floor(times.length / 2)];
   // Within a day the date is the same at every tick, so show the time instead; drop repeated labels.
   const sameDay = t1 - t0 < 36 * 3_600_000;
-  const xLabel = (t: number) => (sameDay ? new Date(t).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : shortDate(t));
+  const xLabel = (t: number) =>
+    sameDay ? new Date(t).toLocaleTimeString(intlLocale(lang), { hour: "2-digit", minute: "2-digit" }) : shortDate(t, lang);
   // Ends first, so a middle tick that repeats an end label is the one dropped.
   const xTicks = [
     { t: t0, i: 0 },
@@ -65,14 +69,20 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
   }
 
   const h = hover == null ? null : { t: times[hover], v: data[hover].price, stock: data[hover].in_stock };
+  // Charts read left to right in every language.
   return (
-    <div className="relative">
+    <div className="relative" dir="ltr">
       <svg
         ref={svgRef}
         viewBox={`0 0 ${W} ${H}`}
         className="w-full touch-none select-none"
         role="img"
-        aria-label={`Price history from ${shortDate(t0)} to ${shortDate(t1)}, between ${money(Math.min(...prices), currency)} and ${money(Math.max(...prices), currency)}`}
+        aria-label={fill(t.product.chartLabel, {
+          from: shortDate(t0, lang),
+          to: shortDate(t1, lang),
+          min: money(Math.min(...prices), currency, lang),
+          max: money(Math.max(...prices), currency, lang),
+        })}
         onPointerMove={onMove}
         onPointerLeave={() => setHover(null)}
       >
@@ -86,7 +96,7 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
           <g key={v}>
             <line x1={PAD.left} x2={W - PAD.right} y1={y(v)} y2={y(v)} stroke="var(--grid)" />
             <text x={PAD.left - 10} y={y(v)} textAnchor="end" dominantBaseline="middle" fontSize="12" fill="var(--faint)">
-              {axisMoney(v, currency)}
+              {axisMoney(v, currency, lang)}
             </text>
           </g>
         ))}
@@ -109,25 +119,25 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
           className="pointer-events-none absolute top-1 rounded-lg border border-line bg-card px-3 py-2 text-xs shadow-lg"
           style={{ left: `${(x(h.t) / W) * 100}%`, transform: x(h.t) > W / 2 ? "translateX(calc(-100% - 12px))" : "translateX(12px)" }}
         >
-          <div className="text-muted">{shortDate(h.t)}</div>
-          <div className="text-sm font-semibold tabular-nums text-ink">{money(h.v, currency)}</div>
-          {!h.stock && <div className="text-warn">Out of stock</div>}
+          <div className="text-muted">{shortDate(h.t, lang)}</div>
+          <div className="text-sm font-semibold tabular-nums text-ink">{money(h.v, currency, lang)}</div>
+          {!h.stock && <div className="text-warn">{t.change.outOfStock}</div>}
         </div>
       )}
       <details className="mt-4 text-sm">
-        <summary className="cursor-pointer text-muted hover:text-ink">Show data as table</summary>
+        <summary className="cursor-pointer text-muted hover:text-ink">{t.product.showTable}</summary>
         <table className="mt-2 w-full">
-          <thead className="text-left text-xs text-faint">
+          <thead className="text-start text-xs text-faint">
             <tr>
-              <th className="py-1 font-medium">Date</th>
-              <th className="py-1 text-right font-medium">Price</th>
+              <th className="py-1 font-medium">{t.product.date}</th>
+              <th className="py-1 text-end font-medium">{t.product.price}</th>
             </tr>
           </thead>
           <tbody>
             {data.map((p, i) => (
               <tr key={p.scraped_at} className="border-t border-line">
-                <td className="py-1.5 text-muted">{shortDate(times[i])}</td>
-                <td className="py-1.5 text-right tabular-nums">{money(p.price, currency)}</td>
+                <td className="py-1.5 text-muted">{shortDate(times[i], lang)}</td>
+                <td className="py-1.5 text-end tabular-nums">{money(p.price, currency, lang)}</td>
               </tr>
             ))}
           </tbody>

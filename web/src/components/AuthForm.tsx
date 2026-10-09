@@ -5,15 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PasswordInput } from "@/components/PasswordInput";
 import { useUser } from "@/lib/auth";
+import { useI18n } from "@/i18n/client";
 import { authEnabled, createClient } from "@/lib/supabase/client";
 import { createRecoveryClient } from "@/lib/supabase/recovery";
 
 type Mode = "sign-in" | "sign-up" | "forgot";
-
-const ERRORS: Record<string, string> = {
-  confirm: "That link is invalid or has expired. Try again.",
-  google: "Google sign-in did not finish. Try again.",
-};
 
 // Show the Google button only once the provider is switched on in Supabase.
 function useGoogleEnabled() {
@@ -32,18 +28,21 @@ function useGoogleEnabled() {
 export function AuthForm() {
   const router = useRouter();
   const params = useSearchParams();
+  const { t, href, fill } = useI18n();
+  const urlError = params.get("error");
   const user = useUser();
   const google = useGoogleEnabled();
   const [mode, setMode] = useState<Mode>(params.get("mode") === "forgot" ? "forgot" : "sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(ERRORS[params.get("error") ?? ""] ?? null);
+  const [error, setError] = useState<string | null>(urlError === "google" ? t.auth.googleFailed : urlError ? t.auth.linkInvalid : null);
   const [notice, setNotice] = useState<string | null>(null);
 
   // Already signed in (or just signed in): go to the alerts.
   useEffect(() => {
-    if (user) router.replace("/alerts");
+    if (user) router.replace(href("/"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- href only changes with the language
   }, [user, router]);
 
   function switchTo(m: Mode) {
@@ -52,7 +51,7 @@ export function AuthForm() {
     setNotice(null);
   }
 
-  const callback = (next: string) => `${location.origin}/auth/callback?next=${next}`;
+  const callback = (next: string) => `${location.origin}/auth/callback?next=${href(next)}`;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -62,25 +61,27 @@ export function AuthForm() {
     const supabase = createClient();
     if (mode === "sign-in") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setError(error.message === "Invalid login credentials" ? "Wrong email or password." : error.message);
+      if (error) setError(error.message === "Invalid login credentials" ? t.auth.wrong : error.message);
     } else if (mode === "sign-up") {
-      const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: callback("/alerts") } });
+      const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: callback("/") } });
       if (error) setError(error.message);
       // With email confirmation on there is no session yet: the user has to click the link first.
-      else if (!data.session) setNotice(`We sent a confirmation link to ${email}. Open it to finish creating your account.`);
+      else if (!data.session) setNotice(fill(t.auth.confirmSent, { email }));
     } else {
-      const { error } = await createRecoveryClient().auth.resetPasswordForEmail(email, { redirectTo: `${location.origin}/reset-password` });
+      const { error } = await createRecoveryClient().auth.resetPasswordForEmail(email, {
+        redirectTo: `${location.origin}${href("/reset-password")}`,
+      });
       if (error) setError(error.message);
-      else setNotice(`If ${email} has an account, a reset link is on its way.`);
+      else setNotice(fill(t.auth.resetSent, { email }));
     }
     setBusy(false);
   }
 
   async function signInWithGoogle() {
     setBusy(true);
-    const { error } = await createClient().auth.signInWithOAuth({ provider: "google", options: { redirectTo: callback("/alerts") } });
+    const { error } = await createClient().auth.signInWithOAuth({ provider: "google", options: { redirectTo: callback("/") } });
     if (error) {
-      setError(ERRORS.google);
+      setError(t.auth.googleFailed);
       setBusy(false);
     }
   }
@@ -101,18 +102,16 @@ export function AuthForm() {
     <section className="p-6 sm:p-10">
       {mode === "forgot" ? (
         <div>
-          <h2 className="text-lg font-semibold">Reset your password</h2>
-          <p className="mt-1 text-sm text-muted">Enter your email and we will send you a link to choose a new password.</p>
+          <h2 className="text-lg font-semibold">{t.auth.resetTitle}</h2>
+          <p className="mt-1 text-sm text-muted">{t.auth.resetText}</p>
         </div>
       ) : (
         <>
-          <h2 className="text-lg font-semibold">{mode === "sign-in" ? "Welcome back" : "Create your account"}</h2>
-          <p className="mt-1 text-sm text-muted">
-            {mode === "sign-in" ? "Sign in to see your price alerts." : "Free. Keeps your price alerts on every device."}
-          </p>
+          <h2 className="text-lg font-semibold">{mode === "sign-in" ? t.auth.welcome : t.auth.createTitle}</h2>
+          <p className="mt-1 text-sm text-muted">{mode === "sign-in" ? t.auth.welcomeText : t.auth.createText}</p>
           <div className="mt-5 flex gap-1 rounded-lg bg-bg p-1">
-            {tab("sign-in", "Sign in")}
-            {tab("sign-up", "Create account")}
+            {tab("sign-in", t.auth.signIn)}
+            {tab("sign-up", t.auth.createAccount)}
           </div>
           {google && (
             <>
@@ -134,11 +133,11 @@ export function AuthForm() {
                     d="M12 5.4c1.7 0 2.8.7 3.5 1.3l2.6-2.5C16.5 2.7 14.5 1.8 12 1.8 7.6 1.8 3.8 4.3 2 7.9l3.8 3c.9-2.7 3.3-4.5 6.2-4.5z"
                   />
                 </svg>
-                Continue with Google
+                {t.auth.google}
               </button>
               <div className="mt-5 flex items-center gap-3 text-xs text-faint">
                 <span className="h-px flex-1 bg-line" />
-                or with email
+                {t.auth.orEmail}
                 <span className="h-px flex-1 bg-line" />
               </div>
             </>
@@ -147,12 +146,12 @@ export function AuthForm() {
       )}
       <form onSubmit={submit} className="mt-5 flex flex-col gap-4">
         <label className="flex flex-col gap-1.5 text-sm text-muted">
-          Email
+          {t.common.email}
           <input
             type="email"
             required
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder={t.common.emailPlaceholder}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={input}
@@ -160,7 +159,7 @@ export function AuthForm() {
         </label>
         {mode !== "forgot" && (
           <label className="flex flex-col gap-1.5 text-sm text-muted">
-            Password
+            {t.auth.password}
             <PasswordInput
               required
               minLength={6}
@@ -169,12 +168,12 @@ export function AuthForm() {
               onChange={(e) => setPassword(e.target.value)}
               className={input}
             />
-            {mode === "sign-up" && <span className="text-xs text-faint">At least 6 characters.</span>}
+            {mode === "sign-up" && <span className="text-xs text-faint">{t.auth.minLength}</span>}
           </label>
         )}
         {mode === "sign-in" && (
           <button type="button" onClick={() => switchTo("forgot")} className="-mt-2 self-end text-xs text-accent hover:underline">
-            Forgot password?
+            {t.auth.forgot}
           </button>
         )}
         {error && <p className="rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad">{error}</p>}
@@ -183,18 +182,18 @@ export function AuthForm() {
           disabled={busy}
           className="h-11 rounded-lg bg-accent text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
         >
-          {busy ? "Please wait…" : mode === "sign-in" ? "Sign in" : mode === "sign-up" ? "Create account" : "Send reset link"}
+          {busy ? t.common.pleaseWait : mode === "sign-in" ? t.auth.signIn : mode === "sign-up" ? t.auth.createAccount : t.auth.sendReset}
         </button>
       </form>
       {mode === "forgot" ? (
         <button type="button" onClick={() => switchTo("sign-in")} className="mt-6 w-full text-center text-sm text-accent hover:underline">
-          Back to sign in
+          {t.auth.back}
         </button>
       ) : (
         <p className="mt-6 text-center text-xs text-faint">
-          No account needed to set an alert.{" "}
-          <Link href="/" className="text-accent hover:underline">
-            Browse items
+          {t.auth.noAccountNeeded}{" "}
+          <Link href={href("/")} className="text-accent hover:underline">
+            {t.common.browseItems}
           </Link>
         </p>
       )}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { PasswordInput } from "@/components/PasswordInput";
 import { createRecoveryClient } from "@/lib/supabase/recovery";
+import { useI18n } from "@/i18n/client";
 
 // The reset email links here with the one-time session in the URL hash (#access_token=…&type=recovery).
 // That session is used once, in memory, to save the new password and is then signed out,
@@ -11,6 +12,7 @@ import { createRecoveryClient } from "@/lib/supabase/recovery";
 const noSubscribe = () => () => {};
 
 export function ResetPasswordForm() {
+  const { t, href } = useI18n();
   const hash = useSyncExternalStore(
     noSubscribe,
     () => location.hash,
@@ -32,12 +34,12 @@ export function ResetPasswordForm() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!link) return;
-    if (password !== repeat) return setError("The two passwords do not match.");
+    if (password !== repeat) return setError(t.reset.mismatch);
     setBusy(true);
     setError(null);
     const auth = createRecoveryClient().auth;
     const session = await auth.setSession(link);
-    const error = session.error ? "This reset link has expired. Ask for a new one." : (await auth.updateUser({ password })).error?.message;
+    const error = session.error ? t.reset.expired : (await auth.updateUser({ password })).error?.message;
     if (error) {
       setError(error);
       setBusy(false);
@@ -56,7 +58,7 @@ export function ResetPasswordForm() {
   if (link === undefined && !done) return <div className="h-80 animate-pulse rounded-xl border border-line bg-card" />;
 
   return (
-    <section className="rounded-xl border border-line bg-card p-6 sm:p-8">
+    <section className="rounded-2xl border border-line bg-card p-6 shadow-soft sm:p-8">
       {done ? (
         <>
           <span className="grid size-11 place-items-center rounded-full bg-good-soft text-good" aria-hidden>
@@ -72,22 +74,22 @@ export function ResetPasswordForm() {
               <path d="M5 12.5l4.5 4.5L19 7.5" />
             </svg>
           </span>
-          <h1 className="mt-4 text-lg font-semibold">Password changed</h1>
-          <p className="mt-1 text-sm text-muted">You can close this tab and sign in with your new password.</p>
+          <h1 className="mt-4 text-lg font-semibold">{t.reset.doneTitle}</h1>
+          <p className="mt-1 text-sm text-muted">{t.reset.doneText}</p>
           <Link
-            href="/login"
+            href={href("/login")}
             className="mt-6 grid h-11 place-items-center rounded-lg bg-accent text-sm font-medium text-accent-ink hover:opacity-90"
           >
-            Sign in
+            {t.auth.signIn}
           </Link>
         </>
       ) : link ? (
         <>
-          <h1 className="text-lg font-semibold">Choose a new password</h1>
-          <p className="mt-1 text-sm text-muted">After saving, sign in with it.</p>
+          <h1 className="text-lg font-semibold">{t.reset.title}</h1>
+          <p className="mt-1 text-sm text-muted">{t.reset.text}</p>
           <form onSubmit={submit} className="mt-5 flex flex-col gap-4">
             <label className="flex flex-col gap-1.5 text-sm text-muted">
-              New password
+              {t.reset.newPassword}
               <PasswordInput
                 required
                 minLength={6}
@@ -96,10 +98,10 @@ export function ResetPasswordForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 className={input}
               />
-              <span className="text-xs text-faint">At least 6 characters.</span>
+              <span className="text-xs text-faint">{t.auth.minLength}</span>
             </label>
             <label className="flex flex-col gap-1.5 text-sm text-muted">
-              Repeat it
+              {t.reset.repeat}
               <PasswordInput
                 required
                 minLength={6}
@@ -114,17 +116,17 @@ export function ResetPasswordForm() {
               disabled={busy}
               className="h-11 rounded-lg bg-accent text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
             >
-              {busy ? "Please wait…" : "Save password"}
+              {busy ? t.common.pleaseWait : t.reset.save}
             </button>
           </form>
         </>
       ) : (
         <>
-          <h1 className="text-lg font-semibold">Link expired</h1>
+          <h1 className="text-lg font-semibold">{t.reset.invalidTitle}</h1>
           <p className="mt-1 text-sm text-muted">
-            This reset link is invalid or has already been used.{" "}
-            <Link href="/login?mode=forgot" className="text-accent hover:underline">
-              Send a new one
+            {t.reset.invalidText}{" "}
+            <Link href={href("/login?mode=forgot")} className="text-accent hover:underline">
+              {t.reset.sendNew}
             </Link>
           </p>
         </>

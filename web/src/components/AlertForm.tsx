@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useI18n } from "@/i18n/client";
 import { money } from "@/lib/format";
 import { refreshAccountAlerts } from "@/lib/account-alerts";
 import { useUser } from "@/lib/auth";
@@ -27,6 +28,7 @@ export function AlertForm({
   const [target, setTarget] = useState(suggested);
   const [state, setState] = useState<State>({ kind: "idle" });
   const user = useUser();
+  const { t, lang, fill, apiError } = useI18n();
   const email = typedEmail ?? user?.email ?? "";
 
   // The page streams in, so the browser's own jump to #alert fires before this section exists.
@@ -60,7 +62,7 @@ export function AlertForm({
     } else
       setState({
         kind: "error",
-        message: json?.error ?? "Something went wrong. Please try again.",
+        message: apiError(json?.error),
       });
   }
 
@@ -68,13 +70,14 @@ export function AlertForm({
     return (
       <>
         <p className="rounded-lg bg-good-soft px-4 py-3 text-sm text-ink">
-          {state.updated ? "Alert updated." : "Done."} We will email <strong>{email}</strong> once the price is at or below{" "}
-          <strong>{money(Number(target), currency)}</strong>.{state.demo && " (Demo mode: nothing is saved.)"}{" "}
+          {state.updated ? t.alertForm.updated : t.alertForm.done}{" "}
+          {fill(t.alertForm.willEmail, { email, price: money(Number(target), currency, lang) })}
+          {state.demo && ` ${t.alertForm.demo}`}{" "}
           <button type="button" onClick={() => setState({ kind: "idle" })} className="font-medium text-accent hover:underline">
-            Add another
+            {t.alertForm.addAnother}
           </button>
         </p>
-        <MyAlerts productId={productId} title="Your alerts on this item" />
+        <MyAlerts productId={productId} title={t.alertForm.yourAlertsHere} />
       </>
     );
   }
@@ -85,19 +88,20 @@ export function AlertForm({
     <>
       <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <label className="flex flex-1 flex-col gap-1 text-sm text-muted">
-          Email
+          {t.common.email}
           <input
             type="email"
             required
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder={t.common.emailPlaceholder}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={input}
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm text-muted sm:w-44">
-          Alert me at or below{currency ? ` (${currency})` : ""}
+        <label className="flex flex-col gap-1 text-sm text-muted sm:w-48">
+          {t.alertForm.atOrBelow}
+          {currency ? ` (${currency})` : ""}
           <input
             type="number"
             required
@@ -112,9 +116,9 @@ export function AlertForm({
         <button
           type="submit"
           disabled={state.kind === "saving"}
-          className="h-10 rounded-lg bg-accent px-4 text-sm font-medium text-white hover:opacity-90 disabled:opacity-60"
+          className="h-10 rounded-lg bg-accent px-4 text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
         >
-          {state.kind === "saving" ? "Saving…" : "Create alert"}
+          {state.kind === "saving" ? t.common.saving : t.alertForm.create}
         </button>
         {state.kind === "error" && (
           <p role="alert" className="text-sm text-bad sm:basis-full">
@@ -122,7 +126,7 @@ export function AlertForm({
           </p>
         )}
       </form>
-      <MyAlerts productId={productId} title="Your alerts on this item" />
+      <MyAlerts productId={productId} title={t.alertForm.yourAlertsHere} />
     </>
   );
 }

@@ -5,8 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
-  const next = url.searchParams.get("next") ?? "/alerts";
-  const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/alerts";
+  const next = url.searchParams.get("next") ?? "/";
+  const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/";
   if (code) {
     const db = await createClient();
     const { error } = await db.auth.exchangeCodeForSession(code);

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { ResetPasswordForm } from "@/components/ResetPasswordForm";
+import { getDictionary, resolveLang } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "New password · Price Tracker" };
+export async function generateMetadata({ params }: PageProps<"/[lang]/reset-password">): Promise<Metadata> {
+  const t = await getDictionary(await resolveLang(params));
+  return { title: `${t.meta.newPassword} · ${t.meta.title}` };
+}
 
 export default function ResetPasswordPage() {
   return (

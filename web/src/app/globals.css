@@ -1,46 +1,73 @@
 @import "tailwindcss";
 
-/* Design tokens: every color the UI uses, defined once per theme. */
+/* Design tokens: every color the UI uses, defined once per theme.
+   Calm base (soft gray-blue), one indigo accent, a teal partner, and one soft hue per data source. */
 :root {
-  --bg: #f6f7f9;
+  --bg: #f4f5fa;
   --card: #ffffff;
-  --ink: #0f172a;
-  --muted: #5b6475;
-  --faint: #8a93a3;
-  --line: #e3e6eb;
-  --hover: #f1f3f6;
-  --accent: #2a78d6;
+  --ink: #1b2032;
+  --muted: #596079;
+  --faint: #8a91a6;
+  --line: #e4e7f0;
+  --hover: #f0f2f9;
+  --accent: #4f5bd5;
   --accent-ink: #ffffff;
-  --accent-soft: #e8f1fc;
-  --good: #0f7a3d;
-  --good-soft: #e5f5ec;
-  --bad: #b42318;
-  --bad-soft: #fdecea;
-  --warn: #8a5a00;
-  --warn-soft: #fff4dc;
-  --grid: #e9ecf0;
+  --accent-soft: #eceefd;
+  --teal: #0e8a7e;
+  --teal-soft: #ddf3ef;
+  --good: #0f7a52;
+  --good-soft: #e1f4ec;
+  --bad: #c0392b;
+  --bad-soft: #fcebe8;
+  --warn: #9a5b00;
+  --warn-soft: #fff2d9;
+  --grid: #e8ebf2;
+  --books: #a8560c;
+  --books-soft: #fdf0de;
+  --crypto: #7046cf;
+  --crypto-soft: #f0eafd;
+  --fx: #0e8a7e;
+  --fx-soft: #ddf3ef;
+  --gold: #977010;
+  --gold-soft: #faf2d6;
+  --custom: #b8336a;
+  --custom-soft: #fce8f0;
+  --shadow: 0 1px 2px rgb(27 32 50 / 0.04), 0 4px 16px rgb(27 32 50 / 0.05);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0b0d12;
-    --card: #151922;
-    --ink: #eef1f6;
-    --muted: #a3acbb;
-    --faint: #7c8696;
-    --line: #262c38;
-    --hover: #1c212c;
-    --accent: #3987e5;
-    --accent-ink: #ffffff;
-    --accent-soft: #16263d;
+    --bg: #0e1018;
+    --card: #161a25;
+    --ink: #eceff7;
+    --muted: #a4abbf;
+    --faint: #7a8197;
+    --line: #262b3a;
+    --hover: #1d2230;
+    --accent: #7d88f0;
+    --accent-ink: #0e1018;
+    --accent-soft: #1f2444;
+    --teal: #4cc9b8;
+    --teal-soft: #13302d;
     --good: #4cc38a;
     --good-soft: #12291e;
     --bad: #f07a6f;
     --bad-soft: #33191a;
     --warn: #e7b65c;
     --warn-soft: #2e2512;
-    --grid: #232937;
+    --grid: #232837;
+    --books: #f0a560;
+    --books-soft: #33240f;
+    --crypto: #b399f5;
+    --crypto-soft: #261d3e;
+    --fx: #4cc9b8;
+    --fx-soft: #13302d;
+    --gold: #e3c15a;
+    --gold-soft: #2f2810;
+    --custom: #f08bb3;
+    --custom-soft: #36182a;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
     color-scheme: dark;
   }
 }
@@ -56,13 +83,26 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
+  --color-teal: var(--teal);
+  --color-teal-soft: var(--teal-soft);
   --color-good: var(--good);
   --color-good-soft: var(--good-soft);
   --color-bad: var(--bad);
   --color-bad-soft: var(--bad-soft);
   --color-warn: var(--warn);
   --color-warn-soft: var(--warn-soft);
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-books: var(--books);
+  --color-books-soft: var(--books-soft);
+  --color-crypto: var(--crypto);
+  --color-crypto-soft: var(--crypto-soft);
+  --color-fx: var(--fx);
+  --color-fx-soft: var(--fx-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-custom: var(--custom);
+  --color-custom-soft: var(--custom-soft);
+  --shadow-soft: var(--shadow);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
 @layer base {

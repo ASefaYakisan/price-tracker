@@ -68,7 +68,11 @@ Guests manage their alerts from the browser that created them: each alert has a 
 
 ## Accounts
 
-Email and password sign in with Supabase Auth (`@supabase/ssr`, session cookies refreshed in `src/proxy.ts`). Signed-in users' alerts are saved to their account and readable on any device. Row level security lets each user read, change and delete only their own rows (`supabase/migrations/0005_alert_owners.sql`). Alerts made as a guest move into the account on first sign in.
+Email and password sign in with Supabase Auth (`@supabase/ssr`, session cookies refreshed in `src/proxy.ts`). Signed-in users' alerts are saved to their account and readable on any device. Row level security lets each user read, change and delete only their own rows (`supabase/migrations/0005_alert_owners.sql`). Alerts made as a guest move into the account on first sign in. Password reset links open in a separate in-memory session, so they never sign in other tabs. A "Continue with Google" button appears on its own once the Google provider is switched on in Supabase.
+
+## Languages
+
+The interface ships in 24 languages, from English and Turkish to Arabic (right to left), Chinese and Japanese. Pages live under a language segment (`/tr/alerts`); bare links redirect to the saved choice, then the browser's language, then English. Prices, dates and percentages use the reader's number format, and the Excel and CSV downloads come with translated headers (CSV switches to `;` and decimal commas where spreadsheets expect them). Texts are in `web/src/i18n/dictionaries`, one typed file per language.
 
 ## Adding a site
 

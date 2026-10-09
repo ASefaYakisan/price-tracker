@@ -4,13 +4,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { AlertStatus } from "@/lib/alert-status";
 import { BellIcon } from "@/components/BellIcon";
-import { money, shortDate, sourceLabel } from "@/lib/format";
+import { money, percent, shortDate } from "@/lib/format";
+import { useI18n } from "@/i18n/client";
+import { SourceChip } from "@/components/SourceChip";
 import { refreshAccountAlerts, useAccountAlerts, useVisibleAlerts } from "@/lib/account-alerts";
 import { removeAlert, replaceAlert, type SavedAlert, useMyAlerts } from "@/lib/my-alerts";
 
 type Live = Exclude<AlertStatus, { missing: true }>;
 
 export function AlertsOverview() {
+  const { t, href, fill } = useI18n();
   const { user, rows: accountRows } = useAccountAlerts();
   const signedIn = Boolean(user);
   const local = useMyAlerts();
@@ -53,7 +56,7 @@ export function AlertsOverview() {
     return (
       <div className="space-y-3" aria-busy>
         {[0, 1].map((i) => (
-          <div key={i} className="h-40 animate-pulse rounded-xl border border-line bg-card" />
+          <div key={i} className="h-40 animate-pulse rounded-2xl border border-line bg-card" />
         ))}
       </div>
     );
@@ -61,16 +64,14 @@ export function AlertsOverview() {
 
   if (!saved.length) {
     return (
-      <section className="flex flex-col items-center rounded-xl border border-line bg-card px-6 py-12 text-center">
+      <section className="flex flex-col items-center rounded-2xl border border-line bg-card px-6 py-12 text-center shadow-soft">
         <span className="grid size-12 place-items-center rounded-full bg-accent-soft text-accent">
           <BellIcon className="size-6" />
         </span>
-        <h2 className="mt-4 font-medium">No alerts yet</h2>
-        <p className="mt-1 max-w-sm text-sm text-muted">
-          Press the bell next to any item and we will email you when its price reaches your target.
-        </p>
-        <Link href="/" className="mt-5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90">
-          Browse items
+        <h2 className="mt-4 font-medium">{t.alerts.emptyTitle}</h2>
+        <p className="mt-1 max-w-sm text-sm text-muted">{t.alerts.emptyText}</p>
+        <Link href={href("/")} className="mt-5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90">
+          {t.common.browseItems}
         </Link>
       </section>
     );
@@ -82,9 +83,9 @@ export function AlertsOverview() {
   return (
     <>
       <div className="mb-4 grid grid-cols-3 gap-3">
-        <Summary label="Alerts" value={saved.length} />
-        <Summary label="Target reached" value={live ? reached : "–"} tone="good" />
-        <Summary label="Emails sent" value={live ? sent : "–"} />
+        <Summary label={t.alerts.count} value={saved.length} tone="accent" />
+        <Summary label={t.alerts.reached} value={live ? reached : "–"} tone="good" />
+        <Summary label={t.alerts.sent} value={live ? sent : "–"} tone="teal" />
       </div>
       <ul className="space-y-3">
         {rows.map(({ saved, live }) => (
@@ -93,25 +94,27 @@ export function AlertsOverview() {
       </ul>
       <p className="mt-4 text-xs text-faint">
         {signedIn ? (
-          <>Saved to your account ({user?.email}), so you see them on every device.</>
+          <>{fill(t.alerts.footerAccount, { email: user?.email ?? "" })}</>
         ) : (
           <>
-            This list is kept in this browser.{" "}
-            <Link href="/login" className="text-accent hover:underline">
-              Sign in
+            {t.alerts.footerBrowser}{" "}
+            <Link href={href("/login")} className="text-accent hover:underline">
+              {t.alerts.footerSignIn}
             </Link>{" "}
-            to keep your alerts on every device.
+            {t.alerts.footerSignInRest}
           </>
         )}{" "}
-        Each alert sends one email when the price is at or below the target; edit it to watch again.
+        {t.alerts.footerRule}
       </p>
     </>
   );
 }
 
-function Summary({ label, value, tone }: { label: string; value: number | string; tone?: "good" }) {
+const SUMMARY_TONES = { accent: "border-t-accent", good: "border-t-good", teal: "border-t-teal" };
+
+function Summary({ label, value, tone }: { label: string; value: number | string; tone: keyof typeof SUMMARY_TONES }) {
   return (
-    <div className="rounded-xl border border-line bg-card p-4">
+    <div className={`rounded-2xl border border-t-4 border-line bg-card p-4 shadow-soft ${SUMMARY_TONES[tone]}`}>
       <div className="text-xs text-muted">{label}</div>
       <div className={`mt-1 text-2xl font-semibold tabular-nums ${tone === "good" && value ? "text-good" : "text-ink"}`}>{value}</div>
     </div>
@@ -121,6 +124,7 @@ function Summary({ label, value, tone }: { label: string; value: number | string
 const isReached = (l: Live) => l.price != null && l.price <= l.target;
 
 function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertStatus | null | undefined; account: boolean }) {
+  const { t, lang, href, fill, apiError } = useI18n();
   const [mode, setMode] = useState<"view" | "edit" | "delete">("view");
   const [email, setEmail] = useState(saved.email);
   const [target, setTarget] = useState(String(saved.target));
@@ -143,7 +147,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
     const json = await res?.json().catch(() => null);
     setBusy(false);
     if (res?.ok && json?.ok) return true;
-    setErr(json?.error ?? "Something went wrong. Please try again.");
+    setErr(apiError(json?.error));
     return false;
   }
 
@@ -164,14 +168,14 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
   }
 
   const status = missing
-    ? { label: "Not active", cls: "bg-hover text-muted" }
+    ? { label: t.alerts.notActive, cls: "bg-hover text-muted" }
     : !l
       ? null
       : l.sentAt
-        ? { label: `Email sent ${shortDate(l.sentAt)}`, cls: "bg-good-soft text-good" }
+        ? { label: fill(t.alerts.emailSent, { date: shortDate(l.sentAt, lang) }), cls: "bg-good-soft text-good" }
         : isReached(l)
-          ? { label: "Target reached", cls: "bg-good-soft text-good" }
-          : { label: "Watching", cls: "bg-accent-soft text-accent" };
+          ? { label: t.alerts.reached, cls: "bg-good-soft text-good" }
+          : { label: t.alerts.watching, cls: "bg-accent-soft text-accent" };
 
   // How far the price still has to fall, as a bar that fills up as it gets closer.
   const progress = l?.price ? Math.min(1, l.target / l.price) : 0;
@@ -179,7 +183,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
 
   const input = "h-10 rounded-lg border border-line bg-bg px-3 text-sm text-ink focus:border-accent focus:outline-none";
   return (
-    <li className="rounded-xl border border-line bg-card p-4 sm:p-5">
+    <li className="rounded-2xl border border-line bg-card p-4 shadow-soft sm:p-5">
       <div className="flex items-start gap-4">
         {l?.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- small remote thumbnails, no optimisation needed
@@ -192,12 +196,14 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div className="min-w-0">
-              <Link href={`/products/${saved.productId}`} className="block truncate font-medium text-ink hover:text-accent">
+              <Link href={href(`/products/${saved.productId}`)} className="block truncate font-medium text-ink hover:text-accent">
                 {l?.title ?? saved.title}
               </Link>
-              <div className="mt-0.5 text-xs text-faint">
-                {l?.source ? `${sourceLabel(l.source)} · ` : ""}
-                {saved.email} · set {shortDate(l?.createdAt ?? saved.createdAt)}
+              <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-faint">
+                {l?.source && <SourceChip source={l.source} t={t} />}
+                <span>
+                  {saved.email} · {fill(t.alerts.setOn, { date: shortDate(l?.createdAt ?? saved.createdAt, lang) })}
+                </span>
               </div>
             </div>
             {status ? (
@@ -210,17 +216,21 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
           {!missing && (
             <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
               <div>
-                <div className="text-xs text-muted">Now</div>
-                <div className="font-semibold tabular-nums">{l ? money(l.price, currency) : "…"}</div>
+                <div className="text-xs text-muted">{t.alerts.now}</div>
+                <div className="font-semibold tabular-nums">{l ? money(l.price, currency, lang) : "…"}</div>
               </div>
               <div>
-                <div className="text-xs text-muted">Target</div>
-                <div className="font-semibold tabular-nums">≤ {money(l?.target ?? saved.target, currency)}</div>
+                <div className="text-xs text-muted">{t.alerts.target}</div>
+                <div className="font-semibold tabular-nums">≤ {money(l?.target ?? saved.target, currency, lang)}</div>
               </div>
               <div>
-                <div className="text-xs text-muted">To go</div>
+                <div className="text-xs text-muted">{t.alerts.toGo}</div>
                 <div className={`font-semibold tabular-nums ${gap != null && gap <= 0 ? "text-good" : ""}`}>
-                  {gap == null ? "…" : gap <= 0 ? "Reached" : `${money(gap, currency)} (${((gap / l!.price!) * 100).toFixed(1)}%)`}
+                  {gap == null
+                    ? "…"
+                    : gap <= 0
+                      ? t.alerts.reachedShort
+                      : `${money(gap, currency, lang)} (${percent((gap / l!.price!) * 100, lang, false)})`}
                 </div>
               </div>
             </div>
@@ -232,22 +242,22 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
           )}
           {missing && (
             <p className="mt-3 text-sm text-muted">
-              This alert was deleted or already used. Set a new one from the{" "}
-              <Link href={`/products/${saved.productId}#alert`} className="text-accent hover:underline">
-                item page
+              {t.alerts.missing}{" "}
+              <Link href={href(`/products/${saved.productId}#alert`)} className="text-accent hover:underline">
+                {t.alerts.itemPage}
               </Link>
-              .
             </p>
           )}
 
           {mode === "edit" && (
             <form onSubmit={save} className="mt-4 flex flex-col gap-3 border-t border-line pt-4 sm:flex-row sm:items-end">
               <label className="flex flex-1 flex-col gap-1 text-xs text-muted">
-                Email
+                {t.common.email}
                 <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className={input} />
               </label>
               <label className="flex flex-col gap-1 text-xs text-muted sm:w-40">
-                Alert at or below{currency ? ` (${currency})` : ""}
+                {t.alerts.alertAt}
+                {currency ? ` (${currency})` : ""}
                 <input
                   type="number"
                   required
@@ -263,7 +273,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
                   disabled={busy}
                   className="h-10 rounded-lg bg-accent px-4 text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
                 >
-                  {busy ? "Saving…" : "Save"}
+                  {busy ? t.common.saving : t.common.save}
                 </button>
                 <button
                   type="button"
@@ -273,7 +283,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
                   }}
                   className="h-10 rounded-lg border border-line px-4 text-sm text-muted hover:text-ink"
                 >
-                  Cancel
+                  {t.common.cancel}
                 </button>
               </div>
             </form>
@@ -281,16 +291,16 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
 
           {mode === "delete" && (
             <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-line pt-4 text-sm">
-              <span className="text-ink">Delete this alert? You will not get an email for it.</span>
+              <span className="text-ink">{t.alerts.confirmDelete}</span>
               <button
                 onClick={remove}
                 disabled={busy}
                 className="rounded-lg bg-bad px-3 py-1.5 font-medium text-white hover:opacity-90 disabled:opacity-60"
               >
-                {busy ? "Deleting…" : "Delete"}
+                {busy ? t.common.deleting : t.common.delete}
               </button>
               <button onClick={() => setMode("view")} className="rounded-lg border border-line px-3 py-1.5 text-muted hover:text-ink">
-                Cancel
+                {t.common.cancel}
               </button>
             </div>
           )}
@@ -309,13 +319,13 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
                     }}
                     className="rounded-lg border border-line px-3 py-1.5 text-sm text-ink hover:bg-hover"
                   >
-                    {l?.sentAt ? "Watch again" : "Edit"}
+                    {l?.sentAt ? t.alerts.watchAgain : t.alerts.edit}
                   </button>
                   <button
                     onClick={() => setMode("delete")}
                     className="rounded-lg border border-line px-3 py-1.5 text-sm text-bad hover:bg-bad-soft"
                   >
-                    Delete
+                    {t.common.delete}
                   </button>
                 </>
               )}
@@ -324,7 +334,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
                   onClick={() => removeAlert(saved)}
                   className="rounded-lg border border-line px-3 py-1.5 text-sm text-muted hover:text-ink"
                 >
-                  Remove from list
+                  {t.alerts.remove}
                 </button>
               )}
             </div>

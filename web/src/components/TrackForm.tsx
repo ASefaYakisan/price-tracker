@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useI18n } from "@/i18n/client";
 import { money } from "@/lib/format";
 
 type Preview = { title: string; price: number; currency: string | null };
@@ -9,6 +10,7 @@ type State = { kind: "idle" | "saving" } | { kind: "demo"; product: Preview } | 
 
 export function TrackForm() {
   const router = useRouter();
+  const { t, lang, href, fill, apiError } = useI18n();
   const [url, setUrl] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
 
@@ -25,32 +27,46 @@ export function TrackForm() {
       // Reset first: the browser can restore this page from history with its old state.
       setState({ kind: "idle" });
       setUrl("");
-      router.push(`/products/${json.id}`);
+      router.push(href(`/products/${json.id}`));
       router.refresh();
     } else if (res?.ok && json?.demo) setState({ kind: "demo", product: json.product });
-    else setState({ kind: "error", message: json?.error ?? "Something went wrong. Please try again." });
+    else setState({ kind: "error", message: apiError(json?.error) });
   }
 
   return (
-    <section className="mb-6 rounded-xl border border-line bg-card p-4">
+    <section className="mb-6 rounded-2xl border border-line bg-card p-4 shadow-soft sm:p-5">
       <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
-        <label className="flex flex-1 flex-col gap-1 text-sm text-muted">
-          Track any product: paste a product page link
-          <input
-            type="url"
-            required
-            placeholder="https://www.example-shop.com/product/123"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="h-10 rounded-lg border border-line bg-bg px-3 text-sm text-ink placeholder:text-faint focus:border-accent focus:outline-none"
-          />
+        <label className="flex flex-1 flex-col gap-1.5 text-sm font-medium text-ink">
+          {t.track.label}
+          <span className="relative">
+            <svg
+              viewBox="0 0 20 20"
+              className="pointer-events-none absolute start-3 top-3 size-4 text-faint"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              aria-hidden
+            >
+              <path d="M8.5 11.5a3.5 3.5 0 005 0l3-3a3.5 3.5 0 00-5-5l-1 1M11.5 8.5a3.5 3.5 0 00-5 0l-3 3a3.5 3.5 0 005 5l1-1" />
+            </svg>
+            <input
+              type="url"
+              required
+              dir="ltr"
+              placeholder={t.track.placeholder}
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className="h-10 w-full rounded-lg border border-line bg-bg ps-9 pe-3 text-sm font-normal text-ink placeholder:text-faint focus:border-accent focus:outline-none"
+            />
+          </span>
         </label>
         <button
           type="submit"
           disabled={state.kind === "saving"}
-          className="h-10 rounded-lg bg-accent px-4 text-sm font-medium text-white hover:opacity-90 disabled:opacity-60"
+          className="h-10 rounded-lg bg-accent px-4 text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
         >
-          {state.kind === "saving" ? "Reading price…" : "Track price"}
+          {state.kind === "saving" ? t.track.reading : t.track.submit}
         </button>
       </form>
       {state.kind === "error" && (
@@ -60,11 +76,10 @@ export function TrackForm() {
       )}
       {state.kind === "demo" && (
         <p className="mt-3 text-sm text-ink">
-          Found <strong>{state.product.title}</strong> at <strong>{money(state.product.price, state.product.currency)}</strong>. (Demo mode:
-          not saved.)
+          {fill(t.track.found, { title: state.product.title, price: money(state.product.price, state.product.currency, lang) })}
         </p>
       )}
-      <p className="mt-2 text-xs text-faint">Works with shops that publish product data for Google Shopping. Checked again every day.</p>
+      <p className="mt-2 text-xs text-faint">{t.track.hint}</p>
     </section>
   );
 }
