@@ -1,6 +1,6 @@
 # Price Tracker
 
-**Live demo:** https://price-tracker-sefa-yksn.vercel.app
+**Live demo:** https://price-tracker-shop.vercel.app
 
 A Node.js scraper collects prices from four sources on a schedule (an e-commerce catalogue, crypto, exchange rates and gold) and stores every run in Supabase (Postgres). A Next.js dashboard shows current prices, the change since the last run and stock status.
 
@@ -52,7 +52,7 @@ Both are optional and switch on when their repository secrets exist:
 
 ## Public API
 
-Read-only JSON, no key needed, CORS open. Interactive docs (Swagger UI): [`/docs`](https://price-tracker-sefa-yksn.vercel.app/docs), spec at `/api/openapi.json`.
+Read-only JSON, no key needed, CORS open. Interactive docs (Swagger UI): [`/docs`](https://price-tracker-shop.vercel.app/docs), spec at `/api/openapi.json`.
 
 | Endpoint | Returns |
 |---|---|

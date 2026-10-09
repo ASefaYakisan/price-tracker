@@ -38,7 +38,7 @@ jobs:
           COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
           # Optional: without it, due alerts are only logged, not emailed.
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          SITE_URL: https://price-tracker-sefa-yksn.vercel.app
+          SITE_URL: https://price-tracker-shop.vercel.app
           # Optional: daily Telegram message with the day's price drops.
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
