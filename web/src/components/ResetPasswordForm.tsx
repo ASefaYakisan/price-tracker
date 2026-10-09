@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { PasswordInput } from "@/components/PasswordInput";
 import { NewPasswordField } from "@/components/NewPasswordField";
 import { isStrong } from "@/lib/password";
@@ -202,55 +202,100 @@ export function ChoosePassword({
   );
 }
 
-// The one-time code from the reset email. A correct code opens a recovery session (in memory only).
+// Length of the one-time code Supabase sends (Authentication > Providers > Email > Email OTP length).
+const CODE_LENGTH = 8;
+
+// The one-time code from the reset email, typed into one box per digit. A single real input sits on top of
+// the boxes, so typing, deleting, pasting and the phone's "code from email" suggestion all just work.
+// A correct code opens a recovery session (in memory only).
 export function CodeStep({
   email,
   onVerified,
-  notice,
 }: {
   email: string;
   onVerified: (auth: Auth) => void;
-  notice?: React.ReactNode;
 }) {
   const { t } = useI18n();
   const [code, setCode] = useState("");
+  const [focused, setFocused] = useState(true);
+  const field = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
+  async function verify(value: string) {
+    if (value.length !== CODE_LENGTH || busy) return;
     setBusy(true);
     setError(null);
     const auth = createRecoveryClient().auth;
     const { error } = await auth.verifyOtp({
       email,
-      token: code.replace(/\s/g, ""),
+      token: value,
       type: "recovery",
     });
     setBusy(false);
-    if (error) setError(t.auth.codeWrong);
-    else onVerified(auth);
+    if (error) {
+      // Start over in the first box.
+      setError(t.auth.codeWrong);
+      setCode("");
+      field.current?.focus();
+    } else onVerified(auth);
   }
 
-  const input =
-    "h-11 rounded-lg border border-line bg-bg px-3 text-sm text-ink placeholder:text-faint focus:border-accent focus:outline-none";
+  function change(raw: string) {
+    const value = raw.replace(/\D/g, "").slice(0, CODE_LENGTH);
+    setCode(value);
+    if (value) setError(null);
+    // The last digit sends the code right away.
+    if (value.length === CODE_LENGTH) verify(value);
+  }
+
+  const active = Math.min(code.length, CODE_LENGTH - 1);
 
   return (
-    <form onSubmit={submit} className="mt-5 flex flex-col gap-4">
-      {notice}
-      <label className="flex flex-col gap-1.5 text-sm text-muted">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        verify(code);
+      }}
+      className="mt-5 flex flex-col gap-4"
+    >
+      <label className="flex flex-col gap-2 text-sm text-muted">
         {t.auth.codeLabel}
-        <input
-          required
-          autoFocus
-          inputMode="numeric"
-          autoComplete="one-time-code"
-          pattern="[0-9 ]{6,12}"
-          maxLength={12}
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className={`${input} tracking-[0.3em]`}
-        />
+        <div className="relative" dir="ltr">
+          <div className="grid grid-cols-8 gap-1.5 sm:gap-2" aria-hidden>
+            {Array.from({ length: CODE_LENGTH }, (_, i) => (
+              <span
+                key={i}
+                className={`grid aspect-[4/5] place-items-center rounded-lg border bg-bg text-xl font-semibold text-ink transition-colors ${
+                  error
+                    ? "border-bad"
+                    : focused && i === active && !busy
+                      ? "border-accent ring-2 ring-accent/25"
+                      : code[i]
+                        ? "border-faint"
+                        : "border-line"
+                }`}
+              >
+                {code[i] ?? ""}
+              </span>
+            ))}
+          </div>
+          <input
+            autoFocus
+            required
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            pattern={`[0-9]{${CODE_LENGTH}}`}
+            maxLength={CODE_LENGTH}
+            value={code}
+            ref={field}
+            readOnly={busy}
+            onChange={(e) => change(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            className="absolute inset-0 h-full w-full cursor-text opacity-0"
+          />
+        </div>
       </label>
       {error && (
         <p className="rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad">
@@ -258,7 +303,7 @@ export function CodeStep({
         </p>
       )}
       <button
-        disabled={busy}
+        disabled={busy || code.length !== CODE_LENGTH}
         className="h-11 rounded-lg bg-accent text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
       >
         {busy ? t.common.pleaseWait : t.auth.verifyCode}
