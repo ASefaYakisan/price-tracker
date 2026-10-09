@@ -78,7 +78,7 @@ export function AppearanceMenu() {
         </svg>
       </button>
       {open && (
-        <div className="absolute end-0 z-30 mt-2 w-64 rounded-xl border border-line bg-card p-3 text-sm shadow-lg">
+        <div className="fixed inset-x-4 top-16 z-30 rounded-xl border border-line bg-card p-3 text-sm shadow-lg sm:absolute sm:inset-x-auto sm:end-0 sm:top-auto sm:mt-2 sm:w-64">
           <div className="mb-2 text-xs font-medium text-muted">{t.appearance.mode}</div>
           <div className="grid grid-cols-3 gap-1 rounded-lg bg-bg p-1">
             {MODES.map((m) => (
