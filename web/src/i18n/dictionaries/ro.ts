@@ -219,6 +219,7 @@ const ro: Dict = {
     copied: "Copiat",
     samePassword: "Alege o parolă diferită de cea actuală.",
     weakPassword: "Această parolă este prea slabă. Respectă regulile de sub câmp.",
+    checkInbox: "Deschide e-mailul, apasă butonul și introdu codul din el. După ce noua parolă este salvată, pagina revine la conectare.",
     codeLabel: "Codul din e-mail",
     verifyCode: "Continuă",
     codeWrong: "Codul este greșit sau a expirat. Verifică-l sau cere un e-mail nou.",

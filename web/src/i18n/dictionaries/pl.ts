@@ -219,6 +219,7 @@ const pl: Dict = {
     copied: "Skopiowano",
     samePassword: "Wybierz hasło inne niż obecne.",
     weakPassword: "To hasło jest za słabe. Postępuj zgodnie z zasadami pod polem.",
+    checkInbox: "Otwórz e-mail, kliknij przycisk i wpisz kod z wiadomości. Po zapisaniu nowego hasła ta strona wróci do logowania.",
     codeLabel: "Kod z e-maila",
     verifyCode: "Dalej",
     codeWrong: "Kod jest błędny lub wygasł. Sprawdź go albo poproś o nowy e-mail.",

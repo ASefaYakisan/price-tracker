@@ -219,6 +219,7 @@ const id: Dict = {
     copied: "Disalin",
     samePassword: "Pilih kata sandi yang berbeda dari kata sandi Anda saat ini.",
     weakPassword: "Kata sandi ini terlalu lemah. Ikuti aturan di bawah kolom.",
+    checkInbox: "Buka email, tekan tombolnya, lalu masukkan kode yang tertera. Setelah kata sandi baru disimpan, halaman ini kembali ke halaman masuk.",
     codeLabel: "Kode dari email",
     verifyCode: "Lanjutkan",
     codeWrong: "Kode salah atau sudah kedaluwarsa. Periksa lagi atau minta email baru.",

@@ -218,6 +218,7 @@ const it: Dict = {
     copied: "Copiata",
     samePassword: "Scegli una password diversa da quella attuale.",
     weakPassword: "Questa password è troppo debole. Segui le regole sotto il campo.",
+    checkInbox: "Apri l'email, premi il pulsante e inserisci il codice indicato. Quando la nuova password è salvata, questa pagina torna all'accesso.",
     codeLabel: "Codice dell'email",
     verifyCode: "Continua",
     codeWrong: "Il codice è errato o scaduto. Controllalo o richiedi una nuova email.",

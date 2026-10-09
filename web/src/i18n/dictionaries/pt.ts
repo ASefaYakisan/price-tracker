@@ -218,6 +218,7 @@ const pt: Dict = {
     copied: "Copiada",
     samePassword: "Escolha uma senha diferente da atual.",
     weakPassword: "Esta senha é fraca demais. Siga as regras abaixo do campo.",
+    checkInbox: "Abra o e-mail, clique no botão e digite o código que aparece nele. Quando a nova senha for salva, esta página volta para o login.",
     codeLabel: "Código do e-mail",
     verifyCode: "Continuar",
     codeWrong: "Código incorreto ou expirado. Confira ou peça um novo e-mail.",

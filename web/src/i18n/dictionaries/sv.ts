@@ -219,6 +219,7 @@ const sv: Dict = {
     copied: "Kopierat",
     samePassword: "Välj ett annat lösenord än ditt nuvarande.",
     weakPassword: "Lösenordet är för svagt. Följ reglerna under fältet.",
+    checkInbox: "Öppna mejlet, tryck på knappen och ange koden i mejlet. När det nya lösenordet har sparats går den här sidan tillbaka till inloggningen.",
     codeLabel: "Kod från mejlet",
     verifyCode: "Fortsätt",
     codeWrong: "Koden är fel eller har gått ut. Kontrollera den eller be om ett nytt mejl.",

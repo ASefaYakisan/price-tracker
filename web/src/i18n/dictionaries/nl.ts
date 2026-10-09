@@ -218,6 +218,7 @@ const nl: Dict = {
     copied: "Gekopieerd",
     samePassword: "Kies een ander wachtwoord dan je huidige.",
     weakPassword: "Dit wachtwoord is te zwak. Volg de regels onder het veld.",
+    checkInbox: "Open de e-mail, klik op de knop en voer de code uit de e-mail in. Zodra het nieuwe wachtwoord is opgeslagen, gaat deze pagina terug naar inloggen.",
     codeLabel: "Code uit de e-mail",
     verifyCode: "Doorgaan",
     codeWrong: "Die code is onjuist of verlopen. Controleer hem of vraag een nieuwe e-mail aan.",

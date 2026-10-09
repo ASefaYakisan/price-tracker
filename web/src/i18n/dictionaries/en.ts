@@ -218,6 +218,7 @@ const en = {
     copied: "Copied",
     samePassword: "Choose a password different from your current one.",
     weakPassword: "This password is too weak. Follow the rules below the field.",
+    checkInbox: "Open the email, press its button and enter the code shown in it. When the new password is saved, this page goes back to sign-in.",
     codeLabel: "Code from the email",
     verifyCode: "Continue",
     codeWrong: "That code is wrong or has expired. Check it or ask for a new email.",

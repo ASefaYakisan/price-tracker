@@ -10,7 +10,7 @@ import { useUser } from "@/lib/auth";
 import { useI18n } from "@/i18n/client";
 import { authEnabled, createClient } from "@/lib/supabase/client";
 import { createRecoveryClient } from "@/lib/supabase/recovery";
-import { ChoosePassword, CodeStep } from "@/components/ResetPasswordForm";
+import { PASSWORD_CHANNEL } from "@/components/ResetPasswordForm";
 
 type Mode = "sign-in" | "sign-up" | "forgot";
 
@@ -55,11 +55,8 @@ export function AuthForm() {
         : null,
   );
   const [notice, setNotice] = useState<string | null>(null);
-  // Forgot password: after the email is sent, the code from its subject can be typed here instead of opening the link.
+  // Forgot password: after the email is sent this tab waits; the reset happens on the page the email opens.
   const [sent, setSent] = useState(false);
-  const [recovery, setRecovery] = useState<
-    ReturnType<typeof createRecoveryClient>["auth"] | null
-  >(null);
 
   // Already signed in (or just signed in): go to the alerts.
   useEffect(() => {
@@ -72,14 +69,21 @@ export function AuthForm() {
     setError(null);
     setNotice(null);
     setSent(false);
-    setRecovery(null);
   }
 
-  function passwordChanged() {
-    switchTo("sign-in");
-    setPassword("");
-    setNotice(t.reset.doneSignIn);
-  }
+  // The reset page tells the other open tabs when the new password is saved, so this one goes back to sign-in.
+  useEffect(() => {
+    if (typeof BroadcastChannel === "undefined") return;
+    const channel = new BroadcastChannel(PASSWORD_CHANNEL);
+    channel.onmessage = () => {
+      setMode("sign-in");
+      setSent(false);
+      setError(null);
+      setPassword("");
+      setNotice(t.reset.doneSignIn);
+    };
+    return () => channel.close();
+  }, [t]);
 
   const callback = (next: string) =>
     `${location.origin}/auth/callback?next=${href(next)}`;
@@ -162,12 +166,8 @@ export function AuthForm() {
     <section className="p-6 sm:p-10">
       {mode === "forgot" ? (
         <div>
-          <h2 className="text-lg font-semibold">
-            {recovery ? t.reset.title : t.auth.resetTitle}
-          </h2>
-          <p className="mt-1 text-sm text-muted">
-            {recovery ? t.reset.text : t.auth.resetText}
-          </p>
+          <h2 className="text-lg font-semibold">{t.auth.resetTitle}</h2>
+          <p className="mt-1 text-sm text-muted">{t.auth.resetText}</p>
         </div>
       ) : (
         <>
@@ -218,23 +218,13 @@ export function AuthForm() {
           )}
         </>
       )}
-      {recovery ? (
-        <ChoosePassword open={async () => recovery} onDone={passwordChanged} />
-      ) : sent ? (
-        <CodeStep
-          email={email}
-          onVerified={(auth) => {
-            setNotice(null);
-            setRecovery(auth);
-          }}
-          notice={
-            notice && (
-              <p className="rounded-lg bg-good-soft px-3 py-2 text-sm text-ink">
-                {notice}
-              </p>
-            )
-          }
-        />
+      {sent ? (
+        <div className="mt-5 flex flex-col gap-3">
+          <p className="rounded-lg bg-good-soft px-3 py-2 text-sm text-ink">
+            {notice}
+          </p>
+          <p className="text-sm text-muted">{t.auth.checkInbox}</p>
+        </div>
       ) : (
         <form onSubmit={submit} className="mt-5 flex flex-col gap-4">
           <label className="flex flex-col gap-1.5 text-sm text-muted">

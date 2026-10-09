@@ -219,6 +219,7 @@ const cs: Dict = {
     copied: "Zkopírováno",
     samePassword: "Zvolte heslo odlišné od současného.",
     weakPassword: "Toto heslo je příliš slabé. Dodržte pravidla pod polem.",
+    checkInbox: "Otevři e-mail, klikni na tlačítko a zadej kód z e-mailu. Po uložení nového hesla se tato stránka vrátí k přihlášení.",
     codeLabel: "Kód z e-mailu",
     verifyCode: "Pokračovat",
     codeWrong: "Kód je špatný nebo vypršel. Zkontroluj ho, nebo si vyžádej nový e-mail.",

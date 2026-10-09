@@ -219,6 +219,7 @@ const de: Dict = {
     copied: "Kopiert",
     samePassword: "Wähle ein anderes Passwort als dein aktuelles.",
     weakPassword: "Dieses Passwort ist zu schwach. Beachte die Regeln unter dem Feld.",
+    checkInbox: "Öffne die E-Mail, klicke auf den Button und gib den Code aus der E-Mail ein. Sobald das neue Passwort gespeichert ist, kehrt diese Seite zur Anmeldung zurück.",
     codeLabel: "Code aus der E-Mail",
     verifyCode: "Weiter",
     codeWrong: "Der Code ist falsch oder abgelaufen. Prüfe ihn oder fordere eine neue E-Mail an.",

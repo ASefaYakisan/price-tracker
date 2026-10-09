@@ -219,6 +219,7 @@ const vi: Dict = {
     copied: "Đã sao chép",
     samePassword: "Hãy chọn mật khẩu khác với mật khẩu hiện tại.",
     weakPassword: "Mật khẩu này quá yếu. Hãy làm theo các quy tắc bên dưới ô nhập.",
+    checkInbox: "Mở email, nhấn nút trong đó và nhập mã trong email. Khi mật khẩu mới được lưu, trang này sẽ quay lại màn hình đăng nhập.",
     codeLabel: "Mã trong email",
     verifyCode: "Tiếp tục",
     codeWrong: "Mã không đúng hoặc đã hết hạn. Kiểm tra lại hoặc yêu cầu email mới.",

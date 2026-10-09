@@ -219,6 +219,7 @@ const fr: Dict = {
     copied: "Copié",
     samePassword: "Choisissez un mot de passe différent de l'actuel.",
     weakPassword: "Ce mot de passe est trop faible. Suivez les règles sous le champ.",
+    checkInbox: "Ouvre l'e-mail, clique sur son bouton et saisis le code qu'il contient. Une fois le nouveau mot de passe enregistré, cette page revient à la connexion.",
     codeLabel: "Code reçu par e-mail",
     verifyCode: "Continuer",
     codeWrong: "Ce code est incorrect ou a expiré. Vérifie-le ou demande un nouvel e-mail.",

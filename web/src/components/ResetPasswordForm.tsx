@@ -10,8 +10,13 @@ import { useI18n } from "@/i18n/client";
 
 const noSubscribe = () => () => {};
 
+// Other open tabs of the site listen here (the sign-in page goes back to "sign in" when the password changes).
+export const PASSWORD_CHANNEL = "pt-password";
+
 type Auth = ReturnType<typeof createRecoveryClient>["auth"];
-type Target = { link: { access_token: string; refresh_token: string } } | { email: string };
+type Target =
+  | { link: { access_token: string; refresh_token: string } }
+  | { email: string };
 
 // The reset email's button links here as ?email=…; the page then asks for the code from the same email
 // and only after that for the new password. Older emails linked here with the one-time session in the
@@ -49,6 +54,8 @@ export function ResetPasswordForm() {
 
   function finish() {
     setDone(true);
+    if (typeof BroadcastChannel !== "undefined")
+      new BroadcastChannel(PASSWORD_CHANNEL).postMessage("changed");
     history.replaceState(null, "", location.pathname);
     // Works when the browser allows it; otherwise the message below says to close the tab.
     window.close();

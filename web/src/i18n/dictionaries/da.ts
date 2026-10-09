@@ -219,6 +219,7 @@ const da: Dict = {
     copied: "Kopieret",
     samePassword: "Vælg en anden adgangskode end din nuværende.",
     weakPassword: "Denne adgangskode er for svag. Følg reglerne under feltet.",
+    checkInbox: "Åbn e-mailen, tryk på knappen og indtast koden fra e-mailen. Når den nye adgangskode er gemt, går denne side tilbage til login.",
     codeLabel: "Kode fra e-mailen",
     verifyCode: "Fortsæt",
     codeWrong: "Koden er forkert eller udløbet. Tjek den, eller bed om en ny e-mail.",

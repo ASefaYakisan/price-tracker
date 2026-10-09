@@ -218,6 +218,7 @@ const zh: Dict = {
     copied: "已复制",
     samePassword: "请选择与当前密码不同的密码。",
     weakPassword: "此密码太弱。请按照输入框下方的规则设置。",
+    checkInbox: "打开邮件，点击其中的按钮并输入邮件中的验证码。新密码保存后，此页面会回到登录界面。",
     codeLabel: "邮件中的验证码",
     verifyCode: "继续",
     codeWrong: "验证码错误或已过期。请检查，或重新发送邮件。",

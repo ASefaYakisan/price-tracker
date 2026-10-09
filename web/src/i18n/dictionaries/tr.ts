@@ -218,6 +218,7 @@ const tr: Dict = {
     copied: "Kopyalandı",
     samePassword: "Mevcut şifrenden farklı bir şifre seç.",
     weakPassword: "Bu şifre çok zayıf. Alanın altındaki kurallara uy.",
+    checkInbox: "E-postayı aç, içindeki düğmeye bas ve e-postadaki kodu gir. Yeni şifre kaydedilince bu sayfa giriş ekranına döner.",
     codeLabel: "E-postadaki kod",
     verifyCode: "Devam et",
     codeWrong: "Kod yanlış veya süresi dolmuş. Kontrol et ya da yeni bir e-posta iste.",
