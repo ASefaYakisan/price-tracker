@@ -34,6 +34,10 @@ export async function POST(request: Request) {
       if (!updated?.length) return error("This email already has an alert on this item.", 409);
       return Response.json({ ok: true, updated: true, account: true, id: updated[0].id, token: updated[0].manage_token });
     }
+    if (dbError?.message === "alert_limit_total")
+      return error("Your account already has the maximum number of alerts. Delete some first.", 429);
+    if (dbError?.message === "alert_limit_hourly")
+      return error("You created many alerts in the last hour. Try again later.", 429);
     if (dbError) return error("Could not save the alert. Please try again.", 500);
     return Response.json({ ok: true, account: true, id: data.id, token: data.manage_token });
   }

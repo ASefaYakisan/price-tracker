@@ -6,6 +6,7 @@ import { PasswordInput } from "@/components/PasswordInput";
 import { NewPasswordField } from "@/components/NewPasswordField";
 import { isStrong } from "@/lib/password";
 import { createRecoveryClient } from "@/lib/supabase/recovery";
+import { createClient } from "@/lib/supabase/client";
 import { useI18n } from "@/i18n/client";
 
 const noSubscribe = () => () => {};
@@ -208,12 +209,16 @@ const CODE_LENGTH = 8;
 // The one-time code from the reset email, typed into one box per digit. A single real input sits on top of
 // the boxes, so typing, deleting, pasting and the phone's "code from email" suggestion all just work.
 // A correct code opens a recovery session (in memory only).
+// kind "recovery": the reset code, checked on the in-memory client. kind "signup": the code that confirms a
+// new account, checked on the normal client so the visitor ends up signed in.
 export function CodeStep({
   email,
   onVerified,
+  kind = "recovery",
 }: {
   email: string;
   onVerified: (auth: Auth) => void;
+  kind?: "recovery" | "signup";
 }) {
   const { t } = useI18n();
   const [code, setCode] = useState("");
@@ -226,11 +231,11 @@ export function CodeStep({
     if (value.length !== CODE_LENGTH || busy) return;
     setBusy(true);
     setError(null);
-    const auth = createRecoveryClient().auth;
+    const auth = (kind === "signup" ? createClient() : createRecoveryClient()).auth;
     const { error } = await auth.verifyOtp({
       email,
       token: value,
-      type: "recovery",
+      type: kind === "signup" ? "email" : "recovery",
     });
     setBusy(false);
     if (error) {

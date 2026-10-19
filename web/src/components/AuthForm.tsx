@@ -10,9 +10,31 @@ import { useUser } from "@/lib/auth";
 import { useI18n } from "@/i18n/client";
 import { authEnabled, createClient } from "@/lib/supabase/client";
 import { createRecoveryClient } from "@/lib/supabase/recovery";
-import { PASSWORD_CHANNEL } from "@/components/ResetPasswordForm";
+import { CodeStep, PASSWORD_CHANNEL } from "@/components/ResetPasswordForm";
+import { Turnstile, TURNSTILE_KEY } from "@/components/Turnstile";
 
 type Mode = "sign-in" | "sign-up" | "forgot";
+
+// After 5 wrong passwords in a row this browser waits 30 seconds, then twice as long after each further miss.
+// Supabase also limits sign-in attempts per network on its side; this just stops guessing early and politely.
+const LOCK_KEY = "pt-login-lock";
+const FREE_TRIES = 5;
+type Lock = { fails: number; until: number };
+function readLock(): Lock {
+  try {
+    const v = JSON.parse(localStorage.getItem(LOCK_KEY) ?? "null");
+    if (Number.isFinite(v?.fails) && Number.isFinite(v?.until)) return v;
+  } catch {}
+  return { fails: 0, until: 0 };
+}
+function writeLock(lock: Lock | null) {
+  try {
+    if (lock) localStorage.setItem(LOCK_KEY, JSON.stringify(lock));
+    else localStorage.removeItem(LOCK_KEY);
+  } catch {}
+}
+const secondsLeft = (until: number) => Math.max(0, Math.ceil((until - Date.now()) / 1000));
+const RESEND_WAIT = 60;
 
 // Show the Google button only once the provider is switched on in Supabase.
 function useGoogleEnabled() {
@@ -33,7 +55,7 @@ function useGoogleEnabled() {
 export function AuthForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const { t, href, fill } = useI18n();
+  const { t, href, fill, lang } = useI18n();
   const urlError = params.get("error");
   // Where to go after signing in, e.g. back to the item whose alert the visitor wanted to set.
   const nextParam = params.get("next");
@@ -57,6 +79,27 @@ export function AuthForm() {
   const [notice, setNotice] = useState<string | null>(null);
   // Forgot password: after the email is sent this tab waits; the reset happens on the page the email opens.
   const [sent, setSent] = useState(false);
+  // Sign-up (or signing in before confirming): the address that still has to enter its 8-digit code.
+  const [confirming, setConfirming] = useState<string | null>(null);
+  const [resendWait, setResendWait] = useState(0);
+  // Seconds until this browser may try a password again (0 = free).
+  const [locked, setLocked] = useState(0);
+  const [captcha, setCaptcha] = useState<string | null>(null);
+  const [captchaRound, setCaptchaRound] = useState(0);
+
+  // Pick up a running lock after a reload and count it down.
+  useEffect(() => {
+    const tick = () => setLocked(secondsLeft(readLock().until));
+    tick();
+    const timer = setInterval(tick, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (resendWait <= 0) return;
+    const timer = setTimeout(() => setResendWait((s) => s - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendWait]);
 
   // Already signed in (or just signed in): go to the alerts.
   useEffect(() => {
@@ -69,6 +112,44 @@ export function AuthForm() {
     setError(null);
     setNotice(null);
     setSent(false);
+    setConfirming(null);
+  }
+
+  // Supabase's own error codes, in the visitor's language.
+  function explain(error: { code?: string; status?: number; message: string }) {
+    if (error.code === "over_request_rate_limit" || error.code === "over_email_send_rate_limit" || error.status === 429)
+      return t.auth.rateLimited;
+    if (error.code === "captcha_failed") return t.auth.captchaFailed;
+    if (error.code === "weak_password") return t.auth.weakPassword;
+    return error.message;
+  }
+
+  function startConfirm(address: string, wait: number) {
+    setConfirming(address);
+    setResendWait(wait);
+    setPassword("");
+  }
+
+  async function resend() {
+    if (!confirming || resendWait > 0) return;
+    setBusy(true);
+    setError(null);
+    const { error } = await createClient().auth.resend({
+      type: "signup",
+      email: confirming,
+      options: { emailRedirectTo: callback(next), captchaToken: captcha ?? undefined },
+    });
+    nextCaptcha();
+    setBusy(false);
+    if (error) setError(explain(error));
+    else {
+      setNotice(t.auth.resent);
+      setResendWait(RESEND_WAIT);
+    }
+  }
+
+  function nextCaptcha() {
+    if (TURNSTILE_KEY) setCaptchaRound((r) => r + 1);
   }
 
   // The reset page tells the other open tabs when the new password is saved, so this one goes back to sign-in.
@@ -90,21 +171,35 @@ export function AuthForm() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (mode === "sign-in" && secondsLeft(readLock().until) > 0) return;
+    if (TURNSTILE_KEY && !captcha) {
+      setError(t.auth.captchaWait);
+      return;
+    }
     setBusy(true);
     setError(null);
     setNotice(null);
     const supabase = createClient();
+    const captchaToken = captcha ?? undefined;
+    nextCaptcha();
     if (mode === "sign-in") {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
+        options: { captchaToken },
       });
-      if (error)
-        setError(
-          error.message === "Invalid login credentials"
-            ? t.auth.wrong
-            : error.message,
-        );
+      if (error?.code === "email_not_confirmed") {
+        setNotice(t.auth.notConfirmed);
+        startConfirm(email, 0);
+      } else if (error?.code === "invalid_credentials" || error?.message === "Invalid login credentials") {
+        const fails = readLock().fails + 1;
+        const until = fails >= FREE_TRIES ? Date.now() + 30_000 * 2 ** (fails - FREE_TRIES) : 0;
+        writeLock({ fails, until });
+        setLocked(secondsLeft(until));
+        // When the lock starts, the countdown notice below the fields takes over from the error.
+        if (!until) setError(t.auth.wrong);
+      } else if (error) setError(explain(error));
+      else writeLock(null);
     } else if (mode === "sign-up") {
       if (!isStrong(password)) {
         setError(t.auth.weakPassword);
@@ -114,22 +209,20 @@ export function AuthForm() {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: callback(next) },
+        options: { emailRedirectTo: callback(next), captchaToken },
       });
-      if (error)
-        setError(
-          error.code === "weak_password" ? t.auth.weakPassword : error.message,
-        );
-      // With email confirmation on there is no session yet: the user has to click the link first.
-      else if (!data.session) setNotice(fill(t.auth.confirmSent, { email }));
+      if (error) setError(explain(error));
+      // With email confirmation on there is no session yet: the 8-digit code from the email finishes it.
+      else if (!data.session) startConfirm(email, RESEND_WAIT);
     } else {
       const { error } = await createRecoveryClient().auth.resetPasswordForEmail(
         email,
         {
           redirectTo: `${location.origin}${href("/reset-password")}`,
+          captchaToken,
         },
       );
-      if (error) setError(error.message);
+      if (error) setError(explain(error));
       else {
         setNotice(fill(t.auth.resetSent, { email }));
         setSent(true);
@@ -164,7 +257,14 @@ export function AuthForm() {
 
   return (
     <section className="p-6 sm:p-10">
-      {mode === "forgot" ? (
+      {confirming ? (
+        <div>
+          <h2 className="text-lg font-semibold">{t.auth.confirmTitle}</h2>
+          <p className="mt-1 text-sm text-muted">
+            {fill(t.auth.confirmText, { email: confirming })}
+          </p>
+        </div>
+      ) : mode === "forgot" ? (
         <div>
           <h2 className="text-lg font-semibold">{t.auth.resetTitle}</h2>
           <p className="mt-1 text-sm text-muted">{t.auth.resetText}</p>
@@ -218,7 +318,36 @@ export function AuthForm() {
           )}
         </>
       )}
-      {sent ? (
+      {confirming ? (
+        <div>
+          <CodeStep
+            key={confirming}
+            email={confirming}
+            kind="signup"
+            onVerified={() => {
+              writeLock(null);
+              router.replace(href(next));
+            }}
+          />
+          {(error || notice) && (
+            <p
+              className={`mt-4 rounded-lg px-3 py-2 text-sm ${error ? "bg-bad-soft text-bad" : "bg-good-soft text-ink"}`}
+            >
+              {error ?? notice}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={resend}
+            disabled={busy || resendWait > 0}
+            className="mt-4 w-full text-center text-sm text-accent hover:underline disabled:text-faint disabled:no-underline"
+          >
+            {resendWait > 0
+              ? fill(t.auth.resendIn, { s: String(resendWait) })
+              : t.auth.resend}
+          </button>
+        </div>
+      ) : sent ? (
         <div className="mt-5 flex flex-col gap-3">
           <p className="rounded-lg bg-good-soft px-3 py-2 text-sm text-ink">
             {notice}
@@ -278,21 +407,33 @@ export function AuthForm() {
               {notice}
             </p>
           )}
+          {mode === "sign-in" && locked > 0 && !error && (
+            <p className="rounded-lg bg-bad-soft px-3 py-2 text-sm text-bad">
+              {fill(t.auth.tooMany, { s: String(locked) })}
+            </p>
+          )}
           <button
-            disabled={busy}
+            disabled={busy || (mode === "sign-in" && locked > 0)}
             className="h-11 rounded-lg bg-accent text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
           >
             {busy
               ? t.common.pleaseWait
               : mode === "sign-in"
-                ? t.auth.signIn
+                ? locked > 0
+                  ? `${t.auth.signIn} (${locked})`
+                  : t.auth.signIn
                 : mode === "sign-up"
                   ? t.auth.createAccount
                   : t.auth.sendReset}
           </button>
         </form>
       )}
-      {mode === "forgot" ? (
+      {TURNSTILE_KEY && !sent && (
+        <div className="mt-4">
+          <Turnstile onToken={setCaptcha} round={captchaRound} lang={lang} />
+        </div>
+      )}
+      {mode === "forgot" || confirming ? (
         <button
           type="button"
           onClick={() => switchTo("sign-in")}

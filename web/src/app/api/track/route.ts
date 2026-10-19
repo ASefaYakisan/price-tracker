@@ -6,6 +6,8 @@ import { extractProduct } from "@/lib/extract-price";
 import { assertPublicUrl } from "@/lib/safe-url";
 
 const MAX_CUSTOM = 100; // keeps the public demo from being filled by strangers
+const PER_HOUR = 10; // links one account may add per hour
+const PER_ACCOUNT = 30; // links one account may own in total
 const BROWSER_HEADERS = {
   "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
   accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -23,6 +25,24 @@ const BROWSER_HEADERS = {
 
 // POST { url } -> reads the price from the page now, saves it, and the daily job keeps checking it.
 export async function POST(request: Request) {
+  // Sign-in comes first, so strangers cannot make the server open pages for them.
+  const user = isDemo ? null : await currentUser();
+  if (!isDemo && !user) return fail("Sign in to track a link.", 401);
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!isDemo && !serviceKey) return fail("Adding links is not switched on for this site yet.", 503);
+  const db = serviceKey
+    ? createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey, { auth: { persistSession: false } })
+    : null;
+  if (db && user) {
+    const hourAgo = new Date(Date.now() - 3_600_000).toISOString();
+    const [recent, owned] = await Promise.all([
+      db.from("products").select("id", { count: "exact", head: true }).eq("added_by", user.id).gte("created_at", hourAgo),
+      db.from("products").select("id", { count: "exact", head: true }).eq("added_by", user.id),
+    ]);
+    if ((recent.count ?? 0) >= PER_HOUR) return fail("You added many links in the last hour. Try again later.", 429);
+    if ((owned.count ?? 0) >= PER_ACCOUNT) return fail("Your account already tracks the maximum number of links.", 429);
+  }
+
   const body = await request.json().catch(() => null);
   let url: URL;
   try {
@@ -43,13 +63,7 @@ export async function POST(request: Request) {
 
   const product = extractProduct(html, url.href);
   if (!product) return fail("No price found on that page. Paste the link of a single product page.", 422);
-  if (isDemo) return Response.json({ ok: true, demo: true, product });
-  const user = await currentUser();
-  if (!user) return fail("Sign in to track a link.", 401);
-
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!serviceKey) return fail("Adding links is not switched on for this site yet.", 503);
-  const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey, { auth: { persistSession: false } });
+  if (isDemo || !db || !user) return Response.json({ ok: true, demo: true, product });
 
   const { count } = await db.from("products").select("id", { count: "exact", head: true }).eq("source", "custom");
   if ((count ?? 0) >= MAX_CUSTOM) return fail("This demo already tracks the maximum number of links.", 429);

@@ -1,0 +1,53 @@
+<!-- Supabase > Authentication > Emails > Confirm signup.
+     Subject: Price Tracker confirmation code ({{ .Token }})
+     The code in the subject makes every email unique, so Gmail shows each one on its own instead of folding it under the last one.
+     Two ways to confirm: type the code on the sign-up page, or press the button. The button goes to /auth/confirm with a
+     one-time token hash, which works in any browser (also the email opened on a phone) and signs the visitor in.
+     The logo cell keeps its gradient, so it still looks right when the email app blocks images.
+     Tables and inline styles only: that is what email apps render the same way. -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f5fa;font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b2032">
+  <tr>
+    <td align="center" style="padding:32px 12px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px">
+        <tr>
+          <td style="padding:0 4px 16px">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="32" height="32" style="width:32px;height:32px;background:#4f5bd5;border-radius:8px"><img src="https://raw.githubusercontent.com/ASefaYakisan/price-tracker/main/web/public/email-logo.png" width="32" height="32" alt="" style="display:block;border:0;border-radius:8px"></td>
+                <td style="vertical-align:middle;padding-left:10px;font-size:18px;font-weight:600;color:#1b2032">Price Tracker</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#4f5bd5;background-image:linear-gradient(135deg,#4f5bd5,#0e8a7e);border-radius:12px 12px 0 0;padding:40px 32px 28px">
+            <div style="font-size:24px;line-height:1.3;font-weight:600;color:#ffffff">Confirm your email</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#ffffff;border:1px solid #e4e7f0;border-top:0;border-radius:0 0 12px 12px;padding:32px;font-size:15px;line-height:1.6;color:#1b2032">
+            <p style="margin:0 0 16px">Hello,</p>
+            <p style="margin:0 0 24px">Thanks for creating a Price Tracker account with <a href="mailto:{{ .Email }}" style="color:#4f5bd5;text-decoration:none">{{ .Email }}</a>. Enter the code below on the sign-up page, or press the button to confirm your email.</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+              <tr>
+                <td style="background:#4f5bd5;border-radius:8px">
+                  <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email" style="display:inline-block;padding:13px 32px;font-size:16px;font-weight:600;color:#ffffff;text-decoration:none">Confirm email</a>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:28px 0 8px;text-align:center;color:#596079">Your code:</p>
+            <div style="margin:0 auto 28px;text-align:center;font-size:32px;font-weight:700;letter-spacing:8px;color:#1b2032">{{ .Token }}</div>
+            <p style="margin:0 0 16px">The code works once and expires in one hour. If you did not create this account, ignore this email: the account stays unconfirmed. <strong>Do not share this code with anyone.</strong></p>
+            <p style="margin:0">Thanks,<br>The Price Tracker team</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 4px 0;font-size:12px;line-height:1.5;color:#8a91a6">
+            This email was sent automatically; replies are not read.<br>
+            <a href="https://price-tracker-shop.vercel.app" style="color:#8a91a6">price-tracker-shop.vercel.app</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
