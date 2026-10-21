@@ -1,9 +1,8 @@
 // Last-resort reader for shops that turn away datacenter servers (GitHub, Vercel) even with browser headers.
 // The page is fetched through a scraping API (ScraperAPI), which opens it from a residential address.
-// Off unless SCRAPER_API_KEY is set. Every request costs credits, so it is used only after a blocked answer
-// or for hosts listed in UNBLOCK_HOSTS, and it stops for the month after UNBLOCK_MONTHLY_LIMIT requests.
+// Off unless SCRAPER_API_KEY is set. Every request costs credits, so it is used only when both the plain request and
+// the real browser were turned away, or for hosts listed in UNBLOCK_HOSTS, and it stops for the month after UNBLOCK_MONTHLY_LIMIT requests.
 import { fetchText } from './fetch.js';
-import { BLOCKED_STATUSES } from './track-outcome.js';
 
 // track_attempts.layer for reads through the API: "unblock" alone, or "unblock:<markup>" when a price was found.
 export const UNBLOCK_LAYER = 'unblock';
@@ -33,10 +32,6 @@ export function isListed(hosts, url) {
     return false;
   }
   return hosts.some((listed) => host === listed || host.endsWith(`.${listed}`));
-}
-
-export function isBlocked(err) {
-  return BLOCKED_STATUSES.includes(err?.status);
 }
 
 export function apiUrl(apiKey, url) {

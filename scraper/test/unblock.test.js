@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { afterEach, test } from 'node:test';
-import { readLink } from '../src/adapters/custom.js';
+import { readThroughLayers as readLink } from '../src/adapters/custom.js';
 import { apiUrl, createUnblocker, isListed, unblockConfig } from '../src/unblock-fetch.js';
 
 const PAGE = `<html><head><script type="application/ld+json">
@@ -38,6 +38,18 @@ function fakeDb(used = 0) {
 }
 
 const env = (extra = {}) => ({ SCRAPER_API_KEY: KEY, ...extra });
+
+// Stands in for browser-fetch.js: answers every retry with `result` and counts the calls.
+function fakeBrowser(result) {
+  const browser = {
+    calls: 0,
+    async retry(url, attempt) {
+      browser.calls += 1;
+      return result ?? attempt;
+    },
+  };
+  return browser;
+}
 
 test('without a key the layer is off and a blocked link fails as before', async () => {
   assert.equal(createUnblocker({ db: fakeDb(), env: {} }), null);
@@ -113,6 +125,41 @@ test('if the monthly count cannot be read, no paid request is made', async () =>
     console.warn = realWarn;
   }
   assert.deepEqual(calls, ['shop']);
+});
+
+test('when the real browser reads the price, the API is not paid for', async () => {
+  const calls = fakeNetwork();
+  const browser = fakeBrowser({ outcome: 'ok', httpStatus: 200, layer: 'browser/json-ld', html: PAGE, product: { price: 1 } });
+  const attempt = await readLink(LINK, { retries: 1, browser, unblocker: createUnblocker({ db: fakeDb(), env: env() }) });
+  assert.deepEqual(calls, ['shop']);
+  assert.equal(browser.calls, 1);
+  assert.equal(attempt.layer, 'browser/json-ld');
+});
+
+test('the API is tried only after the real browser is turned away too', async () => {
+  const calls = fakeNetwork();
+  const browser = fakeBrowser({ outcome: 'http_error', httpStatus: 403, html: null, product: null });
+  const attempt = await readLink(LINK, { retries: 1, browser, unblocker: createUnblocker({ db: fakeDb(), env: env() }) });
+  assert.deepEqual(calls, ['shop', 'api']);
+  assert.equal(browser.calls, 1);
+  assert.equal(attempt.layer, 'unblock:json-ld');
+});
+
+test('a page the browser opened without a price is not sent to the API', async () => {
+  const calls = fakeNetwork();
+  const browser = fakeBrowser({ outcome: 'no_price', httpStatus: 200, html: '<html></html>', product: null });
+  const attempt = await readLink(LINK, { retries: 1, browser, unblocker: createUnblocker({ db: fakeDb(), env: env() }) });
+  assert.deepEqual(calls, ['shop']);
+  assert.equal(attempt.outcome, 'no_price');
+});
+
+test('a listed shop skips the browser and goes to the API', async () => {
+  const calls = fakeNetwork();
+  const browser = fakeBrowser();
+  const unblocker = createUnblocker({ db: fakeDb(), env: env({ UNBLOCK_HOSTS: 'shop.example' }) });
+  await readLink(LINK, { retries: 1, browser, unblocker });
+  assert.deepEqual(calls, ['api']);
+  assert.equal(browser.calls, 0);
 });
 
 test('config parsing and host matching', () => {

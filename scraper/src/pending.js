@@ -1,6 +1,9 @@
 // Links the site saved without a price because the shop turned its server away (see web/src/app/api/track/route.ts).
-// Runs every 15 minutes on GitHub Actions, whose servers some of those shops still answer.
-import { readLink } from './adapters/custom.js';
+// Runs every 15 minutes on GitHub Actions, whose servers some of those shops still answer;
+// a link that still fails is opened in a real Chromium (browser-fetch.js), and only then, when a key is set,
+// read through the scraping API (unblock-fetch.js).
+import { readThroughLayers } from './adapters/custom.js';
+import { createBrowserReader } from './browser-fetch.js';
 import { sleep } from './fetch.js';
 import { createStore } from './store.js';
 import { attemptRow } from './track-outcome.js';
@@ -49,12 +52,18 @@ async function main() {
   const attempts = [];
   const unblocker = createUnblocker({ db: store.db });
   const triedToday = unblocker ? await skipList(store.db, links) : new Set();
-  for (const { url, added_by: userId } of links) {
-    const attempt = await readLink(url, { retries: 1, unblocker: triedToday.has(url) ? null : unblocker });
-    console.log(`  ${attempt.outcome}${attempt.httpStatus ? ` ${attempt.httpStatus}` : ''} ${url}`);
-    attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
-    if (attempt.product) products.push(attempt.product);
-    await sleep(1500);
+  // A real browser gets past shops that only render the price with scripts or turn plain requests away.
+  const browser = createBrowserReader({ maxPages: 25 });
+  try {
+    for (const { url, added_by: userId } of links) {
+      const attempt = await readThroughLayers(url, { retries: 1, browser, unblocker: triedToday.has(url) ? null : unblocker });
+      console.log(`  ${attempt.outcome}${attempt.httpStatus ? ` ${attempt.httpStatus}` : ''}${attempt.layer ? ` (${attempt.layer})` : ''} ${url}`);
+      attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
+      if (attempt.product) products.push(attempt.product);
+      await sleep(1500);
+    }
+  } finally {
+    await browser.close();
   }
   if (products.length) await store.save('custom', products, new Date().toISOString());
   if (attempts.length) {

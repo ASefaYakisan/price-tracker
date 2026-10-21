@@ -41,7 +41,7 @@ NEXT_PUBLIC_SUPABASE_URL=... NEXT_PUBLIC_SUPABASE_ANON_KEY=... npm run dev
 
 ## Track any product by link
 
-Paste a product page link on the dashboard. The server reads the price from the structured data most shops publish for Google Shopping (JSON-LD `Product`/`Offer`, then `product:price` meta tags), saves it, and the daily job re-checks every added link (`source = custom`). Links that resolve to private network addresses are refused. Needs `SUPABASE_SERVICE_ROLE_KEY` as a server-side environment variable on Vercel.
+Paste a product page link on the dashboard. The server reads the price from the structured data most shops publish for Google Shopping (JSON-LD `Product`/`Offer`, then `product:price` meta tags), saves it, and the daily job re-checks every added link (`source = custom`). A link the shop turns away is kept as pending and retried from GitHub Actions every 15 minutes; when a plain request still fails, the scraper opens the page in a real Chromium (Playwright, `scraper/src/browser-fetch.js`) so prices drawn by scripts can be read too. Links that resolve to private network addresses are refused. Needs `SUPABASE_SERVICE_ROLE_KEY` as a server-side environment variable on Vercel.
 
 Every read of a pasted link, when it is added and on each daily refresh, is logged to the `track_attempts` table with its outcome (`ok`, `http_error`, `no_price`, `timeout`, `network`), the HTTP status and which markup held the price (`json-ld`, `meta`, `microdata`). Visitors see a message that matches the reason, in their language.
 
@@ -54,14 +54,15 @@ Reading a pasted link goes through layers, cheapest first:
 1. **Plain request** with browser headers, from the server that runs the job.
 2. **Markup layers** on the page that came back: JSON-LD, microdata, price meta tags.
 3. **Pending links**: when the shop turns the site's server away (401/403/429/503 or a timeout), the link is saved without a price and the **Pending links** workflow retries it from GitHub's servers every 15 minutes for two days.
-4. **Scraping API** (optional, off by default): some shops block every datacenter address. With a [ScraperAPI](https://www.scraperapi.com/) key, the scraper retries those links through the API, which opens the page from a residential address. The markup layers then read the price as usual.
+4. **Real browser**: when the plain request is still turned away or finds no price, the scraper opens the page in a headless Chromium (Playwright, `scraper/src/browser-fetch.js`), lets its scripts run and reads the rendered page. Free, so it always comes before the paid layer.
+5. **Scraping API** (optional, off by default): some shops block every datacenter address, real browser included. With a [ScraperAPI](https://www.scraperapi.com/) key, the scraper retries links that both the plain request and the browser were turned away from through the API, which opens the page from a residential address. The markup layers then read the price as usual.
 
 The scraping API costs credits, so it is used only when needed:
 
 | Setting | Where | What it does |
 | --- | --- | --- |
 | `SCRAPER_API_KEY` | Actions secret | Turns the layer on. Without it nothing changes. |
-| `UNBLOCK_HOSTS` | Actions variable, optional | Comma-separated shops read through the API straight away, e.g. `vatanbilgisayar.com,trendyol.com`. Other shops use it only after a blocked answer. |
+| `UNBLOCK_HOSTS` | Actions variable, optional | Comma-separated shops read through the API straight away, skipping the plain request and the browser, e.g. `vatanbilgisayar.com,trendyol.com`. Other shops use it only after both the plain request and the browser were blocked. |
 | `UNBLOCK_MONTHLY_LIMIT` | Actions variable, optional | Requests per calendar month (default 900). When reached, the layer switches off until the next month. |
 
 Requests are counted from `track_attempts`: reads through the API are logged with the layer `unblock` (failed) or `unblock:<markup>` (price found, e.g. `unblock:json-ld`). A pending link that failed through the API is not sent again for 24 hours. If the monthly count cannot be read, no paid request is made.

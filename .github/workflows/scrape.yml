@@ -18,7 +18,7 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 40
     defaults:
       run:
         working-directory: scraper
@@ -30,6 +30,8 @@ jobs:
           cache: npm
           cache-dependency-path: scraper/package-lock.json
       - run: npm ci
+      # Chromium for links a plain request cannot read (src/browser-fetch.js).
+      - run: npx playwright install --with-deps chromium
       - run: npm test
       - run: npm run scrape -- ${{ inputs.source || 'all' }} ${{ inputs.pages || '3' }}
         env:

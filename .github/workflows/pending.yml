@@ -1,7 +1,8 @@
 name: Pending links
 
 # Links the site could not read (the shop refused Vercel's server) are saved without a price.
-# This reads them from GitHub's servers every 15 minutes for two days; the daily scrape takes over after that.
+# This reads them from GitHub's servers every 15 minutes for two days, in a real Chromium when a plain request
+# still fails; the daily scrape takes over after that.
 on:
   schedule:
     - cron: "7,22,37,52 * * * *"
@@ -14,7 +15,7 @@ concurrency:
 jobs:
   pending:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: scraper
@@ -26,6 +27,8 @@ jobs:
           cache: npm
           cache-dependency-path: scraper/package-lock.json
       - run: npm ci
+      # Chromium for links a plain request cannot read (src/browser-fetch.js).
+      - run: npx playwright install --with-deps chromium
       - run: npm run pending
         env:
           SUPABASE_URL: https://zaufbyefvjttfppirjrj.supabase.co
