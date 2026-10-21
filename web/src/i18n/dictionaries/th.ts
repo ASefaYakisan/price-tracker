@@ -308,6 +308,12 @@ const th: Dict = {
     "Could not open that page. Check the link and try again.": "เปิดหน้านั้นไม่ได้ โปรดตรวจสอบลิงก์แล้วลองอีกครั้ง",
     "No price found on that page. Paste the link of a single product page.":
       "ไม่พบราคาในหน้านั้น โปรดวางลิงก์ของหน้าสินค้าเพียงรายการเดียว",
+    "That page was not found at the shop. Check the link and try again.":
+      "ไม่พบหน้านี้ในร้านค้า ตรวจสอบลิงก์แล้วลองอีกครั้ง",
+    "The shop's page returned an error. Try again later.":
+      "หน้าของร้านค้าแจ้งข้อผิดพลาด ลองอีกครั้งในภายหลัง",
+    "The shop did not respond in time. Try again later.":
+      "ร้านค้าไม่ตอบกลับทันเวลา ลองอีกครั้งในภายหลัง",
     "Adding links is not switched on for this site yet.": "เว็บไซต์นี้ยังไม่ได้เปิดใช้การเพิ่มลิงก์",
     "This demo already tracks the maximum number of links.": "เดโมนี้ติดตามลิงก์ครบจำนวนสูงสุดแล้ว",
     "You added many links in the last hour. Try again later.": "คุณเพิ่มลิงก์จำนวนมากในชั่วโมงที่ผ่านมา ลองใหม่ภายหลัง",

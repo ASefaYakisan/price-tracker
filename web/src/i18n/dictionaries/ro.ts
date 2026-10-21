@@ -309,6 +309,12 @@ const ro: Dict = {
     "Could not open that page. Check the link and try again.": "Pagina nu a putut fi deschisă. Verifică linkul și încearcă din nou.",
     "No price found on that page. Paste the link of a single product page.":
       "Nu s-a găsit niciun preț pe acea pagină. Lipește linkul paginii unui singur produs.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Pagina nu a fost găsită în magazin. Verifică linkul și încearcă din nou.",
+    "The shop's page returned an error. Try again later.":
+      "Pagina magazinului a returnat o eroare. Încearcă din nou mai târziu.",
+    "The shop did not respond in time. Try again later.":
+      "Magazinul nu a răspuns la timp. Încearcă din nou mai târziu.",
     "Adding links is not switched on for this site yet.": "Adăugarea de linkuri nu este încă activată pentru acest site.",
     "This demo already tracks the maximum number of links.": "Acest demo urmărește deja numărul maxim de linkuri.",
     "You added many links in the last hour. Try again later.": "Ai adăugat multe linkuri în ultima oră. Încearcă mai târziu.",

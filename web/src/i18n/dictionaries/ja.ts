@@ -308,6 +308,12 @@ const ja: Dict = {
     "Could not open that page. Check the link and try again.": "ページを開けませんでした。リンクを確認して、もう一度お試しください。",
     "No price found on that page. Paste the link of a single product page.":
       "このページに価格が見つかりません。個別の商品ページのリンクを貼り付けてください。",
+    "That page was not found at the shop. Check the link and try again.":
+      "ショップでそのページが見つかりませんでした。リンクを確認して、もう一度お試しください。",
+    "The shop's page returned an error. Try again later.":
+      "ショップのページがエラーを返しました。しばらくしてからもう一度お試しください。",
+    "The shop did not respond in time. Try again later.":
+      "ショップから時間内に応答がありませんでした。しばらくしてからもう一度お試しください。",
     "Adding links is not switched on for this site yet.": "このサイトではまだリンクの追加が有効になっていません。",
     "This demo already tracks the maximum number of links.": "このデモで追跡できるリンク数の上限に達しています。",
     "You added many links in the last hour. Try again later.": "この1時間に多くのリンクを追加しました。後でもう一度お試しください。",

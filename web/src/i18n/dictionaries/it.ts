@@ -308,6 +308,12 @@ const it: Dict = {
     "Could not open that page. Check the link and try again.": "Impossibile aprire la pagina. Controlla il link e riprova.",
     "No price found on that page. Paste the link of a single product page.":
       "Nessun prezzo trovato in questa pagina. Incolla il link della pagina di un singolo prodotto.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Questa pagina non è stata trovata nel negozio. Controlla il link e riprova.",
+    "The shop's page returned an error. Try again later.":
+      "La pagina del negozio ha restituito un errore. Riprova più tardi.",
+    "The shop did not respond in time. Try again later.":
+      "Il negozio non ha risposto in tempo. Riprova più tardi.",
     "Adding links is not switched on for this site yet.": "L'aggiunta di link non è ancora attiva su questo sito.",
     "This demo already tracks the maximum number of links.": "Questa demo monitora già il numero massimo di link.",
     "You added many links in the last hour. Try again later.": "Hai aggiunto molti link nell’ultima ora. Riprova più tardi.",

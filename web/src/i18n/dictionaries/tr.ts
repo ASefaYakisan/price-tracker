@@ -308,6 +308,12 @@ const tr: Dict = {
     "Could not open that page. Check the link and try again.": "Bu sayfa açılamadı. Bağlantıyı kontrol edip tekrar dene.",
     "No price found on that page. Paste the link of a single product page.":
       "Bu sayfada fiyat bulunamadı. Tek bir ürün sayfasının bağlantısını yapıştır.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Bu sayfa mağazada bulunamadı. Bağlantıyı kontrol edip tekrar dene.",
+    "The shop's page returned an error. Try again later.":
+      "Mağazanın sayfası bir hata döndürdü. Daha sonra tekrar dene.",
+    "The shop did not respond in time. Try again later.":
+      "Mağaza zamanında yanıt vermedi. Daha sonra tekrar dene.",
     "Adding links is not switched on for this site yet.": "Bu sitede bağlantı ekleme henüz açık değil.",
     "This demo already tracks the maximum number of links.": "Bu demo zaten en fazla sayıda bağlantıyı takip ediyor.",
     "You added many links in the last hour. Try again later.": "Son bir saatte çok sayıda bağlantı ekledin. Daha sonra tekrar dene.",

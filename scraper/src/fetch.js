@@ -3,13 +3,16 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const USER_AGENT = 'FiyatTakipBot/0.1 (+https://github.com/ASefaYakisan/price-tracker)';
 
 // Polite fetch: identifies itself, retries transient failures with backoff.
-export async function fetchText(url, { retries = 3, accept = 'text/html', headers = {} } = {}) {
+// Errors for an HTTP answer carry its `status`; `timeoutMs` gives up on a slow server with a TimeoutError.
+export async function fetchText(url, { retries = 3, accept = 'text/html', headers = {}, timeoutMs } = {}) {
   for (let attempt = 1; ; attempt++) {
     try {
-      const res = await fetch(url, { headers: { 'user-agent': USER_AGENT, accept, ...headers } });
+      const signal = timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined;
+      const res = await fetch(url, { headers: { 'user-agent': USER_AGENT, accept, ...headers }, signal });
       if (res.ok) return await res.text();
-      if (res.status < 500 && res.status !== 429) throw new Error(`HTTP ${res.status} for ${url}`);
-      throw Object.assign(new Error(`HTTP ${res.status} for ${url}`), { retryable: true });
+      const error = Object.assign(new Error(`HTTP ${res.status} for ${url}`), { status: res.status });
+      if (res.status < 500 && res.status !== 429) throw error;
+      throw Object.assign(error, { retryable: true });
     } catch (err) {
       const retryable = err.retryable || err.name === 'TypeError';
       if (!retryable || attempt >= retries) throw err;

@@ -308,6 +308,12 @@ const en = {
     "Could not open that page. Check the link and try again.": "Could not open that page. Check the link and try again.",
     "No price found on that page. Paste the link of a single product page.":
       "No price found on that page. Paste the link of a single product page.",
+    "That page was not found at the shop. Check the link and try again.":
+      "That page was not found at the shop. Check the link and try again.",
+    "The shop's page returned an error. Try again later.":
+      "The shop's page returned an error. Try again later.",
+    "The shop did not respond in time. Try again later.":
+      "The shop did not respond in time. Try again later.",
     "Adding links is not switched on for this site yet.": "Adding links is not switched on for this site yet.",
     "This demo already tracks the maximum number of links.": "This demo already tracks the maximum number of links.",
     "You added many links in the last hour. Try again later.": "You added many links in the last hour. Try again later.",

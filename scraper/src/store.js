@@ -14,7 +14,7 @@ function supabaseStore(db) {
       const { data: rows, error } = await db
         .from('products')
         .upsert(
-          products.map(({ price, in_stock, ...p }) => ({ ...p, source, last_seen_at: scrapedAt })),
+          products.map(({ price, in_stock, layer, ...p }) => ({ ...p, source, last_seen_at: scrapedAt })),
           { onConflict: 'source,external_id' },
         )
         .select('id, external_id');

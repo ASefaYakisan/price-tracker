@@ -311,6 +311,12 @@ const el: Dict = {
       "Δεν ήταν δυνατό το άνοιγμα της σελίδας. Ελέγξτε τον σύνδεσμο και δοκιμάστε ξανά.",
     "No price found on that page. Paste the link of a single product page.":
       "Δεν βρέθηκε τιμή σε αυτή τη σελίδα. Επικολλήστε τον σύνδεσμο μιας σελίδας μεμονωμένου προϊόντος.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Η σελίδα δεν βρέθηκε στο κατάστημα. Ελέγξτε τον σύνδεσμο και δοκιμάστε ξανά.",
+    "The shop's page returned an error. Try again later.":
+      "Η σελίδα του καταστήματος επέστρεψε σφάλμα. Δοκιμάστε ξανά αργότερα.",
+    "The shop did not respond in time. Try again later.":
+      "Το κατάστημα δεν απάντησε εγκαίρως. Δοκιμάστε ξανά αργότερα.",
     "Adding links is not switched on for this site yet.": "Η προσθήκη συνδέσμων δεν έχει ενεργοποιηθεί ακόμη για αυτόν τον ιστότοπο.",
     "This demo already tracks the maximum number of links.": "Αυτή η επίδειξη παρακολουθεί ήδη τον μέγιστο αριθμό συνδέσμων.",
     "You added many links in the last hour. Try again later.": "Προσθέσατε πολλούς συνδέσμους την τελευταία ώρα. Δοκιμάστε αργότερα.",

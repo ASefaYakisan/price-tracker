@@ -1,11 +1,12 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { revalidateTag } from "next/cache";
 import { currentUser } from "@/lib/supabase/server";
 import { isDemo } from "@/lib/data";
 import { extractProduct } from "@/lib/extract-price";
 import { assertPublicUrl } from "@/lib/safe-url";
+import { attemptRow, messageFor, outcomeForError, type TrackOutcome } from "@/lib/track-outcome";
 
-const MAX_CUSTOM = 100; // keeps the public demo from being filled by strangers
+const MAX_CUSTOM = 5000; // safety ceiling for the whole site; the per-account limits below do the real work
 const PER_HOUR = 10; // links one account may add per hour
 const PER_ACCOUNT = 30; // links one account may own in total
 const BROWSER_HEADERS = {
@@ -51,24 +52,40 @@ export async function POST(request: Request) {
     return fail((err as Error).message, 400);
   }
 
+  // Every read is logged with its reason, so we can see which shops fail and why.
   let html: string;
+  let status: number;
   try {
     const res = await fetchPublic(url);
-    if (!res.ok) return fail("The shop refused the request. Some shops block automated visits.", 422);
-    html = (await res.text()).slice(0, 3_000_000);
+    status = res.status;
+    if (!res.ok) throw new ReadError("http_error", status);
+    html = await res.text().then(
+      (text) => text.slice(0, 3_000_000),
+      (err) => {
+        throw new ReadError(outcomeForError(err));
+      },
+    );
     url = new URL(res.url || url.href);
   } catch (err) {
-    return fail((err as Error).message || "Could not open that page. Check the link and try again.", 422);
+    const e = err instanceof ReadError ? err : new ReadError("network");
+    await logAttempt(db, attemptRow({ url: url.href, stage: "add", outcome: e.outcome, httpStatus: e.httpStatus, userId: user?.id }));
+    return fail(e.message, 422);
   }
 
   const product = extractProduct(html, url.href);
-  if (!product) return fail("No price found on that page. Paste the link of a single product page.", 422);
+  await logAttempt(
+    db,
+    attemptRow({ url: url.href, stage: "add", outcome: product ? "ok" : "no_price", httpStatus: status, layer: product?.layer, userId: user?.id }),
+  );
+  if (!product) return fail(messageFor("no_price"), 422);
   if (isDemo || !db || !user) return Response.json({ ok: true, demo: true, product });
 
   const { count } = await db.from("products").select("id", { count: "exact", head: true }).eq("source", "custom");
   if ((count ?? 0) >= MAX_CUSTOM) return fail("This demo already tracks the maximum number of links.", 429);
 
-  const { in_stock, price, ...fields } = product;
+  // `layer` only goes to track_attempts; products has no column for it.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { in_stock, price, layer, ...fields } = product;
   const { data: row, error } = await db
     .from("products")
     .upsert({ ...fields, source: "custom", last_seen_at: new Date().toISOString() }, { onConflict: "source,external_id" })
@@ -88,14 +105,39 @@ export async function POST(request: Request) {
 async function fetchPublic(start: URL) {
   let url = start;
   for (let hop = 0; hop < 5; hop++) {
-    const res = await fetch(url, { headers: BROWSER_HEADERS, redirect: "manual", signal: AbortSignal.timeout(15_000) }).catch(() => {
-      throw new Error("Could not open that page. Check the link and try again.");
+    const res = await fetch(url, { headers: BROWSER_HEADERS, redirect: "manual", signal: AbortSignal.timeout(15_000) }).catch((err) => {
+      throw new ReadError(outcomeForError(err));
     });
     const location = res.headers.get("location");
     if (res.status < 300 || res.status >= 400 || !location) return res;
-    url = await assertPublicUrl(new URL(location, url).href);
+    url = await assertPublicUrl(new URL(location, url).href).catch((err) => {
+      throw new ReadError("network", null, (err as Error).message);
+    });
   }
-  throw new Error("That link redirects too many times.");
+  throw new ReadError("network", null, "That link redirects too many times.");
+}
+
+// A failed read of the shop's page: the reason goes to track_attempts, the message to the visitor.
+class ReadError extends Error {
+  outcome: TrackOutcome;
+  httpStatus: number | null;
+  constructor(outcome: TrackOutcome, httpStatus: number | null = null, message = messageFor(outcome, httpStatus)) {
+    super(message);
+    this.outcome = outcome;
+    this.httpStatus = httpStatus;
+  }
+}
+
+// A failed log write never stops the link from being added.
+async function logAttempt(db: SupabaseClient | null, row: ReturnType<typeof attemptRow>) {
+  if (!db) return;
+  await db
+    .from("track_attempts")
+    .insert(row)
+    .then(
+      () => {},
+      () => {},
+    );
 }
 
 function fail(error: string, status: number) {
