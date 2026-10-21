@@ -41,6 +41,11 @@ const tr: Dict = {
     custom: "Bağlantıyla eklenen",
   },
   home: {
+    heroTitle: "Fiyat düştüğü an haberin olsun",
+    heroLead: "Ürün linkini yapıştır. Fiyatı her gün kontrol eder, geçmişini grafikte gösterir ve hedef fiyatına inince sana haber veririz.",
+    step1: "Herhangi bir ürün linkini yapıştır",
+    step2: "Her gün kontrol ederiz",
+    step3: "Hedef fiyatında haber al",
     title: "Takip edilen fiyatlar",
     lastScrape: "Son tarama {date}",
     noScrapes: "Henüz tarama yok",

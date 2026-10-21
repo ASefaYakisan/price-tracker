@@ -41,6 +41,11 @@ const pt: Dict = {
     custom: "Adicionado por link",
   },
   home: {
+    heroTitle: "Saiba na hora quando um preço cair",
+    heroLead: "Cole o link de um produto. Verificamos o preço todos os dias, mostramos o histórico e avisamos quando ele chegar ao seu alvo.",
+    step1: "Cole qualquer link de produto",
+    step2: "Verificamos todos os dias",
+    step3: "Receba um alerta no seu preço",
     title: "Preços acompanhados",
     lastScrape: "Última coleta {date}",
     noScrapes: "Nenhuma coleta ainda",

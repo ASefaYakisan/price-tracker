@@ -41,6 +41,11 @@ const da: Dict = {
     custom: "Tilføjet via link",
   },
   home: {
+    heroTitle: "Få besked, så snart en pris falder",
+    heroLead: "Indsæt et produktlink. Vi tjekker prisen hver dag, viser dens historik og giver besked, når den når dit mål.",
+    step1: "Indsæt et vilkårligt produktlink",
+    step2: "Vi tjekker det hver dag",
+    step3: "Få besked ved din pris",
     title: "Overvågede priser",
     lastScrape: "Seneste hentning {date}",
     noScrapes: "Ingen hentninger endnu",

@@ -41,6 +41,11 @@ const es: Dict = {
     custom: "Añadido por enlace",
   },
   home: {
+    heroTitle: "Entérate en cuanto baje un precio",
+    heroLead: "Pega el enlace de un producto. Revisamos el precio cada día, mostramos su historial y te avisamos cuando llegue a tu objetivo.",
+    step1: "Pega cualquier enlace de producto",
+    step2: "Lo revisamos cada día",
+    step3: "Recibe un aviso a tu precio",
     title: "Precios seguidos",
     lastScrape: "Última consulta {date}",
     noScrapes: "Aún no hay consultas",

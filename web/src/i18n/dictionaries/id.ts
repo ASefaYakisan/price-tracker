@@ -41,6 +41,11 @@ const id: Dict = {
     custom: "Ditambahkan lewat tautan",
   },
   home: {
+    heroTitle: "Tahu saat harga turun",
+    heroLead: "Tempel tautan produk. Kami memeriksa harga setiap hari, menampilkan riwayatnya, dan memberi tahu Anda saat mencapai target.",
+    step1: "Tempel tautan produk apa pun",
+    step2: "Kami memeriksanya setiap hari",
+    step3: "Dapatkan peringatan di harga Anda",
     title: "Harga yang dilacak",
     lastScrape: "Pengambilan terakhir {date}",
     noScrapes: "Belum ada pengambilan data",

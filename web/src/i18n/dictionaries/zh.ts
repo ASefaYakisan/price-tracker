@@ -41,6 +41,11 @@ const zh: Dict = {
     custom: "通过链接添加",
   },
   home: {
+    heroTitle: "降价第一时间知道",
+    heroLead: "粘贴商品链接。我们每天检查价格、绘制历史走势，并在达到目标价时提醒你。",
+    step1: "粘贴任意商品链接",
+    step2: "每天自动检查",
+    step3: "到达目标价即提醒",
     title: "追踪的价格",
     lastScrape: "上次抓取：{date}",
     noScrapes: "尚未抓取",
