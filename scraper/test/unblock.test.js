@@ -171,3 +171,18 @@ test('config parsing and host matching', () => {
   assert.ok(!isListed(config.hosts, 'not a url'));
   assert.equal(apiUrl('k', 'https://a.example/x?y=1'), 'https://api.scraperapi.com/?api_key=k&url=https%3A%2F%2Fa.example%2Fx%3Fy%3D1');
 });
+
+test('a product read through the API keeps its saved external id', async () => {
+  fakeNetwork();
+  const unblocker = createUnblocker({ db: fakeDb(), env: env() });
+  const attempt = await readLink(LINK, { retries: 1, externalId: 'saved-id', unblocker });
+  assert.equal(attempt.layer, 'unblock:json-ld');
+  assert.equal(attempt.product.external_id, 'saved-id');
+});
+
+test('a product read by the real browser keeps its saved external id', async () => {
+  fakeNetwork();
+  const browser = fakeBrowser({ outcome: 'ok', httpStatus: 200, layer: 'browser/json-ld', html: PAGE, product: { price: 1, external_id: 'new-id' } });
+  const attempt = await readLink(LINK, { retries: 1, externalId: 'saved-id', browser, unblocker: null });
+  assert.equal(attempt.product.external_id, 'saved-id');
+});
