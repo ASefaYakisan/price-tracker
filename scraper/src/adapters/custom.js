@@ -1,4 +1,5 @@
 // Products people added by pasting a link. Re-reads each saved page with the generic extractor.
+import { createBrowserReader } from '../browser-fetch.js';
 import { extractProduct } from '../extract-price.js';
 import { fetchText, sleep } from '../fetch.js';
 import { attemptRow, outcomeForError } from '../track-outcome.js';
@@ -11,11 +12,17 @@ export async function fetchAll({ db } = {}) {
   if (error) throw error;
   const products = [];
   const attempts = [];
-  for (const { url, external_id: externalId, added_by: userId } of data) {
-    const attempt = await readLink(url, { externalId });
-    attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
-    if (attempt.product) products.push(attempt.product);
-    await sleep(1500);
+  const browser = createBrowserReader();
+  try {
+    for (const { url, external_id: externalId, added_by: userId } of data) {
+      const attempt = await browser.retry(url, await readLink(url, { externalId }));
+      const product = keepExternalId(attempt.product, externalId);
+      attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
+      if (product) products.push(product);
+      await sleep(1500);
+    }
+  } finally {
+    await browser.close();
   }
   await saveAttempts(db, attempts);
   return products;
@@ -31,10 +38,13 @@ export async function readLink(url, { retries = 3, externalId = null } = {}) {
     console.warn(`  ${url}: ${err.message ?? err}`);
     return { outcome: outcomeForError(err), httpStatus: err.status ?? null, html: null, product: null };
   }
-  const read = extractProduct(html, url);
-  const product = read && externalId ? { ...read, external_id: externalId } : read;
+  const product = keepExternalId(extractProduct(html, url), externalId);
   if (!product) console.warn(`  no price found on ${url}`);
   return { outcome: product ? 'ok' : 'no_price', httpStatus: 200, layer: product?.layer ?? null, html, product };
+}
+
+function keepExternalId(product, externalId) {
+  return product && externalId ? { ...product, external_id: externalId } : product;
 }
 
 // The log helps decide what to fix next; failing to write it never stops the refresh.
