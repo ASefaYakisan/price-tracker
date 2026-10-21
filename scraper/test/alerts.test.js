@@ -14,6 +14,18 @@ test('dueAlerts keeps only alerts whose target is reached', () => {
   assert.deepEqual(due.map((a) => a.id), [1]);
 });
 
+test('dueAlerts holds alerts while the product is out of stock', () => {
+  const alerts = [{ id: 1, product_id: 7, email: 'a@x.io', target_price: '62000' }];
+  assert.deepEqual(dueAlerts(alerts, new Map([[7, { ...product, in_stock: false }]])), []);
+  // Back in stock and still under target: the alert fires.
+  assert.deepEqual(dueAlerts(alerts, new Map([[7, { ...product, in_stock: true }]])).map((a) => a.id), [1]);
+});
+
+test('dueAlerts treats unknown stock as in stock', () => {
+  const alerts = [{ id: 1, product_id: 7, email: 'a@x.io', target_price: '62000' }];
+  assert.deepEqual(dueAlerts(alerts, new Map([[7, { ...product, in_stock: null }]])).map((a) => a.id), [1]);
+});
+
 test('alertEmail links to the price history page when the site URL is known', () => {
   const mail = alertEmail({ product, target_price: '62000' }, 'https://example.app/');
   assert.match(mail.subject, /Bitcoin \(BTC\) is now \$61,000\.5/);
