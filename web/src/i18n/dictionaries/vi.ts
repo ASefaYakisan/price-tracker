@@ -41,6 +41,11 @@ const vi: Dict = {
     custom: "Thêm bằng liên kết",
   },
   home: {
+    heroTitle: "Biết ngay khi giá giảm",
+    heroLead: "Dán liên kết sản phẩm. Chúng tôi kiểm tra giá mỗi ngày, hiển thị lịch sử giá và báo cho bạn khi giá đạt mục tiêu.",
+    step1: "Dán bất kỳ liên kết sản phẩm nào",
+    step2: "Chúng tôi kiểm tra mỗi ngày",
+    step3: "Nhận cảnh báo ở mức giá của bạn",
     title: "Giá đang theo dõi",
     lastScrape: "Lần thu thập gần nhất {date}",
     noScrapes: "Chưa thu thập lần nào",

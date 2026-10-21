@@ -41,6 +41,11 @@ const en = {
     custom: "Added by link",
   },
   home: {
+    heroTitle: "Know the moment a price drops",
+    heroLead: "Paste a product link. We check the price every day, chart its history and alert you when it reaches your target.",
+    step1: "Paste any product link",
+    step2: "We check it every day",
+    step3: "Get an alert at your price",
     title: "Tracked prices",
     lastScrape: "Last scrape {date}",
     noScrapes: "No scrapes yet",
