@@ -120,6 +120,7 @@ const cs: Dict = {
     stopTracking: "Přestat sledovat",
     stopConfirm: "Přestat sledovat tuto položku? Smaže se i její historie cen a upozornění.",
     removing: "Odebírání…",
+    pending: "Obchod odmítl první načtení. Zkoušíme to znovu z jiného serveru; cena se obvykle objeví do hodiny.",
   },
   alertForm: {
     atOrBelow: "Upozornit při ceně nejvýše",

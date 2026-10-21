@@ -120,6 +120,7 @@ const vi: Dict = {
     stopTracking: "Ngừng theo dõi",
     stopConfirm: "Ngừng theo dõi sản phẩm này? Lịch sử giá và cảnh báo của nó cũng sẽ bị xóa.",
     removing: "Đang xóa…",
+    pending: "Cửa hàng đã từ chối lần đọc đầu tiên. Chúng tôi đang thử lại từ máy chủ khác; giá thường xuất hiện trong vòng một giờ.",
   },
   alertForm: {
     atOrBelow: "Báo cho tôi khi giá bằng hoặc thấp hơn",

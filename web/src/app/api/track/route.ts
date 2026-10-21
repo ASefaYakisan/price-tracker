@@ -2,10 +2,10 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { revalidateTag } from "next/cache";
 import { currentUser } from "@/lib/supabase/server";
 import { isDemo } from "@/lib/data";
-import { extractProduct } from "@/lib/extract-price";
+import { canonicalUrl, extractProduct } from "@/lib/extract-price";
 import { assertPublicUrl } from "@/lib/safe-url";
 import { trackLimitMessage } from "@/lib/track-limits";
-import { attemptRow, messageFor, outcomeForError, type TrackOutcome } from "@/lib/track-outcome";
+import { attemptRow, messageFor, outcomeForError, retryLater, type TrackOutcome } from "@/lib/track-outcome";
 
 const MAX_CUSTOM = 5000; // safety ceiling for the whole site; the per-account limits in track-limits.ts do the real work
 const BROWSER_HEADERS = {
@@ -70,6 +70,7 @@ export async function POST(request: Request) {
   } catch (err) {
     const e = err instanceof ReadError ? err : new ReadError("network");
     await logAttempt(db, attemptRow({ url: url.href, stage: "add", outcome: e.outcome, httpStatus: e.httpStatus, userId: user?.id }));
+    if (db && user && retryLater(e.outcome, e.httpStatus)) return savePending(db, url, user.id, e.message);
     return fail(e.message, 422);
   }
 
@@ -100,6 +101,38 @@ export async function POST(request: Request) {
 
   revalidateTag("products", { expire: 0 });
   return Response.json({ ok: true, id: row.id, product });
+}
+
+// Saves the link without a price; scraper/src/pending.js reads it from GitHub's servers within the hour.
+// A link someone already tracks keeps its title and history.
+async function savePending(db: SupabaseClient, url: URL, userId: string, readError: string) {
+  const { count } = await db.from("products").select("id", { count: "exact", head: true }).eq("source", "custom");
+  if ((count ?? 0) >= MAX_CUSTOM) return fail(readError, 422);
+  const externalId = canonicalUrl(url.href);
+  const { error } = await db
+    .from("products")
+    .upsert({ source: "custom", external_id: externalId, title: titleFromUrl(url), url: url.href }, { onConflict: "source,external_id", ignoreDuplicates: true });
+  const { data: row } = await db.from("products").select("id").eq("source", "custom").eq("external_id", externalId).maybeSingle();
+  if (error || !row) return fail(readError, 422);
+  await db.from("products").update({ added_by: userId }).eq("id", row.id).is("added_by", null);
+  revalidateTag("products", { expire: 0 });
+  return Response.json({ ok: true, id: row.id, pending: true });
+}
+
+// "samsung-galaxy-s25-ultra-...-p-HBCV00007MIF54" -> "Samsung galaxy s25 ultra ...", until the real name is read.
+function titleFromUrl(url: URL) {
+  const longest = url.pathname.split("/").filter(Boolean).sort((a, b) => b.length - a.length)[0] ?? "";
+  let slug = longest;
+  try {
+    slug = decodeURIComponent(longest);
+  } catch {}
+  slug = slug
+    .replace(/\.html?$/i, "")
+    .replace(/-p-[a-z0-9]+$/i, "")
+    .replace(/[-_+]+/g, " ")
+    .trim();
+  const words = slug.length >= 8 && /[a-z]/i.test(slug) ? slug : url.hostname.replace(/^www\./, "");
+  return (words[0].toUpperCase() + words.slice(1)).slice(0, 300);
 }
 
 // Follows redirects by hand so every hop gets the same public-address check.

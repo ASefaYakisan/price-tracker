@@ -120,6 +120,7 @@ const tr: Dict = {
     stopTracking: "Takibi bırak",
     stopConfirm: "Bu ürünün takibi bırakılsın mı? Fiyat geçmişi ve alarmları da silinir.",
     removing: "Kaldırılıyor…",
+    pending: "Mağaza ilk okumayı reddetti. Başka bir sunucudan tekrar deniyoruz; fiyat genelde bir saat içinde görünür.",
   },
   alertForm: {
     atOrBelow: "Bu fiyat ve altında haber ver",

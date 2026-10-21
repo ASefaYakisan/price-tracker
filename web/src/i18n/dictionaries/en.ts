@@ -120,6 +120,7 @@ const en = {
     stopTracking: "Stop tracking",
     stopConfirm: "Stop tracking this item? Its price history and alerts are deleted too.",
     removing: "Removing…",
+    pending: "The shop turned away our first read. We are trying again from another server; the price usually appears within an hour.",
   },
   alertForm: {
     atOrBelow: "Alert me at or below",

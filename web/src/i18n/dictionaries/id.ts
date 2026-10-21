@@ -120,6 +120,7 @@ const id: Dict = {
     stopTracking: "Berhenti melacak",
     stopConfirm: "Berhenti melacak item ini? Riwayat harga dan peringatannya juga akan dihapus.",
     removing: "Menghapus…",
+    pending: "Toko menolak pembacaan pertama. Kami mencoba lagi dari server lain; harga biasanya muncul dalam satu jam.",
   },
   alertForm: {
     atOrBelow: "Beri tahu saya pada harga atau di bawah",

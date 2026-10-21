@@ -120,6 +120,7 @@ const nl: Dict = {
     stopTracking: "Niet meer volgen",
     stopConfirm: "Dit item niet meer volgen? De prijsgeschiedenis en alerts worden ook verwijderd.",
     removing: "Verwijderen…",
+    pending: "De winkel weigerde de eerste poging. We proberen het opnieuw vanaf een andere server; de prijs verschijnt meestal binnen een uur.",
   },
   alertForm: {
     atOrBelow: "Waarschuw me bij of onder",

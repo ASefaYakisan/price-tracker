@@ -120,6 +120,7 @@ const es: Dict = {
     stopTracking: "Dejar de seguir",
     stopConfirm: "¿Dejar de seguir este artículo? También se borran su historial de precios y sus alertas.",
     removing: "Quitando…",
+    pending: "La tienda rechazó la primera lectura. Lo intentamos de nuevo desde otro servidor; el precio suele aparecer en menos de una hora.",
   },
   alertForm: {
     atOrBelow: "Avisarme a partir de",

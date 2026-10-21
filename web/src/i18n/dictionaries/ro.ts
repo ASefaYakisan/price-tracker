@@ -120,6 +120,7 @@ const ro: Dict = {
     stopTracking: "Nu mai urmări",
     stopConfirm: "Nu mai urmărești acest produs? Istoricul prețurilor și alertele lui vor fi șterse.",
     removing: "Se elimină…",
+    pending: "Magazinul a refuzat prima citire. Încercăm din nou de pe alt server; prețul apare de obicei în cel mult o oră.",
   },
   alertForm: {
     atOrBelow: "Anunță-mă la sau sub",
