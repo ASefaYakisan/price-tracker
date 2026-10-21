@@ -122,6 +122,23 @@ const tr: Dict = {
     removing: "Kaldırılıyor…",
     pending: "Mağaza ilk okumayı reddetti. Başka bir sunucudan tekrar deniyoruz; fiyat genelde bir saat içinde görünür.",
   },
+  linkStatus: {
+    pending: "Bekliyor",
+    failed: "Okunamadı",
+    lastTry: "Son deneme {date}: {reason}.",
+    failedTitle: "Bu linkten fiyat okunamadı",
+    failedText: "{date} tarihli son deneme başarısız oldu: {reason}. Yine de günde bir kez kontrol ediyoruz.",
+    checkFailed: "{date} tarihli son kontrol başarısız oldu: {reason}. Gösterilen fiyat son başarılı okumadan.",
+    retry: "Tekrar dene",
+    retrying: "Deneniyor…",
+    retried: "Sıraya alındı. 15 dakika içinde tekrar deneyeceğiz.",
+    blocked: "mağaza isteği engelledi",
+    notFound: "sayfa bulunamadı",
+    httpError: "mağazanın sayfası hata verdi",
+    noPrice: "sayfada fiyat bulunamadı",
+    timeout: "mağaza zamanında yanıt vermedi",
+    network: "sayfa açılamadı",
+  },
   alertForm: {
     atOrBelow: "Bu fiyat ve altında haber ver",
     create: "Alarm kur",
@@ -329,6 +346,8 @@ const tr: Dict = {
     "You created many alerts in the last hour. Try again later.": "Son bir saatte çok sayıda alarm kurdun. Daha sonra tekrar dene.",
     "Could not save the product. Please try again.": "Ürün kaydedilemedi. Lütfen tekrar dene.",
     "Could not save the price. Please try again.": "Fiyat kaydedilemedi. Lütfen tekrar dene.",
+    "Only the person who added this item can retry it.": "Bu ürünü yalnızca ekleyen kişi tekrar deneyebilir.",
+    "Could not queue the item. Please try again.": "Ürün sıraya alınamadı. Lütfen tekrar dene.",
   },
 };
 

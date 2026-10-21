@@ -122,6 +122,23 @@ const cs: Dict = {
     removing: "Odebírání…",
     pending: "Obchod odmítl první načtení. Zkoušíme to znovu z jiného serveru; cena se obvykle objeví do hodiny.",
   },
+  linkStatus: {
+    pending: "Čeká",
+    failed: "Nelze přečíst",
+    lastTry: "Poslední pokus {date}: {reason}.",
+    failedTitle: "Z tohoto odkazu se nám nepodařilo přečíst cenu",
+    failedText: "Náš poslední pokus {date} selhal: {reason}. Stále ho kontrolujeme jednou denně.",
+    checkFailed: "Poslední kontrola {date} selhala: {reason}. Zobrazená cena je z posledního úspěšného načtení.",
+    retry: "Zkusit znovu",
+    retrying: "Zkoušíme…",
+    retried: "Zařazeno. Zkusíme to znovu do 15 minut.",
+    blocked: "obchod zablokoval požadavek",
+    notFound: "stránka nebyla nalezena",
+    httpError: "stránka obchodu vrátila chybu",
+    noPrice: "na stránce nebyla nalezena cena",
+    timeout: "obchod neodpověděl včas",
+    network: "stránku nelze otevřít",
+  },
   alertForm: {
     atOrBelow: "Upozornit při ceně nejvýše",
     create: "Vytvořit upozornění",
@@ -330,6 +347,8 @@ const cs: Dict = {
     "You created many alerts in the last hour. Try again later.": "Za poslední hodinu jste vytvořili mnoho upozornění. Zkuste to později.",
     "Could not save the product. Please try again.": "Produkt se nepodařilo uložit. Zkuste to znovu.",
     "Could not save the price. Please try again.": "Cenu se nepodařilo uložit. Zkuste to znovu.",
+    "Only the person who added this item can retry it.": "Zkusit znovu může jen ten, kdo položku přidal.",
+    "Could not queue the item. Please try again.": "Položku se nepodařilo zařadit. Zkuste to prosím znovu.",
   },
 };
 

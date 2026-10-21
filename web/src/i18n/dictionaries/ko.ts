@@ -122,6 +122,23 @@ const ko: Dict = {
     removing: "삭제 중…",
     pending: "쇼핑몰이 첫 번째 읽기를 거부했습니다. 다른 서버에서 다시 시도하고 있으며, 보통 1시간 안에 가격이 표시됩니다.",
   },
+  linkStatus: {
+    pending: "대기 중",
+    failed: "읽을 수 없음",
+    lastTry: "마지막 시도 {date}: {reason}.",
+    failedTitle: "이 링크에서 가격을 읽지 못했습니다",
+    failedText: "{date}의 마지막 시도가 실패했습니다: {reason}. 하루에 한 번은 계속 확인합니다.",
+    checkFailed: "{date}의 마지막 확인이 실패했습니다: {reason}. 표시된 가격은 마지막으로 성공한 읽기 결과입니다.",
+    retry: "다시 시도",
+    retrying: "시도 중…",
+    retried: "대기열에 추가했습니다. 15분 안에 다시 시도합니다.",
+    blocked: "상점이 요청을 차단했습니다",
+    notFound: "페이지를 찾을 수 없습니다",
+    httpError: "상점 페이지가 오류를 반환했습니다",
+    noPrice: "페이지에서 가격을 찾지 못했습니다",
+    timeout: "상점이 제때 응답하지 않았습니다",
+    network: "페이지를 열 수 없습니다",
+  },
   alertForm: {
     atOrBelow: "이 가격 이하일 때 알림",
     create: "알림 만들기",
@@ -329,6 +346,8 @@ const ko: Dict = {
     "You created many alerts in the last hour. Try again later.": "지난 1시간 동안 알림을 많이 만들었습니다. 나중에 다시 시도하세요.",
     "Could not save the product. Please try again.": "상품을 저장하지 못했습니다. 다시 시도해 주세요.",
     "Could not save the price. Please try again.": "가격을 저장하지 못했습니다. 다시 시도해 주세요.",
+    "Only the person who added this item can retry it.": "이 상품을 추가한 사람만 다시 시도할 수 있습니다.",
+    "Could not queue the item. Please try again.": "상품을 대기열에 추가하지 못했습니다. 다시 시도해 주세요.",
   },
 };
 

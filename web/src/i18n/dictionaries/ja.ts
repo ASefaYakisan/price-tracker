@@ -122,6 +122,23 @@ const ja: Dict = {
     removing: "削除中…",
     pending: "ショップが最初の読み取りを拒否しました。別のサーバーから再試行しています。通常1時間以内に価格が表示されます。",
   },
+  linkStatus: {
+    pending: "保留中",
+    failed: "読み取り不可",
+    lastTry: "最後の試行 {date}：{reason}。",
+    failedTitle: "このリンクから価格を読み取れませんでした",
+    failedText: "{date} の最後の試行は失敗しました：{reason}。引き続き1日1回確認します。",
+    checkFailed: "{date} の最後の確認は失敗しました：{reason}。表示中の価格は最後に成功した読み取りのものです。",
+    retry: "再試行",
+    retrying: "試行中…",
+    retried: "キューに追加しました。15分以内に再試行します。",
+    blocked: "ショップがリクエストをブロックしました",
+    notFound: "ページが見つかりませんでした",
+    httpError: "ショップのページがエラーを返しました",
+    noPrice: "ページに価格が見つかりませんでした",
+    timeout: "ショップが時間内に応答しませんでした",
+    network: "ページを開けませんでした",
+  },
   alertForm: {
     atOrBelow: "この価格以下で通知",
     create: "アラートを作成",
@@ -329,6 +346,8 @@ const ja: Dict = {
     "You created many alerts in the last hour. Try again later.": "この1時間に多くのアラートを作成しました。後でもう一度お試しください。",
     "Could not save the product. Please try again.": "商品を保存できませんでした。もう一度お試しください。",
     "Could not save the price. Please try again.": "価格を保存できませんでした。もう一度お試しください。",
+    "Only the person who added this item can retry it.": "この商品を追加した人だけが再試行できます。",
+    "Could not queue the item. Please try again.": "商品をキューに追加できませんでした。もう一度お試しください。",
   },
 };
 

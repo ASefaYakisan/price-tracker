@@ -122,6 +122,23 @@ const zh: Dict = {
     removing: "正在移除…",
     pending: "商店拒绝了第一次读取。我们正在从另一台服务器重试，价格通常会在一小时内显示。",
   },
+  linkStatus: {
+    pending: "等待中",
+    failed: "无法读取",
+    lastTry: "最后一次尝试 {date}：{reason}。",
+    failedTitle: "无法从此链接读取价格",
+    failedText: "{date} 的最后一次尝试失败：{reason}。我们仍会每天检查一次。",
+    checkFailed: "{date} 的最后一次检查失败：{reason}。显示的价格来自最后一次成功读取。",
+    retry: "重试",
+    retrying: "正在尝试…",
+    retried: "已加入队列。我们会在 15 分钟内重试。",
+    blocked: "商店拦截了请求",
+    notFound: "未找到该页面",
+    httpError: "商店页面返回了错误",
+    noPrice: "页面上未找到价格",
+    timeout: "商店未及时响应",
+    network: "无法打开该页面",
+  },
   alertForm: {
     atOrBelow: "价格低于或等于此值时提醒我",
     create: "创建提醒",
@@ -326,6 +343,8 @@ const zh: Dict = {
     "You created many alerts in the last hour. Try again later.": "你在过去一小时内创建了很多提醒。请稍后再试。",
     "Could not save the product. Please try again.": "无法保存商品，请重试。",
     "Could not save the price. Please try again.": "无法保存价格，请重试。",
+    "Only the person who added this item can retry it.": "只有添加此商品的人才能重试。",
+    "Could not queue the item. Please try again.": "无法将商品加入队列。请重试。",
   },
 };
 

@@ -122,6 +122,23 @@ const fr: Dict = {
     removing: "Suppression…",
     pending: "La boutique a refusé la première lecture. Nous réessayons depuis un autre serveur ; le prix apparaît en général dans l'heure.",
   },
+  linkStatus: {
+    pending: "En attente",
+    failed: "Illisible",
+    lastTry: "Dernier essai {date} : {reason}.",
+    failedTitle: "Nous n'avons pas pu lire de prix sur ce lien",
+    failedText: "Notre dernier essai du {date} a échoué : {reason}. Nous le vérifions encore une fois par jour.",
+    checkFailed: "La dernière vérification du {date} a échoué : {reason}. Le prix affiché provient de la dernière lecture réussie.",
+    retry: "Réessayer",
+    retrying: "Essai…",
+    retried: "En file d'attente. Nous réessaierons dans les 15 minutes.",
+    blocked: "la boutique a bloqué la requête",
+    notFound: "la page est introuvable",
+    httpError: "la page de la boutique a renvoyé une erreur",
+    noPrice: "aucun prix trouvé sur la page",
+    timeout: "la boutique n'a pas répondu à temps",
+    network: "la page n'a pas pu être ouverte",
+  },
   alertForm: {
     atOrBelow: "M'alerter à ou sous",
     create: "Créer l'alerte",
@@ -331,6 +348,8 @@ const fr: Dict = {
     "You created many alerts in the last hour. Try again later.": "Vous avez créé beaucoup d’alertes au cours de la dernière heure. Réessayez plus tard.",
     "Could not save the product. Please try again.": "Impossible d'enregistrer le produit. Veuillez réessayer.",
     "Could not save the price. Please try again.": "Impossible d'enregistrer le prix. Veuillez réessayer.",
+    "Only the person who added this item can retry it.": "Seule la personne qui a ajouté cet article peut réessayer.",
+    "Could not queue the item. Please try again.": "Impossible de mettre l'article en file d'attente. Veuillez réessayer.",
   },
 };
 

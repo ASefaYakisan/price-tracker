@@ -2,22 +2,25 @@
 import { createBrowserReader } from '../browser-fetch.js';
 import { extractProduct } from '../extract-price.js';
 import { fetchText, sleep } from '../fetch.js';
+import { saveStatuses, statusChange } from '../link-status.js';
 import { attemptRow, outcomeForError } from '../track-outcome.js';
 
 export const name = 'custom';
 
 export async function fetchAll({ db } = {}) {
   if (!db) return []; // nothing to refresh without the database that holds the links
-  const { data, error } = await db.from('products').select('url, external_id, added_by').eq('source', 'custom');
+  const { data, error } = await db.from('products').select('id, url, external_id, added_by').eq('source', 'custom');
   if (error) throw error;
   const products = [];
   const attempts = [];
+  const statuses = [];
   const browser = createBrowserReader();
   try {
-    for (const { url, external_id: externalId, added_by: userId } of data) {
+    for (const { id, url, external_id: externalId, added_by: userId } of data) {
       const attempt = await browser.retry(url, await readLink(url, { externalId }));
       const product = keepExternalId(attempt.product, externalId);
       attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
+      statuses.push({ id, ...statusChange(attempt) });
       if (product) products.push(product);
       await sleep(1500);
     }
@@ -25,6 +28,7 @@ export async function fetchAll({ db } = {}) {
     await browser.close();
   }
   await saveAttempts(db, attempts);
+  await saveStatuses(db, statuses);
   return products;
 }
 

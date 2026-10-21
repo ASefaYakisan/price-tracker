@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { cacheLife, cacheTag } from "next/cache";
+import type { LinkState } from "@/lib/link-status";
 
 export type ProductRow = {
   id: number;
@@ -13,6 +14,10 @@ export type ProductRow = {
   price_change: number | null;
   in_stock: boolean | null;
   scraped_at: string | null;
+  // Pasted links only (migration 0009); see lib/link-status.ts.
+  status?: LinkState | null;
+  last_error?: string | null;
+  last_checked_at?: string | null;
 };
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -28,7 +33,7 @@ export async function getProducts(): Promise<ProductRow[]> {
   const db = createClient(url!, anonKey!);
   const { data, error } = await db
     .from("product_latest")
-    .select("id, source, title, url, image_url, currency, price, previous_price, price_change, in_stock, scraped_at")
+    .select("id, source, title, url, image_url, currency, price, previous_price, price_change, in_stock, scraped_at, status, last_error, last_checked_at")
     .order("price_change", { ascending: true, nullsFirst: false })
     .limit(200);
   if (error) throw new Error(error.message);

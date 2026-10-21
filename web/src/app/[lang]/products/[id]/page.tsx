@@ -4,6 +4,7 @@ import { BellIcon } from "@/components/BellIcon";
 import { AlertForm } from "@/components/AlertForm";
 import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
+import { LinkStatusNote, LinkStatusPill } from "@/components/LinkStatus";
 import { SourceChip } from "@/components/SourceChip";
 import { Stat } from "@/components/Stat";
 import { StopTracking } from "@/components/StopTracking";
@@ -45,6 +46,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted">
             <SourceChip source={product.source} t={t} />
             <StockPill inStock={product.in_stock} t={t} />
+            <LinkStatusPill product={product} t={t} />
             {product.scraped_at && <span>{fill(t.product.updated, { date: dateTime(product.scraped_at, lang) })}</span>}
           </div>
         </div>
@@ -66,11 +68,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
         </div>
       </div>
 
-      {product.source === "custom" && !product.scraped_at && (
-        <p role="status" className="mt-6 rounded-xl border border-line bg-accent-soft px-4 py-3 text-sm text-ink">
-          {t.product.pending}
-        </p>
-      )}
+      <LinkStatusNote product={product} t={t} lang={lang} />
 
       <section className="my-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="rounded-2xl border border-line bg-card p-4 shadow-soft">

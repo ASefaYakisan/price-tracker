@@ -122,6 +122,23 @@ const es: Dict = {
     removing: "Quitando…",
     pending: "La tienda rechazó la primera lectura. Lo intentamos de nuevo desde otro servidor; el precio suele aparecer en menos de una hora.",
   },
+  linkStatus: {
+    pending: "Pendiente",
+    failed: "No se pudo leer",
+    lastTry: "Último intento {date}: {reason}.",
+    failedTitle: "No pudimos leer un precio de este enlace",
+    failedText: "Nuestro último intento del {date} falló: {reason}. Seguimos revisándolo una vez al día.",
+    checkFailed: "La última comprobación del {date} falló: {reason}. El precio mostrado es de la última lectura correcta.",
+    retry: "Reintentar",
+    retrying: "Intentando…",
+    retried: "En cola. Lo intentaremos de nuevo en 15 minutos.",
+    blocked: "la tienda bloqueó la solicitud",
+    notFound: "no se encontró la página",
+    httpError: "la página de la tienda devolvió un error",
+    noPrice: "no se encontró ningún precio en la página",
+    timeout: "la tienda no respondió a tiempo",
+    network: "no se pudo abrir la página",
+  },
   alertForm: {
     atOrBelow: "Avisarme a partir de",
     create: "Crear alerta",
@@ -329,6 +346,8 @@ const es: Dict = {
     "You created many alerts in the last hour. Try again later.": "Creaste muchas alertas en la última hora. Inténtalo más tarde.",
     "Could not save the product. Please try again.": "No se pudo guardar el producto. Inténtalo de nuevo.",
     "Could not save the price. Please try again.": "No se pudo guardar el precio. Inténtalo de nuevo.",
+    "Only the person who added this item can retry it.": "Solo la persona que añadió este artículo puede reintentarlo.",
+    "Could not queue the item. Please try again.": "No se pudo poner el artículo en cola. Inténtalo de nuevo.",
   },
 };
 

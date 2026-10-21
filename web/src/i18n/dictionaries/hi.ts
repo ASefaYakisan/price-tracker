@@ -122,6 +122,23 @@ const hi: Dict = {
     removing: "हटाया जा रहा है…",
     pending: "दुकान ने पहली कोशिश ठुकरा दी। हम दूसरे सर्वर से फिर कोशिश कर रहे हैं; कीमत आमतौर पर एक घंटे में दिख जाती है।",
   },
+  linkStatus: {
+    pending: "लंबित",
+    failed: "पढ़ा नहीं जा सका",
+    lastTry: "आखिरी कोशिश {date}: {reason}।",
+    failedTitle: "हम इस लिंक से कीमत नहीं पढ़ सके",
+    failedText: "{date} को हमारी आखिरी कोशिश विफल रही: {reason}। हम अब भी इसे दिन में एक बार जाँचते हैं।",
+    checkFailed: "{date} की आखिरी जाँच विफल रही: {reason}। दिखाई गई कीमत आखिरी सफल रीड की है।",
+    retry: "फिर कोशिश करें",
+    retrying: "कोशिश हो रही है…",
+    retried: "कतार में है। हम 15 मिनट के अंदर फिर कोशिश करेंगे।",
+    blocked: "दुकान ने अनुरोध रोक दिया",
+    notFound: "पेज नहीं मिला",
+    httpError: "दुकान के पेज ने त्रुटि लौटाई",
+    noPrice: "पेज पर कोई कीमत नहीं मिली",
+    timeout: "दुकान ने समय पर जवाब नहीं दिया",
+    network: "पेज नहीं खुल सका",
+  },
   alertForm: {
     atOrBelow: "इस कीमत या उससे कम पर अलर्ट करें",
     create: "अलर्ट बनाएँ",
@@ -329,6 +346,8 @@ const hi: Dict = {
     "You created many alerts in the last hour. Try again later.": "पिछले एक घंटे में आपने बहुत अलर्ट बनाए। बाद में कोशिश करें।",
     "Could not save the product. Please try again.": "प्रोडक्ट सेव नहीं हो सका। कृपया फिर से कोशिश करें।",
     "Could not save the price. Please try again.": "कीमत सेव नहीं हो सकी। कृपया फिर से कोशिश करें।",
+    "Only the person who added this item can retry it.": "केवल वही व्यक्ति फिर कोशिश कर सकता है जिसने यह आइटम जोड़ा।",
+    "Could not queue the item. Please try again.": "आइटम को कतार में नहीं डाला जा सका। कृपया फिर कोशिश करें।",
   },
 };
 

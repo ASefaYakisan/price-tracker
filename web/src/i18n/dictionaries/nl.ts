@@ -122,6 +122,23 @@ const nl: Dict = {
     removing: "Verwijderen…",
     pending: "De winkel weigerde de eerste poging. We proberen het opnieuw vanaf een andere server; de prijs verschijnt meestal binnen een uur.",
   },
+  linkStatus: {
+    pending: "In afwachting",
+    failed: "Niet leesbaar",
+    lastTry: "Laatste poging {date}: {reason}.",
+    failedTitle: "We konden geen prijs van deze link lezen",
+    failedText: "Onze laatste poging op {date} is mislukt: {reason}. We controleren hem nog steeds één keer per dag.",
+    checkFailed: "De laatste controle op {date} is mislukt: {reason}. De getoonde prijs komt van de laatste geslaagde uitlezing.",
+    retry: "Opnieuw proberen",
+    retrying: "Bezig…",
+    retried: "In de wachtrij. We proberen het binnen 15 minuten opnieuw.",
+    blocked: "de winkel blokkeerde het verzoek",
+    notFound: "de pagina werd niet gevonden",
+    httpError: "de pagina van de winkel gaf een fout",
+    noPrice: "er is geen prijs op de pagina gevonden",
+    timeout: "de winkel reageerde niet op tijd",
+    network: "de pagina kon niet worden geopend",
+  },
   alertForm: {
     atOrBelow: "Waarschuw me bij of onder",
     create: "Alert aanmaken",
@@ -330,6 +347,8 @@ const nl: Dict = {
     "You created many alerts in the last hour. Try again later.": "Je hebt het afgelopen uur veel meldingen gemaakt. Probeer het later opnieuw.",
     "Could not save the product. Please try again.": "Het product kon niet worden opgeslagen. Probeer het opnieuw.",
     "Could not save the price. Please try again.": "De prijs kon niet worden opgeslagen. Probeer het opnieuw.",
+    "Only the person who added this item can retry it.": "Alleen degene die dit artikel heeft toegevoegd kan het opnieuw proberen.",
+    "Could not queue the item. Please try again.": "Kon het artikel niet in de wachtrij zetten. Probeer het opnieuw.",
   },
 };
 

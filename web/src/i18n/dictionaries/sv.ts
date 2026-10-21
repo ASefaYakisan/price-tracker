@@ -122,6 +122,23 @@ const sv: Dict = {
     removing: "Tar bort…",
     pending: "Butiken nekade första försöket. Vi försöker igen från en annan server; priset brukar synas inom en timme.",
   },
+  linkStatus: {
+    pending: "Väntar",
+    failed: "Kunde inte läsas",
+    lastTry: "Senaste försök {date}: {reason}.",
+    failedTitle: "Vi kunde inte läsa något pris från den här länken",
+    failedText: "Vårt senaste försök {date} misslyckades: {reason}. Vi kontrollerar den fortfarande en gång om dagen.",
+    checkFailed: "Senaste kontrollen {date} misslyckades: {reason}. Det visade priset är från senaste lyckade avläsning.",
+    retry: "Försök igen",
+    retrying: "Försöker…",
+    retried: "I kö. Vi försöker igen inom 15 minuter.",
+    blocked: "butiken blockerade begäran",
+    notFound: "sidan hittades inte",
+    httpError: "butikens sida returnerade ett fel",
+    noPrice: "inget pris hittades på sidan",
+    timeout: "butiken svarade inte i tid",
+    network: "sidan kunde inte öppnas",
+  },
   alertForm: {
     atOrBelow: "Meddela mig vid eller under",
     create: "Skapa bevakning",
@@ -330,6 +347,8 @@ const sv: Dict = {
     "You created many alerts in the last hour. Try again later.": "Du har skapat många larm den senaste timmen. Försök igen senare.",
     "Could not save the product. Please try again.": "Det gick inte att spara produkten. Försök igen.",
     "Could not save the price. Please try again.": "Det gick inte att spara priset. Försök igen.",
+    "Only the person who added this item can retry it.": "Bara den som lade till den här varan kan försöka igen.",
+    "Could not queue the item. Please try again.": "Varan kunde inte köas. Försök igen.",
   },
 };
 
