@@ -2,6 +2,7 @@
 import { extractProduct } from '../extract-price.js';
 import { fetchText, sleep } from '../fetch.js';
 import { attemptRow, outcomeForError } from '../track-outcome.js';
+import { createUnblocker, isBlocked, UNBLOCK_LAYER } from '../unblock-fetch.js';
 
 export const name = 'custom';
 
@@ -11,8 +12,9 @@ export async function fetchAll({ db } = {}) {
   if (error) throw error;
   const products = [];
   const attempts = [];
+  const unblocker = createUnblocker({ db });
   for (const { url, added_by: userId } of data) {
-    const attempt = await readLink(url);
+    const attempt = await readLink(url, { unblocker });
     attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
     if (attempt.product) products.push(attempt.product);
     await sleep(1500);
@@ -22,17 +24,34 @@ export async function fetchAll({ db } = {}) {
 }
 
 // One read of a product page, with why it failed when it did.
-export async function readLink(url, { retries = 3 } = {}) {
+// With an `unblocker` (see unblock-fetch.js), a blocked answer or a listed shop is read through the scraping API.
+export async function readLink(url, { retries = 3, unblocker = null } = {}) {
   let html;
+  let viaApi = false;
+  const throughApi = () => {
+    viaApi = true;
+    return unblocker.fetchPage(url);
+  };
   try {
-    html = await fetchText(url, { headers: BROWSER_HEADERS, timeoutMs: 20_000, retries });
+    if (unblocker?.listed(url) && (await unblocker.hasCredit())) {
+      html = await throughApi();
+    } else {
+      try {
+        html = await fetchText(url, { headers: BROWSER_HEADERS, timeoutMs: 20_000, retries });
+      } catch (err) {
+        if (!isBlocked(err) || !unblocker || !(await unblocker.hasCredit())) throw err;
+        console.warn(`  ${url}: ${err.message ?? err}, trying the scraping API`);
+        html = await throughApi();
+      }
+    }
   } catch (err) {
     console.warn(`  ${url}: ${err.message ?? err}`);
-    return { outcome: outcomeForError(err), httpStatus: err.status ?? null, html: null, product: null };
+    return { outcome: outcomeForError(err), httpStatus: err.status ?? null, layer: viaApi ? UNBLOCK_LAYER : null, html: null, product: null };
   }
   const product = extractProduct(html, url);
   if (!product) console.warn(`  no price found on ${url}`);
-  return { outcome: product ? 'ok' : 'no_price', httpStatus: 200, layer: product?.layer ?? null, html, product };
+  const layer = viaApi ? [UNBLOCK_LAYER, product?.layer].filter(Boolean).join(':') : product?.layer ?? null;
+  return { outcome: product ? 'ok' : 'no_price', httpStatus: 200, layer, html, product };
 }
 
 // The log helps decide what to fix next; failing to write it never stops the refresh.

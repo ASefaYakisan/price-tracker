@@ -4,6 +4,7 @@ import { readLink } from './adapters/custom.js';
 import { sleep } from './fetch.js';
 import { createStore } from './store.js';
 import { attemptRow } from './track-outcome.js';
+import { createUnblocker, recentlyUnblocked } from './unblock-fetch.js';
 
 const WINDOW_HOURS = 48; // after that the daily scrape keeps trying, without the 15-minute retries
 
@@ -30,6 +31,15 @@ export async function pendingLinks(db, now = Date.now()) {
   return data.map(({ id, url }) => ({ url, added_by: ownerById.get(id) ?? null }));
 }
 
+async function skipList(db, links) {
+  try {
+    return await recentlyUnblocked(db, links.map((link) => link.url));
+  } catch (err) {
+    console.warn(`  scraping API off for this run: ${err.message ?? err}`);
+    return new Set(links.map((link) => link.url));
+  }
+}
+
 async function main() {
   const store = createStore();
   if (!store.db) throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are needed to read pending links.');
@@ -37,8 +47,10 @@ async function main() {
   console.log(`${links.length} pending links`);
   const products = [];
   const attempts = [];
+  const unblocker = createUnblocker({ db: store.db });
+  const triedToday = unblocker ? await skipList(store.db, links) : new Set();
   for (const { url, added_by: userId } of links) {
-    const attempt = await readLink(url, { retries: 1 });
+    const attempt = await readLink(url, { retries: 1, unblocker: triedToday.has(url) ? null : unblocker });
     console.log(`  ${attempt.outcome}${attempt.httpStatus ? ` ${attempt.httpStatus}` : ''} ${url}`);
     attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
     if (attempt.product) products.push(attempt.product);

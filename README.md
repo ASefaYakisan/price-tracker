@@ -47,6 +47,25 @@ Every read of a pasted link, when it is added and on each daily refresh, is logg
 
 To measure which shops can be read, run the **Shop probe** workflow from the Actions tab (or `cd scraper && npm run probe`, optionally followed by links). It opens the sample product pages in `scraper/probe-urls.txt` and writes a per-shop table (HTTP code, HTML size, JSON-LD present, price found, layer) to the job summary.
 
+## Blocked shops (optional scraping API)
+
+Reading a pasted link goes through layers, cheapest first:
+
+1. **Plain request** with browser headers, from the server that runs the job.
+2. **Markup layers** on the page that came back: JSON-LD, microdata, price meta tags.
+3. **Pending links**: when the shop turns the site's server away (401/403/429/503 or a timeout), the link is saved without a price and the **Pending links** workflow retries it from GitHub's servers every 15 minutes for two days.
+4. **Scraping API** (optional, off by default): some shops block every datacenter address. With a [ScraperAPI](https://www.scraperapi.com/) key, the scraper retries those links through the API, which opens the page from a residential address. The markup layers then read the price as usual.
+
+The scraping API costs credits, so it is used only when needed:
+
+| Setting | Where | What it does |
+| --- | --- | --- |
+| `SCRAPER_API_KEY` | Actions secret | Turns the layer on. Without it nothing changes. |
+| `UNBLOCK_HOSTS` | Actions variable, optional | Comma-separated shops read through the API straight away, e.g. `vatanbilgisayar.com,trendyol.com`. Other shops use it only after a blocked answer. |
+| `UNBLOCK_MONTHLY_LIMIT` | Actions variable, optional | Requests per calendar month (default 900). When reached, the layer switches off until the next month. |
+
+Requests are counted from `track_attempts`: reads through the API are logged with the layer `unblock` (failed) or `unblock:<markup>` (price found, e.g. `unblock:json-ld`). A pending link that failed through the API is not sent again for 24 hours. If the monthly count cannot be read, no paid request is made.
+
 ## Telegram and Google Sheets
 
 Both are optional and switch on when their repository secrets exist:
