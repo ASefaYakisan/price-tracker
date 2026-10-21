@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@/i18n/client";
 import { money } from "@/lib/format";
 import { useUser } from "@/lib/auth";
+import { refreshMyProducts } from "@/lib/my-products";
 import { authEnabled } from "@/lib/supabase/client";
 
 const PENDING_KEY = "pending-link";
@@ -50,6 +51,7 @@ export function TrackForm() {
       // Reset first: the browser can restore this page from history with its old state.
       setState({ kind: "idle" });
       setUrl("");
+      refreshMyProducts();
       router.push(href(`/products/${json.id}`));
       router.refresh();
     } else if (res?.ok && json?.demo) setState({ kind: "demo", product: json.product });

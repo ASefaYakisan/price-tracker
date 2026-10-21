@@ -96,8 +96,9 @@ export async function POST(request: Request) {
   if (error) return fail("Could not save the product. Please try again.", 500);
   const { error: histError } = await db.from("price_history").insert({ product_id: row.id, price, in_stock });
   if (histError) return fail("Could not save the price. Please try again.", 500);
-  // The first person to add a link owns it; adding the same link again keeps the original owner.
+  // added_by records who brought the link in; everyone who adds it gets it in their own list.
   await db.from("products").update({ added_by: user.id }).eq("id", row.id).is("added_by", null);
+  await addToList(db, user.id, row.id);
 
   revalidateTag("products", { expire: 0 });
   return Response.json({ ok: true, id: row.id, product });
@@ -115,8 +116,13 @@ async function savePending(db: SupabaseClient, url: URL, userId: string, readErr
   const { data: row } = await db.from("products").select("id").eq("source", "custom").eq("external_id", externalId).maybeSingle();
   if (error || !row) return fail(readError, 422);
   await db.from("products").update({ added_by: userId }).eq("id", row.id).is("added_by", null);
+  await addToList(db, userId, row.id);
   revalidateTag("products", { expire: 0 });
   return Response.json({ ok: true, id: row.id, pending: true });
+}
+
+async function addToList(db: SupabaseClient, userId: string, productId: number) {
+  await db.from("user_products").upsert({ user_id: userId, product_id: productId }, { onConflict: "user_id,product_id", ignoreDuplicates: true });
 }
 
 // "samsung-galaxy-s25-ultra-...-p-HBCV00007MIF54" -> "Samsung galaxy s25 ultra ...", until the real name is read.
