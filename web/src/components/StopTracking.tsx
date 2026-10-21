@@ -44,7 +44,7 @@ export function StopTracking({ productId }: { productId: number }) {
   }
 
   return (
-    <section className="mt-6 rounded-2xl border border-line bg-card p-4 shadow-soft sm:p-5">
+    <section className="mt-10 border-t border-line pt-6">
       <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
         <span className="text-muted">{confirm ? t.product.stopConfirm : t.product.addedByYou}</span>
         <div className="flex gap-2">
