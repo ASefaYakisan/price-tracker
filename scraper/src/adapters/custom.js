@@ -8,16 +8,17 @@ export const name = 'custom';
 
 export async function fetchAll({ db } = {}) {
   if (!db) return []; // nothing to refresh without the database that holds the links
-  const { data, error } = await db.from('products').select('url, added_by').eq('source', 'custom');
+  const { data, error } = await db.from('products').select('url, external_id, added_by').eq('source', 'custom');
   if (error) throw error;
   const products = [];
   const attempts = [];
   const browser = createBrowserReader();
   try {
-    for (const { url, added_by: userId } of data) {
-      const attempt = await browser.retry(url, await readLink(url));
+    for (const { url, external_id: externalId, added_by: userId } of data) {
+      const attempt = await browser.retry(url, await readLink(url, { externalId }));
+      const product = keepExternalId(attempt.product, externalId);
       attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
-      if (attempt.product) products.push(attempt.product);
+      if (product) products.push(product);
       await sleep(1500);
     }
   } finally {
@@ -28,7 +29,8 @@ export async function fetchAll({ db } = {}) {
 }
 
 // One read of a product page, with why it failed when it did.
-export async function readLink(url, { retries = 3 } = {}) {
+// A saved externalId is kept, so a change in how links are shortened never splits one product into two rows.
+export async function readLink(url, { retries = 3, externalId = null } = {}) {
   let html;
   try {
     html = await fetchText(url, { headers: BROWSER_HEADERS, timeoutMs: 20_000, retries });
@@ -36,9 +38,13 @@ export async function readLink(url, { retries = 3 } = {}) {
     console.warn(`  ${url}: ${err.message ?? err}`);
     return { outcome: outcomeForError(err), httpStatus: err.status ?? null, html: null, product: null };
   }
-  const product = extractProduct(html, url);
+  const product = keepExternalId(extractProduct(html, url), externalId);
   if (!product) console.warn(`  no price found on ${url}`);
   return { outcome: product ? 'ok' : 'no_price', httpStatus: 200, layer: product?.layer ?? null, html, product };
+}
+
+function keepExternalId(product, externalId) {
+  return product && externalId ? { ...product, external_id: externalId } : product;
 }
 
 // The log helps decide what to fix next; failing to write it never stops the refresh.
