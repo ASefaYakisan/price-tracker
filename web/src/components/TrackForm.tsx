@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/i18n/client";
@@ -134,7 +135,12 @@ export function TrackForm() {
           {fill(t.track.found, { title: state.product.title, price: money(state.product.price, state.product.currency, lang) })}
         </p>
       )}
-      <p className="mt-2 text-xs text-faint">{signedOut ? t.track.signIn : t.track.hint}</p>
+      <p className="mt-2 text-xs text-faint">
+        {signedOut ? t.track.signIn : t.track.hint}{" "}
+        <Link href={href("/how-to-add")} className="font-medium text-accent underline-offset-4 hover:underline">
+          {t.howTo.link}
+        </Link>
+      </p>
     </div>
   );
 }
