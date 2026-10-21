@@ -306,6 +306,12 @@ const ar: Dict = {
     "The shop refused the request. Some shops block automated visits.": "رفض المتجر الطلب. بعض المتاجر تحظر الزيارات الآلية.",
     "Could not open that page. Check the link and try again.": "تعذّر فتح هذه الصفحة. تحقّق من الرابط وحاول مرة أخرى.",
     "No price found on that page. Paste the link of a single product page.": "لم يُعثر على سعر في هذه الصفحة. الصق رابط صفحة منتج واحد.",
+    "That page was not found at the shop. Check the link and try again.":
+      "لم يتم العثور على هذه الصفحة في المتجر. تحقّق من الرابط وحاول مرة أخرى.",
+    "The shop's page returned an error. Try again later.":
+      "أعادت صفحة المتجر خطأً. حاول مرة أخرى لاحقًا.",
+    "The shop did not respond in time. Try again later.":
+      "لم يستجب المتجر في الوقت المناسب. حاول مرة أخرى لاحقًا.",
     "Adding links is not switched on for this site yet.": "إضافة الروابط غير مفعّلة لهذا الموقع بعد.",
     "This demo already tracks the maximum number of links.": "يتتبّع هذا العرض التجريبي الحد الأقصى من الروابط بالفعل.",
     "You added many links in the last hour. Try again later.": "أضفت روابط كثيرة خلال الساعة الماضية. حاول لاحقًا.",

@@ -305,6 +305,12 @@ const zh: Dict = {
     "The shop refused the request. Some shops block automated visits.": "商店拒绝了请求。部分商店会拦截自动访问。",
     "Could not open that page. Check the link and try again.": "无法打开该页面。请检查链接后重试。",
     "No price found on that page. Paste the link of a single product page.": "该页面未找到价格。请粘贴单个商品页面的链接。",
+    "That page was not found at the shop. Check the link and try again.":
+      "在该商店中找不到此页面。请检查链接后重试。",
+    "The shop's page returned an error. Try again later.":
+      "商店页面返回了错误。请稍后重试。",
+    "The shop did not respond in time. Try again later.":
+      "商店未及时响应。请稍后重试。",
     "Adding links is not switched on for this site yet.": "本站尚未开启添加链接功能。",
     "This demo already tracks the maximum number of links.": "此演示已追踪最大数量的链接。",
     "You added many links in the last hour. Try again later.": "你在过去一小时内添加了很多链接。请稍后再试。",

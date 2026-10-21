@@ -309,6 +309,12 @@ const vi: Dict = {
     "Could not open that page. Check the link and try again.": "Không thể mở trang đó. Hãy kiểm tra liên kết và thử lại.",
     "No price found on that page. Paste the link of a single product page.":
       "Không tìm thấy giá trên trang đó. Hãy dán liên kết của một trang sản phẩm cụ thể.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Không tìm thấy trang này trên cửa hàng. Hãy kiểm tra liên kết và thử lại.",
+    "The shop's page returned an error. Try again later.":
+      "Trang của cửa hàng trả về lỗi. Hãy thử lại sau.",
+    "The shop did not respond in time. Try again later.":
+      "Cửa hàng không phản hồi kịp thời. Hãy thử lại sau.",
     "Adding links is not switched on for this site yet.": "Trang này chưa bật tính năng thêm liên kết.",
     "This demo already tracks the maximum number of links.": "Bản demo này đã theo dõi số lượng liên kết tối đa.",
     "You added many links in the last hour. Try again later.": "Bạn đã thêm nhiều liên kết trong giờ qua. Thử lại sau.",

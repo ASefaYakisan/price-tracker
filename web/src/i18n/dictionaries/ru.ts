@@ -309,6 +309,12 @@ const ru: Dict = {
     "Could not open that page. Check the link and try again.": "Не удалось открыть страницу. Проверьте ссылку и попробуйте ещё раз.",
     "No price found on that page. Paste the link of a single product page.":
       "На этой странице не найдена цена. Вставьте ссылку на страницу отдельного товара.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Эта страница не найдена в магазине. Проверьте ссылку и попробуйте снова.",
+    "The shop's page returned an error. Try again later.":
+      "Страница магазина вернула ошибку. Попробуйте позже.",
+    "The shop did not respond in time. Try again later.":
+      "Магазин не ответил вовремя. Попробуйте позже.",
     "Adding links is not switched on for this site yet.": "Добавление ссылок для этого сайта пока не включено.",
     "This demo already tracks the maximum number of links.": "Это демо уже отслеживает максимальное количество ссылок.",
     "You added many links in the last hour. Try again later.": "За последний час вы добавили много ссылок. Попробуйте позже.",

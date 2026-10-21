@@ -308,6 +308,12 @@ const ko: Dict = {
     "Could not open that page. Check the link and try again.": "페이지를 열 수 없습니다. 링크를 확인하고 다시 시도해 주세요.",
     "No price found on that page. Paste the link of a single product page.":
       "해당 페이지에서 가격을 찾지 못했습니다. 개별 상품 페이지의 링크를 붙여 넣으세요.",
+    "That page was not found at the shop. Check the link and try again.":
+      "쇼핑몰에서 해당 페이지를 찾을 수 없습니다. 링크를 확인하고 다시 시도하세요.",
+    "The shop's page returned an error. Try again later.":
+      "쇼핑몰 페이지에서 오류가 발생했습니다. 나중에 다시 시도하세요.",
+    "The shop did not respond in time. Try again later.":
+      "쇼핑몰이 제시간에 응답하지 않았습니다. 나중에 다시 시도하세요.",
     "Adding links is not switched on for this site yet.": "이 사이트에서는 아직 링크 추가 기능이 켜져 있지 않습니다.",
     "This demo already tracks the maximum number of links.": "이 데모는 이미 최대 개수의 링크를 추적하고 있습니다.",
     "You added many links in the last hour. Try again later.": "지난 1시간 동안 링크를 많이 추가했습니다. 나중에 다시 시도하세요.",

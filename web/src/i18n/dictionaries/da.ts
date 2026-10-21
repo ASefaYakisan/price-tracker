@@ -309,6 +309,12 @@ const da: Dict = {
     "Could not open that page. Check the link and try again.": "Siden kunne ikke åbnes. Tjek linket, og prøv igen.",
     "No price found on that page. Paste the link of a single product page.":
       "Der blev ikke fundet nogen pris på siden. Indsæt linket til en enkelt produktside.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Siden blev ikke fundet i butikken. Tjek linket, og prøv igen.",
+    "The shop's page returned an error. Try again later.":
+      "Butikkens side svarede med en fejl. Prøv igen senere.",
+    "The shop did not respond in time. Try again later.":
+      "Butikken svarede ikke i tide. Prøv igen senere.",
     "Adding links is not switched on for this site yet.": "Tilføjelse af links er endnu ikke slået til for dette website.",
     "This demo already tracks the maximum number of links.": "Denne demo følger allerede det maksimale antal links.",
     "You added many links in the last hour. Try again later.": "Du har tilføjet mange links den seneste time. Prøv igen senere.",

@@ -311,6 +311,12 @@ const de: Dict = {
       "Die Seite konnte nicht geöffnet werden. Prüfe den Link und versuch es erneut.",
     "No price found on that page. Paste the link of a single product page.":
       "Auf dieser Seite wurde kein Preis gefunden. Füge den Link einer einzelnen Produktseite ein.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Diese Seite wurde im Shop nicht gefunden. Prüfe den Link und versuche es erneut.",
+    "The shop's page returned an error. Try again later.":
+      "Die Seite des Shops hat einen Fehler gemeldet. Versuche es später erneut.",
+    "The shop did not respond in time. Try again later.":
+      "Der Shop hat nicht rechtzeitig geantwortet. Versuche es später erneut.",
     "Adding links is not switched on for this site yet.": "Das Hinzufügen von Links ist für diese Seite noch nicht aktiviert.",
     "This demo already tracks the maximum number of links.": "Diese Demo verfolgt bereits die maximale Anzahl an Links.",
     "You added many links in the last hour. Try again later.": "Du hast in der letzten Stunde viele Links hinzugefügt. Versuch es später erneut.",

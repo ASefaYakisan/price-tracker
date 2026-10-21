@@ -308,6 +308,12 @@ const hi: Dict = {
     "Could not open that page. Check the link and try again.": "वह पेज नहीं खुल सका। लिंक जाँचें और फिर से कोशिश करें।",
     "No price found on that page. Paste the link of a single product page.":
       "उस पेज पर कोई कीमत नहीं मिली। किसी एक प्रोडक्ट पेज का लिंक पेस्ट करें।",
+    "That page was not found at the shop. Check the link and try again.":
+      "यह पेज दुकान पर नहीं मिला। लिंक जाँचें और फिर से कोशिश करें।",
+    "The shop's page returned an error. Try again later.":
+      "दुकान के पेज ने एक त्रुटि लौटाई। बाद में फिर से कोशिश करें।",
+    "The shop did not respond in time. Try again later.":
+      "दुकान ने समय पर जवाब नहीं दिया। बाद में फिर से कोशिश करें।",
     "Adding links is not switched on for this site yet.": "इस साइट के लिए लिंक जोड़ना अभी चालू नहीं है।",
     "This demo already tracks the maximum number of links.": "यह डेमो पहले से अधिकतम संख्या में लिंक ट्रैक कर रहा है।",
     "You added many links in the last hour. Try again later.": "पिछले एक घंटे में आपने बहुत लिंक जोड़े। बाद में कोशिश करें।",

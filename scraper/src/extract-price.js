@@ -8,9 +8,15 @@ export function extractProduct(html, pageUrl) {
   const fromLd = jsonLdProduct($);
   const meta = (key) => $(`meta[property="${key}"], meta[name="${key}"], meta[itemprop="${key}"]`).first().attr('content')?.trim();
 
-  const price =
-    fromLd?.price ??
-    parseAmount(meta('product:price:amount') ?? meta('og:price:amount') ?? $('[itemprop="price"]').first().attr('content') ?? meta('price'));
+  // `layer` records which kind of markup held the price, so failures and wins can be counted per kind.
+  const [layer, raw] = fromLd
+    ? ['json-ld']
+    : ([
+        ['meta', meta('product:price:amount') ?? meta('og:price:amount')],
+        ['microdata', $('[itemprop="price"]').first().attr('content')],
+        ['meta', meta('price')],
+      ].find(([, value]) => value != null) ?? []);
+  const price = fromLd?.price ?? parseAmount(raw);
   if (price == null) return null;
 
   const currency =
@@ -27,6 +33,7 @@ export function extractProduct(html, pageUrl) {
     currency: currency ? currency.toUpperCase() : null,
     in_stock: !/outofstock|out of stock|soldout|discontinued/i.test(availability),
     rating: null,
+    layer,
   };
 }
 

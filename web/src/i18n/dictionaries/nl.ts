@@ -309,6 +309,12 @@ const nl: Dict = {
       "Die pagina kon niet worden geopend. Controleer de link en probeer het opnieuw.",
     "No price found on that page. Paste the link of a single product page.":
       "Geen prijs gevonden op die pagina. Plak de link van één productpagina.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Die pagina is niet gevonden bij de winkel. Controleer de link en probeer het opnieuw.",
+    "The shop's page returned an error. Try again later.":
+      "De pagina van de winkel gaf een fout. Probeer het later opnieuw.",
+    "The shop did not respond in time. Try again later.":
+      "De winkel reageerde niet op tijd. Probeer het later opnieuw.",
     "Adding links is not switched on for this site yet.": "Links toevoegen is voor deze site nog niet ingeschakeld.",
     "This demo already tracks the maximum number of links.": "Deze demo volgt al het maximale aantal links.",
     "You added many links in the last hour. Try again later.": "Je hebt het afgelopen uur veel links toegevoegd. Probeer het later opnieuw.",

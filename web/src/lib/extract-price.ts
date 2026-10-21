@@ -12,7 +12,10 @@ export type ExtractedProduct = {
   currency: string | null;
   in_stock: boolean;
   rating: null;
+  layer: PriceLayer;
 };
+
+export type PriceLayer = "json-ld" | "meta" | "microdata";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Json = any;
@@ -22,12 +25,18 @@ export function extractProduct(html: string, pageUrl: string): ExtractedProduct 
   const fromLd = jsonLdProduct($);
   const meta = (key: string) => $(`meta[property="${key}"], meta[name="${key}"], meta[itemprop="${key}"]`).first().attr("content")?.trim();
 
-  const price =
-    fromLd?.price ??
-    parseAmount(
-      meta("product:price:amount") ?? meta("og:price:amount") ?? $('[itemprop="price"]').first().attr("content") ?? meta("price"),
-    );
-  if (price == null) return null;
+  // `layer` records which kind of markup held the price, so failures and wins can be counted per kind.
+  const [layer, raw]: [PriceLayer?, string?] = fromLd
+    ? ["json-ld"]
+    : ((
+        [
+          ["meta", meta("product:price:amount") ?? meta("og:price:amount")],
+          ["microdata", $('[itemprop="price"]').first().attr("content")],
+          ["meta", meta("price")],
+        ] as [PriceLayer, string | undefined][]
+      ).find(([, value]) => value != null) ?? []);
+  const price = fromLd?.price ?? parseAmount(raw);
+  if (price == null || !layer) return null;
 
   const currency =
     fromLd?.currency ??
@@ -47,6 +56,7 @@ export function extractProduct(html: string, pageUrl: string): ExtractedProduct 
     currency: currency ? currency.toUpperCase() : null,
     in_stock: !/outofstock|out of stock|soldout|discontinued/i.test(availability),
     rating: null,
+    layer,
   };
 }
 
