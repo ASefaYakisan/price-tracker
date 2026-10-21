@@ -258,6 +258,7 @@ const id: Dict = {
     dark: "Gelap",
     system: "Sistem",
     colors: "Tema warna",
+    tag: "Label harga",
     indigo: "Nila",
     ocean: "Samudra",
     forest: "Hutan",

@@ -257,6 +257,7 @@ const ja: Dict = {
     dark: "ダーク",
     system: "システム",
     colors: "カラーテーマ",
+    tag: "値札",
     indigo: "インディゴ",
     ocean: "オーシャン",
     forest: "フォレスト",

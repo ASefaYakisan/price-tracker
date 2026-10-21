@@ -258,6 +258,7 @@ const da: Dict = {
     dark: "Mørk",
     system: "System",
     colors: "Farvetema",
+    tag: "Prisskilt",
     indigo: "Indigo",
     ocean: "Hav",
     forest: "Skov",

@@ -257,6 +257,7 @@ const zh: Dict = {
     dark: "深色",
     system: "跟随系统",
     colors: "颜色主题",
+    tag: "价签",
     indigo: "靛蓝",
     ocean: "海洋",
     forest: "森林",

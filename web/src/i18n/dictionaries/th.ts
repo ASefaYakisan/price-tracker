@@ -258,6 +258,7 @@ const th: Dict = {
     dark: "มืด",
     system: "ตามระบบ",
     colors: "ธีมสี",
+    tag: "ป้ายราคา",
     indigo: "คราม",
     ocean: "มหาสมุทร",
     forest: "ป่าไม้",

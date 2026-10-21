@@ -258,6 +258,7 @@ const de: Dict = {
     dark: "Dunkel",
     system: "System",
     colors: "Farbschema",
+    tag: "Preisschild",
     indigo: "Indigo",
     ocean: "Ozean",
     forest: "Wald",

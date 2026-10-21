@@ -258,6 +258,7 @@ const ru: Dict = {
     dark: "Тёмный",
     system: "Системный",
     colors: "Цветовая тема",
+    tag: "Ценник",
     indigo: "Индиго",
     ocean: "Океан",
     forest: "Лес",

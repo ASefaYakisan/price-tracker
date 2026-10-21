@@ -258,6 +258,7 @@ const ro: Dict = {
     dark: "Întunecat",
     system: "Sistem",
     colors: "Temă de culoare",
+    tag: "Etichetă",
     indigo: "Indigo",
     ocean: "Ocean",
     forest: "Pădure",

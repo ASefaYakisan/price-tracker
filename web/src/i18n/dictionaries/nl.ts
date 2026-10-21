@@ -257,6 +257,7 @@ const nl: Dict = {
     dark: "Donker",
     system: "Systeem",
     colors: "Kleurthema",
+    tag: "Prijskaartje",
     indigo: "Indigo",
     ocean: "Oceaan",
     forest: "Bos",

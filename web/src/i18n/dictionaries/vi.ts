@@ -258,6 +258,7 @@ const vi: Dict = {
     dark: "Tối",
     system: "Hệ thống",
     colors: "Chủ đề màu",
+    tag: "Nhãn giá",
     indigo: "Chàm",
     ocean: "Đại dương",
     forest: "Rừng xanh",

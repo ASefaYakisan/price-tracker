@@ -258,6 +258,7 @@ const sv: Dict = {
     dark: "Mörkt",
     system: "System",
     colors: "Färgtema",
+    tag: "Prislapp",
     indigo: "Indigo",
     ocean: "Hav",
     forest: "Skog",

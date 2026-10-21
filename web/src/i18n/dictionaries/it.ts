@@ -257,6 +257,7 @@ const it: Dict = {
     dark: "Scuro",
     system: "Sistema",
     colors: "Tema colore",
+    tag: "Cartellino",
     indigo: "Indaco",
     ocean: "Oceano",
     forest: "Foresta",

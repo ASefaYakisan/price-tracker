@@ -258,6 +258,7 @@ const cs: Dict = {
     dark: "Tmavý",
     system: "Systém",
     colors: "Barevný motiv",
+    tag: "Cenovka",
     indigo: "Indigo",
     ocean: "Oceán",
     forest: "Les",
