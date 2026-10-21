@@ -30,6 +30,7 @@ test('extractProduct prefers JSON-LD Product offers, including @graph', () => {
     currency: 'TRY',
     in_stock: false,
     rating: null,
+    layer: 'json-ld',
   });
 });
 
@@ -42,6 +43,14 @@ test('extractProduct falls back to price meta tags', () => {
   assert.equal(p.price, 39.99);
   assert.equal(p.currency, 'USD');
   assert.equal(p.in_stock, true);
+  assert.equal(p.layer, 'meta');
+});
+
+test('extractProduct reports microdata when only itemprop holds the price', () => {
+  const html = `<h1>Mug</h1><span itemprop="price" content="12.50"></span><meta itemprop="priceCurrency" content="EUR">`;
+  const p = extractProduct(html, 'https://shop.example/mug');
+  assert.equal(p.price, 12.5);
+  assert.equal(p.layer, 'microdata');
 });
 
 test('extractProduct returns null when the page has no price', () => {

@@ -1,11 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useI18n } from "@/i18n/client";
 import { money } from "@/lib/format";
 import { useUser } from "@/lib/auth";
 import { authEnabled } from "@/lib/supabase/client";
+
+const PENDING_KEY = "pending-link";
 
 type Preview = { title: string; price: number; currency: string | null };
 type State = { kind: "idle" | "saving" } | { kind: "demo"; product: Preview } | { kind: "error"; message: string };
@@ -16,9 +18,27 @@ export function TrackForm() {
   const [url, setUrl] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
   const user = useUser();
+  const signedOut = authEnabled && user === null;
+
+  // A link pasted before signing in waits here and is back in the box after sign-in.
+  useEffect(() => {
+    try {
+      const pending = sessionStorage.getItem(PENDING_KEY);
+      if (!pending) return;
+      sessionStorage.removeItem(PENDING_KEY);
+      setUrl(pending); // eslint-disable-line react-hooks/set-state-in-effect -- browser-only storage, read once after mount
+    } catch {}
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (signedOut) {
+      try {
+        sessionStorage.setItem(PENDING_KEY, url);
+      } catch {}
+      router.push(href("/login"));
+      return;
+    }
     setState({ kind: "saving" });
     const res = await fetch("/api/track", {
       method: "POST",
@@ -36,60 +56,42 @@ export function TrackForm() {
     else setState({ kind: "error", message: apiError(json?.error) });
   }
 
-  if (authEnabled && !user) {
-    return (
-      <section className="mb-6 flex flex-col gap-3 rounded-2xl border border-line bg-card p-4 shadow-soft sm:flex-row sm:items-center sm:p-5">
-        <div className="flex-1">
-          <div className="text-sm font-medium">{t.track.label}</div>
-          <p className="mt-0.5 text-sm text-muted">{t.track.signIn}</p>
-        </div>
-        {user === null && (
-          <a
-            href={href("/login")}
-            className="shrink-0 rounded-lg bg-accent px-4 py-2 text-center text-sm font-medium text-accent-ink hover:opacity-90"
-          >
-            {t.alertForm.signInButton}
-          </a>
-        )}
-      </section>
-    );
-  }
-
   return (
-    <section className="mb-6 rounded-2xl border border-line bg-card p-4 shadow-soft sm:p-5">
-      <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
-        <label className="flex flex-1 flex-col gap-1.5 text-sm font-medium text-ink">
+    <div>
+      <form onSubmit={submit}>
+        <label htmlFor="track-url" className="sr-only">
           {t.track.label}
-          <span className="relative">
-            <svg
-              viewBox="0 0 20 20"
-              className="pointer-events-none absolute start-3 top-3 size-4 text-faint"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              aria-hidden
-            >
-              <path d="M8.5 11.5a3.5 3.5 0 005 0l3-3a3.5 3.5 0 00-5-5l-1 1M11.5 8.5a3.5 3.5 0 00-5 0l-3 3a3.5 3.5 0 005 5l1-1" />
-            </svg>
-            <input
-              type="url"
-              required
-              dir="ltr"
-              placeholder={t.track.placeholder}
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              className="h-10 w-full rounded-lg border border-line bg-bg ps-9 pe-3 text-sm font-normal text-ink placeholder:text-faint focus:border-accent focus:outline-none"
-            />
-          </span>
         </label>
-        <button
-          type="submit"
-          disabled={state.kind === "saving"}
-          className="h-10 rounded-lg bg-accent px-4 text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-60"
-        >
-          {state.kind === "saving" ? t.track.reading : t.track.submit}
-        </button>
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border-2 border-line bg-card p-1.5 ps-3 focus-within:border-accent sm:flex-nowrap">
+          <svg
+            viewBox="0 0 20 20"
+            className="size-5 shrink-0 text-faint"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            aria-hidden
+          >
+            <path d="M8.5 11.5a3.5 3.5 0 005 0l3-3a3.5 3.5 0 00-5-5l-1 1M11.5 8.5a3.5 3.5 0 00-5 0l-3 3a3.5 3.5 0 005 5l1-1" />
+          </svg>
+          <input
+            id="track-url"
+            type="url"
+            required
+            dir="ltr"
+            placeholder={t.track.placeholder}
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            className="h-11 min-w-0 flex-1 basis-40 bg-transparent text-base text-ink placeholder:text-faint focus:outline-none"
+          />
+          <button
+            type="submit"
+            disabled={state.kind === "saving"}
+            className="h-11 w-full shrink-0 rounded-lg bg-accent px-4 text-sm font-semibold text-accent-ink hover:opacity-90 disabled:opacity-60 sm:w-auto sm:px-6"
+          >
+            {state.kind === "saving" ? t.track.reading : t.track.submit}
+          </button>
+        </div>
       </form>
       {state.kind === "error" && (
         <p role="alert" className="mt-3 text-sm text-bad">
@@ -101,7 +103,7 @@ export function TrackForm() {
           {fill(t.track.found, { title: state.product.title, price: money(state.product.price, state.product.currency, lang) })}
         </p>
       )}
-      <p className="mt-2 text-xs text-faint">{t.track.hint}</p>
-    </section>
+      <p className="mt-2 text-xs text-faint">{signedOut ? t.track.signIn : t.track.hint}</p>
+    </div>
   );
 }

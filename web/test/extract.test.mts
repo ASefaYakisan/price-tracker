@@ -14,6 +14,7 @@ for (const c of cases) {
     const result = readPrice(readFileSync(new URL(c.file, dir), "utf8"), c.url);
     assert.ok(result, "no price found");
     assert.equal(result.layer, c.layer);
+    assert.equal(result.product.layer, c.layer, 'product.layer feeds track_attempts');
     for (const [key, value] of Object.entries(c.expect)) assert.equal(result.product[key as keyof typeof result.product], value, key);
   });
 }

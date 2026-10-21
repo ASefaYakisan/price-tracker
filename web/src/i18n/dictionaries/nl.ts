@@ -41,6 +41,11 @@ const nl: Dict = {
     custom: "Toegevoegd via link",
   },
   home: {
+    heroTitle: "Weet het meteen als een prijs daalt",
+    heroLead: "Plak een productlink. We controleren de prijs elke dag, tonen het verloop en waarschuwen je zodra je doelprijs bereikt is.",
+    step1: "Plak een willekeurige productlink",
+    step2: "We controleren hem elke dag",
+    step3: "Melding bij jouw prijs",
     title: "Gevolgde prijzen",
     lastScrape: "Laatste scrape {date}",
     noScrapes: "Nog geen scrapes",
@@ -115,6 +120,7 @@ const nl: Dict = {
     stopTracking: "Niet meer volgen",
     stopConfirm: "Dit item niet meer volgen? De prijsgeschiedenis en alerts worden ook verwijderd.",
     removing: "Verwijderen…",
+    pending: "De winkel weigerde de eerste poging. We proberen het opnieuw vanaf een andere server; de prijs verschijnt meestal binnen een uur.",
   },
   alertForm: {
     atOrBelow: "Waarschuw me bij of onder",
@@ -257,6 +263,7 @@ const nl: Dict = {
     dark: "Donker",
     system: "Systeem",
     colors: "Kleurthema",
+    tag: "Prijskaartje",
     indigo: "Indigo",
     ocean: "Oceaan",
     forest: "Bos",
@@ -309,6 +316,12 @@ const nl: Dict = {
       "Die pagina kon niet worden geopend. Controleer de link en probeer het opnieuw.",
     "No price found on that page. Paste the link of a single product page.":
       "Geen prijs gevonden op die pagina. Plak de link van één productpagina.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Die pagina is niet gevonden bij de winkel. Controleer de link en probeer het opnieuw.",
+    "The shop's page returned an error. Try again later.":
+      "De pagina van de winkel gaf een fout. Probeer het later opnieuw.",
+    "The shop did not respond in time. Try again later.":
+      "De winkel reageerde niet op tijd. Probeer het later opnieuw.",
     "Adding links is not switched on for this site yet.": "Links toevoegen is voor deze site nog niet ingeschakeld.",
     "This demo already tracks the maximum number of links.": "Deze demo volgt al het maximale aantal links.",
     "You added many links in the last hour. Try again later.": "Je hebt het afgelopen uur veel links toegevoegd. Probeer het later opnieuw.",

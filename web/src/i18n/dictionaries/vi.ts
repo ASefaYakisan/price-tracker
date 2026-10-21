@@ -41,6 +41,11 @@ const vi: Dict = {
     custom: "Thêm bằng liên kết",
   },
   home: {
+    heroTitle: "Biết ngay khi giá giảm",
+    heroLead: "Dán liên kết sản phẩm. Chúng tôi kiểm tra giá mỗi ngày, hiển thị lịch sử giá và báo cho bạn khi giá đạt mục tiêu.",
+    step1: "Dán bất kỳ liên kết sản phẩm nào",
+    step2: "Chúng tôi kiểm tra mỗi ngày",
+    step3: "Nhận cảnh báo ở mức giá của bạn",
     title: "Giá đang theo dõi",
     lastScrape: "Lần thu thập gần nhất {date}",
     noScrapes: "Chưa thu thập lần nào",
@@ -115,6 +120,7 @@ const vi: Dict = {
     stopTracking: "Ngừng theo dõi",
     stopConfirm: "Ngừng theo dõi sản phẩm này? Lịch sử giá và cảnh báo của nó cũng sẽ bị xóa.",
     removing: "Đang xóa…",
+    pending: "Cửa hàng đã từ chối lần đọc đầu tiên. Chúng tôi đang thử lại từ máy chủ khác; giá thường xuất hiện trong vòng một giờ.",
   },
   alertForm: {
     atOrBelow: "Báo cho tôi khi giá bằng hoặc thấp hơn",
@@ -258,6 +264,7 @@ const vi: Dict = {
     dark: "Tối",
     system: "Hệ thống",
     colors: "Chủ đề màu",
+    tag: "Nhãn giá",
     indigo: "Chàm",
     ocean: "Đại dương",
     forest: "Rừng xanh",
@@ -309,6 +316,12 @@ const vi: Dict = {
     "Could not open that page. Check the link and try again.": "Không thể mở trang đó. Hãy kiểm tra liên kết và thử lại.",
     "No price found on that page. Paste the link of a single product page.":
       "Không tìm thấy giá trên trang đó. Hãy dán liên kết của một trang sản phẩm cụ thể.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Không tìm thấy trang này trên cửa hàng. Hãy kiểm tra liên kết và thử lại.",
+    "The shop's page returned an error. Try again later.":
+      "Trang của cửa hàng trả về lỗi. Hãy thử lại sau.",
+    "The shop did not respond in time. Try again later.":
+      "Cửa hàng không phản hồi kịp thời. Hãy thử lại sau.",
     "Adding links is not switched on for this site yet.": "Trang này chưa bật tính năng thêm liên kết.",
     "This demo already tracks the maximum number of links.": "Bản demo này đã theo dõi số lượng liên kết tối đa.",
     "You added many links in the last hour. Try again later.": "Bạn đã thêm nhiều liên kết trong giờ qua. Thử lại sau.",

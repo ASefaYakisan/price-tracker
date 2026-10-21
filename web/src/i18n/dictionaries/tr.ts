@@ -41,6 +41,11 @@ const tr: Dict = {
     custom: "Bağlantıyla eklenen",
   },
   home: {
+    heroTitle: "Fiyat düştüğü an haberin olsun",
+    heroLead: "Ürün linkini yapıştır. Fiyatı her gün kontrol eder, geçmişini grafikte gösterir ve hedef fiyatına inince sana haber veririz.",
+    step1: "Herhangi bir ürün linkini yapıştır",
+    step2: "Her gün kontrol ederiz",
+    step3: "Hedef fiyatında haber al",
     title: "Takip edilen fiyatlar",
     lastScrape: "Son tarama {date}",
     noScrapes: "Henüz tarama yok",
@@ -115,6 +120,7 @@ const tr: Dict = {
     stopTracking: "Takibi bırak",
     stopConfirm: "Bu ürünün takibi bırakılsın mı? Fiyat geçmişi ve alarmları da silinir.",
     removing: "Kaldırılıyor…",
+    pending: "Mağaza ilk okumayı reddetti. Başka bir sunucudan tekrar deniyoruz; fiyat genelde bir saat içinde görünür.",
   },
   alertForm: {
     atOrBelow: "Bu fiyat ve altında haber ver",
@@ -257,6 +263,7 @@ const tr: Dict = {
     dark: "Koyu",
     system: "Sistem",
     colors: "Renk teması",
+    tag: "Etiket",
     indigo: "Çivit",
     ocean: "Okyanus",
     forest: "Orman",
@@ -308,6 +315,12 @@ const tr: Dict = {
     "Could not open that page. Check the link and try again.": "Bu sayfa açılamadı. Bağlantıyı kontrol edip tekrar dene.",
     "No price found on that page. Paste the link of a single product page.":
       "Bu sayfada fiyat bulunamadı. Tek bir ürün sayfasının bağlantısını yapıştır.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Bu sayfa mağazada bulunamadı. Bağlantıyı kontrol edip tekrar dene.",
+    "The shop's page returned an error. Try again later.":
+      "Mağazanın sayfası bir hata döndürdü. Daha sonra tekrar dene.",
+    "The shop did not respond in time. Try again later.":
+      "Mağaza zamanında yanıt vermedi. Daha sonra tekrar dene.",
     "Adding links is not switched on for this site yet.": "Bu sitede bağlantı ekleme henüz açık değil.",
     "This demo already tracks the maximum number of links.": "Bu demo zaten en fazla sayıda bağlantıyı takip ediyor.",
     "You added many links in the last hour. Try again later.": "Son bir saatte çok sayıda bağlantı ekledin. Daha sonra tekrar dene.",

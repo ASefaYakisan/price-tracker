@@ -14,6 +14,7 @@ export type ExtractedProduct = {
   currency: string | null;
   in_stock: boolean;
   rating: null;
+  layer: Layer;
 };
 
 export type Layer = "json-ld" | "microdata" | "meta" | "embedded-state" | "shop-adapter";
@@ -43,7 +44,7 @@ export function readPrice(html: string, pageUrl: string): { layer: Layer; produc
   const ctx: Ctx = { $, html, url };
   for (const [layer, read] of LAYERS) {
     const found = read(ctx);
-    if (found?.price != null) return { layer, product: buildProduct(found, ctx) };
+    if (found?.price != null) return { layer, product: buildProduct(found, ctx, layer) };
   }
   return null;
 }
@@ -57,7 +58,7 @@ const LAYERS: [Layer, (ctx: Ctx) => Found | null][] = [
 ];
 
 // The winning layer gives the price; anything it lacks comes from the page's general tags.
-function buildProduct(found: Found, { $, url }: Ctx): ExtractedProduct {
+function buildProduct(found: Found, { $, url }: Ctx, layer: Layer): ExtractedProduct {
   const meta = metaReader($);
   const currency =
     found.currency ?? meta("product:price:currency") ?? meta("og:price:currency") ?? itempropValue($, "priceCurrency") ?? null;
@@ -73,6 +74,7 @@ function buildProduct(found: Found, { $, url }: Ctx): ExtractedProduct {
     currency: currency ? String(currency).toUpperCase() : null,
     in_stock: !/outofstock|out of stock|soldout|discontinued|unavailable|stokta yok|tükendi/i.test(String(availability)),
     rating: null,
+    layer,
   };
 }
 

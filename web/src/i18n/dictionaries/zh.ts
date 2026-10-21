@@ -41,6 +41,11 @@ const zh: Dict = {
     custom: "通过链接添加",
   },
   home: {
+    heroTitle: "降价第一时间知道",
+    heroLead: "粘贴商品链接。我们每天检查价格、绘制历史走势，并在达到目标价时提醒你。",
+    step1: "粘贴任意商品链接",
+    step2: "每天自动检查",
+    step3: "到达目标价即提醒",
     title: "追踪的价格",
     lastScrape: "上次抓取：{date}",
     noScrapes: "尚未抓取",
@@ -115,6 +120,7 @@ const zh: Dict = {
     stopTracking: "停止跟踪",
     stopConfirm: "停止跟踪此商品？其价格历史和提醒也会被删除。",
     removing: "正在移除…",
+    pending: "商店拒绝了第一次读取。我们正在从另一台服务器重试，价格通常会在一小时内显示。",
   },
   alertForm: {
     atOrBelow: "价格低于或等于此值时提醒我",
@@ -257,6 +263,7 @@ const zh: Dict = {
     dark: "深色",
     system: "跟随系统",
     colors: "颜色主题",
+    tag: "价签",
     indigo: "靛蓝",
     ocean: "海洋",
     forest: "森林",
@@ -305,6 +312,12 @@ const zh: Dict = {
     "The shop refused the request. Some shops block automated visits.": "商店拒绝了请求。部分商店会拦截自动访问。",
     "Could not open that page. Check the link and try again.": "无法打开该页面。请检查链接后重试。",
     "No price found on that page. Paste the link of a single product page.": "该页面未找到价格。请粘贴单个商品页面的链接。",
+    "That page was not found at the shop. Check the link and try again.":
+      "在该商店中找不到此页面。请检查链接后重试。",
+    "The shop's page returned an error. Try again later.":
+      "商店页面返回了错误。请稍后重试。",
+    "The shop did not respond in time. Try again later.":
+      "商店未及时响应。请稍后重试。",
     "Adding links is not switched on for this site yet.": "本站尚未开启添加链接功能。",
     "This demo already tracks the maximum number of links.": "此演示已追踪最大数量的链接。",
     "You added many links in the last hour. Try again later.": "你在过去一小时内添加了很多链接。请稍后再试。",

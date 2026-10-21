@@ -41,6 +41,11 @@ const ru: Dict = {
     custom: "Добавлено по ссылке",
   },
   home: {
+    heroTitle: "Узнайте сразу, когда цена упадёт",
+    heroLead: "Вставьте ссылку на товар. Мы проверяем цену каждый день, показываем её историю и сообщаем, когда она достигнет вашей цели.",
+    step1: "Вставьте ссылку на любой товар",
+    step2: "Проверяем каждый день",
+    step3: "Уведомление при вашей цене",
     title: "Отслеживаемые цены",
     lastScrape: "Последний сбор {date}",
     noScrapes: "Сборов ещё не было",
@@ -115,6 +120,7 @@ const ru: Dict = {
     stopTracking: "Перестать отслеживать",
     stopConfirm: "Перестать отслеживать этот товар? История цен и оповещения тоже будут удалены.",
     removing: "Удаление…",
+    pending: "Магазин отклонил первый запрос. Мы пробуем снова с другого сервера; обычно цена появляется в течение часа.",
   },
   alertForm: {
     atOrBelow: "Сообщить, когда цена не выше",
@@ -258,6 +264,7 @@ const ru: Dict = {
     dark: "Тёмный",
     system: "Системный",
     colors: "Цветовая тема",
+    tag: "Ценник",
     indigo: "Индиго",
     ocean: "Океан",
     forest: "Лес",
@@ -309,6 +316,12 @@ const ru: Dict = {
     "Could not open that page. Check the link and try again.": "Не удалось открыть страницу. Проверьте ссылку и попробуйте ещё раз.",
     "No price found on that page. Paste the link of a single product page.":
       "На этой странице не найдена цена. Вставьте ссылку на страницу отдельного товара.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Эта страница не найдена в магазине. Проверьте ссылку и попробуйте снова.",
+    "The shop's page returned an error. Try again later.":
+      "Страница магазина вернула ошибку. Попробуйте позже.",
+    "The shop did not respond in time. Try again later.":
+      "Магазин не ответил вовремя. Попробуйте позже.",
     "Adding links is not switched on for this site yet.": "Добавление ссылок для этого сайта пока не включено.",
     "This demo already tracks the maximum number of links.": "Это демо уже отслеживает максимальное количество ссылок.",
     "You added many links in the last hour. Try again later.": "За последний час вы добавили много ссылок. Попробуйте позже.",

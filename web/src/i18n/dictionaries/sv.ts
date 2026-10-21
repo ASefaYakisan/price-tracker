@@ -41,6 +41,11 @@ const sv: Dict = {
     custom: "Tillagd via länk",
   },
   home: {
+    heroTitle: "Få veta direkt när ett pris sjunker",
+    heroLead: "Klistra in en produktlänk. Vi kollar priset varje dag, visar historiken och meddelar dig när det når ditt mål.",
+    step1: "Klistra in valfri produktlänk",
+    step2: "Vi kollar den varje dag",
+    step3: "Få en avisering vid ditt pris",
     title: "Bevakade priser",
     lastScrape: "Senaste hämtning {date}",
     noScrapes: "Inga hämtningar än",
@@ -115,6 +120,7 @@ const sv: Dict = {
     stopTracking: "Sluta bevaka",
     stopConfirm: "Sluta bevaka den här artikeln? Dess prishistorik och bevakningar raderas också.",
     removing: "Tar bort…",
+    pending: "Butiken nekade första försöket. Vi försöker igen från en annan server; priset brukar synas inom en timme.",
   },
   alertForm: {
     atOrBelow: "Meddela mig vid eller under",
@@ -258,6 +264,7 @@ const sv: Dict = {
     dark: "Mörkt",
     system: "System",
     colors: "Färgtema",
+    tag: "Prislapp",
     indigo: "Indigo",
     ocean: "Hav",
     forest: "Skog",
@@ -309,6 +316,12 @@ const sv: Dict = {
     "Could not open that page. Check the link and try again.": "Det gick inte att öppna sidan. Kontrollera länken och försök igen.",
     "No price found on that page. Paste the link of a single product page.":
       "Inget pris hittades på sidan. Klistra in länken till en enskild produktsida.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Sidan hittades inte i butiken. Kontrollera länken och försök igen.",
+    "The shop's page returned an error. Try again later.":
+      "Butikens sida svarade med ett fel. Försök igen senare.",
+    "The shop did not respond in time. Try again later.":
+      "Butiken svarade inte i tid. Försök igen senare.",
     "Adding links is not switched on for this site yet.": "Att lägga till länkar är inte aktiverat för den här webbplatsen än.",
     "This demo already tracks the maximum number of links.": "Demon bevakar redan det högsta antalet länkar.",
     "You added many links in the last hour. Try again later.": "Du har lagt till många länkar den senaste timmen. Försök igen senare.",

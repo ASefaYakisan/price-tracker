@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { attemptRow, messageFor, outcomeForError } from '../src/track-outcome.js';
+import { markdownTable, parseUrlList, probeRow } from '../src/probe.js';
+
+test('outcomeForError tells HTTP answers, timeouts and network failures apart', () => {
+  assert.equal(outcomeForError(Object.assign(new Error('HTTP 403'), { status: 403 })), 'http_error');
+  assert.equal(outcomeForError(new DOMException('slow', 'TimeoutError')), 'timeout');
+  assert.equal(outcomeForError(new TypeError('fetch failed')), 'network');
+});
+
+test('messageFor gives each failure its own message', () => {
+  assert.match(messageFor('http_error', 403), /block automated visits/);
+  assert.match(messageFor('http_error', 429), /block automated visits/);
+  assert.match(messageFor('http_error', 404), /not found at the shop/);
+  assert.match(messageFor('http_error', 500), /returned an error/);
+  assert.match(messageFor('no_price'), /No price found/);
+  assert.match(messageFor('timeout'), /did not respond in time/);
+  assert.match(messageFor('network'), /Could not open that page/);
+});
+
+test('attemptRow groups by shop host and keeps the reason', () => {
+  assert.deepEqual(attemptRow({ url: 'https://www.trendyol.com/p-1?x=1', stage: 'daily', outcome: 'http_error', httpStatus: 403 }), {
+    url: 'https://www.trendyol.com/p-1?x=1',
+    host: 'trendyol.com',
+    user_id: null,
+    stage: 'daily',
+    outcome: 'http_error',
+    http_status: 403,
+    layer: null,
+  });
+});
+
+test('probe rows and table show how far reading got', () => {
+  const html = '<script type="application/ld+json">{}</script>';
+  const row = probeRow('https://shop.example/a', { outcome: 'no_price', httpStatus: 200, html, product: null });
+  assert.deepEqual(row, { host: 'shop.example', status: 200, size: '0 KB', jsonLd: 'yes', price: '-', layer: '-', outcome: 'no_price' });
+  const blocked = probeRow('https://b.example/x', { outcome: 'http_error', httpStatus: 403, html: null, product: null });
+  assert.equal(markdownTable([row, blocked]).split('\n')[3], '| b.example | 403 | - | - | - | - | http_error |');
+  assert.deepEqual(parseUrlList('# shops\nhttps://a.example/1\n\n https://b.example/2 # note\n'), ['https://a.example/1', 'https://b.example/2']);
+});

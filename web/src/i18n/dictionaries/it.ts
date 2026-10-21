@@ -41,6 +41,11 @@ const it: Dict = {
     custom: "Aggiunti tramite link",
   },
   home: {
+    heroTitle: "Scopri subito quando un prezzo scende",
+    heroLead: "Incolla il link di un prodotto. Controlliamo il prezzo ogni giorno, ne mostriamo lo storico e ti avvisiamo quando raggiunge il tuo obiettivo.",
+    step1: "Incolla un link di prodotto",
+    step2: "Lo controlliamo ogni giorno",
+    step3: "Ricevi un avviso al tuo prezzo",
     title: "Prezzi monitorati",
     lastScrape: "Ultima rilevazione {date}",
     noScrapes: "Nessuna rilevazione ancora",
@@ -115,6 +120,7 @@ const it: Dict = {
     stopTracking: "Smetti di monitorare",
     stopConfirm: "Smettere di monitorare questo articolo? Verranno eliminati anche lo storico dei prezzi e gli avvisi.",
     removing: "Rimozione…",
+    pending: "Il negozio ha rifiutato la prima lettura. Riproviamo da un altro server; di solito il prezzo compare entro un'ora.",
   },
   alertForm: {
     atOrBelow: "Avvisami a partire da",
@@ -257,6 +263,7 @@ const it: Dict = {
     dark: "Scuro",
     system: "Sistema",
     colors: "Tema colore",
+    tag: "Cartellino",
     indigo: "Indaco",
     ocean: "Oceano",
     forest: "Foresta",
@@ -308,6 +315,12 @@ const it: Dict = {
     "Could not open that page. Check the link and try again.": "Impossibile aprire la pagina. Controlla il link e riprova.",
     "No price found on that page. Paste the link of a single product page.":
       "Nessun prezzo trovato in questa pagina. Incolla il link della pagina di un singolo prodotto.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Questa pagina non è stata trovata nel negozio. Controlla il link e riprova.",
+    "The shop's page returned an error. Try again later.":
+      "La pagina del negozio ha restituito un errore. Riprova più tardi.",
+    "The shop did not respond in time. Try again later.":
+      "Il negozio non ha risposto in tempo. Riprova più tardi.",
     "Adding links is not switched on for this site yet.": "L'aggiunta di link non è ancora attiva su questo sito.",
     "This demo already tracks the maximum number of links.": "Questa demo monitora già il numero massimo di link.",
     "You added many links in the last hour. Try again later.": "Hai aggiunto molti link nell’ultima ora. Riprova più tardi.",

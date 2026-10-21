@@ -41,6 +41,11 @@ const en = {
     custom: "Added by link",
   },
   home: {
+    heroTitle: "Know the moment a price drops",
+    heroLead: "Paste a product link. We check the price every day, chart its history and alert you when it reaches your target.",
+    step1: "Paste any product link",
+    step2: "We check it every day",
+    step3: "Get an alert at your price",
     title: "Tracked prices",
     lastScrape: "Last scrape {date}",
     noScrapes: "No scrapes yet",
@@ -115,6 +120,7 @@ const en = {
     stopTracking: "Stop tracking",
     stopConfirm: "Stop tracking this item? Its price history and alerts are deleted too.",
     removing: "Removing…",
+    pending: "The shop turned away our first read. We are trying again from another server; the price usually appears within an hour.",
   },
   alertForm: {
     atOrBelow: "Alert me at or below",
@@ -257,6 +263,7 @@ const en = {
     dark: "Dark",
     system: "System",
     colors: "Color theme",
+    tag: "Price tag",
     indigo: "Indigo",
     ocean: "Ocean",
     forest: "Forest",
@@ -308,6 +315,12 @@ const en = {
     "Could not open that page. Check the link and try again.": "Could not open that page. Check the link and try again.",
     "No price found on that page. Paste the link of a single product page.":
       "No price found on that page. Paste the link of a single product page.",
+    "That page was not found at the shop. Check the link and try again.":
+      "That page was not found at the shop. Check the link and try again.",
+    "The shop's page returned an error. Try again later.":
+      "The shop's page returned an error. Try again later.",
+    "The shop did not respond in time. Try again later.":
+      "The shop did not respond in time. Try again later.",
     "Adding links is not switched on for this site yet.": "Adding links is not switched on for this site yet.",
     "This demo already tracks the maximum number of links.": "This demo already tracks the maximum number of links.",
     "You added many links in the last hour. Try again later.": "You added many links in the last hour. Try again later.",

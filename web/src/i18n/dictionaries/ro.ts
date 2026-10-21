@@ -41,6 +41,11 @@ const ro: Dict = {
     custom: "Adăugat prin link",
   },
   home: {
+    heroTitle: "Află imediat când scade un preț",
+    heroLead: "Lipește linkul unui produs. Verificăm prețul zilnic, îi arătăm istoricul și te anunțăm când ajunge la ținta ta.",
+    step1: "Lipește orice link de produs",
+    step2: "Îl verificăm zilnic",
+    step3: "Primești o alertă la prețul tău",
     title: "Prețuri urmărite",
     lastScrape: "Ultima colectare {date}",
     noScrapes: "Nicio colectare încă",
@@ -115,6 +120,7 @@ const ro: Dict = {
     stopTracking: "Nu mai urmări",
     stopConfirm: "Nu mai urmărești acest produs? Istoricul prețurilor și alertele lui vor fi șterse.",
     removing: "Se elimină…",
+    pending: "Magazinul a refuzat prima citire. Încercăm din nou de pe alt server; prețul apare de obicei în cel mult o oră.",
   },
   alertForm: {
     atOrBelow: "Anunță-mă la sau sub",
@@ -258,6 +264,7 @@ const ro: Dict = {
     dark: "Întunecat",
     system: "Sistem",
     colors: "Temă de culoare",
+    tag: "Etichetă",
     indigo: "Indigo",
     ocean: "Ocean",
     forest: "Pădure",
@@ -309,6 +316,12 @@ const ro: Dict = {
     "Could not open that page. Check the link and try again.": "Pagina nu a putut fi deschisă. Verifică linkul și încearcă din nou.",
     "No price found on that page. Paste the link of a single product page.":
       "Nu s-a găsit niciun preț pe acea pagină. Lipește linkul paginii unui singur produs.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Pagina nu a fost găsită în magazin. Verifică linkul și încearcă din nou.",
+    "The shop's page returned an error. Try again later.":
+      "Pagina magazinului a returnat o eroare. Încearcă din nou mai târziu.",
+    "The shop did not respond in time. Try again later.":
+      "Magazinul nu a răspuns la timp. Încearcă din nou mai târziu.",
     "Adding links is not switched on for this site yet.": "Adăugarea de linkuri nu este încă activată pentru acest site.",
     "This demo already tracks the maximum number of links.": "Acest demo urmărește deja numărul maxim de linkuri.",
     "You added many links in the last hour. Try again later.": "Ai adăugat multe linkuri în ultima oră. Încearcă mai târziu.",

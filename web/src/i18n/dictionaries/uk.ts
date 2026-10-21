@@ -41,6 +41,11 @@ const uk: Dict = {
     custom: "Додано за посиланням",
   },
   home: {
+    heroTitle: "Дізнайтеся одразу, коли ціна впаде",
+    heroLead: "Вставте посилання на товар. Ми перевіряємо ціну щодня, показуємо її історію та повідомляємо, коли вона досягне вашої мети.",
+    step1: "Вставте посилання на будь-який товар",
+    step2: "Перевіряємо щодня",
+    step3: "Сповіщення при вашій ціні",
     title: "Відстежувані ціни",
     lastScrape: "Останній збір {date}",
     noScrapes: "Зборів ще не було",
@@ -115,6 +120,7 @@ const uk: Dict = {
     stopTracking: "Припинити відстеження",
     stopConfirm: "Припинити відстеження цього товару? Історію цін і сповіщення також буде видалено.",
     removing: "Видалення…",
+    pending: "Магазин відхилив перший запит. Ми пробуємо знову з іншого сервера; зазвичай ціна з'являється протягом години.",
   },
   alertForm: {
     atOrBelow: "Сповістити, коли ціна не вища за",
@@ -258,6 +264,7 @@ const uk: Dict = {
     dark: "Темний",
     system: "Системний",
     colors: "Колірна тема",
+    tag: "Цінник",
     indigo: "Індиго",
     ocean: "Океан",
     forest: "Ліс",
@@ -309,6 +316,12 @@ const uk: Dict = {
     "Could not open that page. Check the link and try again.": "Не вдалося відкрити сторінку. Перевірте посилання та спробуйте ще раз.",
     "No price found on that page. Paste the link of a single product page.":
       "На цій сторінці не знайдено ціни. Вставте посилання на сторінку окремого товару.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Цю сторінку не знайдено в магазині. Перевірте посилання та спробуйте ще раз.",
+    "The shop's page returned an error. Try again later.":
+      "Сторінка магазину повернула помилку. Спробуйте пізніше.",
+    "The shop did not respond in time. Try again later.":
+      "Магазин не відповів вчасно. Спробуйте пізніше.",
     "Adding links is not switched on for this site yet.": "Додавання посилань для цього сайту поки не ввімкнено.",
     "This demo already tracks the maximum number of links.": "Це демо вже відстежує максимальну кількість посилань.",
     "You added many links in the last hour. Try again later.": "За останню годину ви додали багато посилань. Спробуйте пізніше.",

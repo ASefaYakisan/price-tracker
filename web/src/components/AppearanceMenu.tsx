@@ -2,16 +2,16 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useI18n } from "@/i18n/client";
-import { MODES, type Mode, type Palette, PALETTES, SWATCHES } from "@/lib/appearance";
+import { MODES, type Mode, type Palette, PALETTE_KEY, PALETTES, SWATCHES } from "@/lib/appearance";
 
 const listeners = new Set<() => void>();
 const subscribe = (l: () => void) => (listeners.add(l), () => listeners.delete(l));
 
 function read(): string {
   try {
-    return `${localStorage.getItem("mode") ?? "system"}|${localStorage.getItem("palette") ?? "indigo"}`;
+    return `${localStorage.getItem("mode") ?? "system"}|${localStorage.getItem(PALETTE_KEY) ?? "tag"}`;
   } catch {
-    return "system|indigo";
+    return "system|tag";
   }
 }
 
@@ -19,11 +19,11 @@ function apply(mode: Mode, palette: Palette) {
   const root = document.documentElement;
   if (mode === "system") delete root.dataset.theme;
   else root.dataset.theme = mode;
-  if (palette === "indigo") delete root.dataset.palette;
+  if (palette === "tag") delete root.dataset.palette;
   else root.dataset.palette = palette;
   try {
     localStorage.setItem("mode", mode);
-    localStorage.setItem("palette", palette);
+    localStorage.setItem(PALETTE_KEY, palette);
   } catch {}
   listeners.forEach((l) => l());
 }
@@ -41,7 +41,7 @@ const ICONS: Record<Mode, React.ReactNode> = {
 
 export function AppearanceMenu() {
   const { t } = useI18n();
-  const [mode, palette] = useSyncExternalStore(subscribe, read, () => "system|indigo").split("|") as [Mode, Palette];
+  const [mode, palette] = useSyncExternalStore(subscribe, read, () => "system|tag").split("|") as [Mode, Palette];
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 

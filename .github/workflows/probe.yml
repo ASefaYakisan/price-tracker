@@ -1,0 +1,29 @@
+name: Shop probe
+
+# Run by hand from the Actions tab: opens sample product links from GitHub's servers and writes,
+# per shop, how far reading got (HTTP code, JSON-LD, price, layer) to the job summary.
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: Links to check, separated by spaces (empty = scraper/probe-urls.txt)
+        default: ""
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: scraper/package-lock.json
+      - run: npm ci
+      - run: set -f; npm run probe -- $URLS # set -f: a "*" in a link stays a "*"
+        env:
+          URLS: ${{ inputs.urls }}

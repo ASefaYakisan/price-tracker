@@ -41,6 +41,11 @@ const ar: Dict = {
     custom: "مضاف عبر رابط",
   },
   home: {
+    heroTitle: "اعرف فور انخفاض السعر",
+    heroLead: "الصق رابط المنتج. نتحقق من السعر يوميًا ونعرض سجله وننبهك عندما يصل إلى السعر الذي تريده.",
+    step1: "الصق رابط أي منتج",
+    step2: "نتحقق منه يوميًا",
+    step3: "احصل على تنبيه عند سعرك",
     title: "الأسعار المتتبَّعة",
     lastScrape: "آخر جمع {date}",
     noScrapes: "لم يتم أي جمع بعد",
@@ -115,6 +120,7 @@ const ar: Dict = {
     stopTracking: "إيقاف التتبع",
     stopConfirm: "هل تريد إيقاف تتبع هذا العنصر؟ سيُحذف أيضًا سجل أسعاره وتنبيهاته.",
     removing: "جارٍ الإزالة…",
+    pending: "رفض المتجر القراءة الأولى. نحاول مجددًا من خادم آخر، وعادةً يظهر السعر خلال ساعة.",
   },
   alertForm: {
     atOrBelow: "نبّهني عند سعر أقل من أو يساوي",
@@ -257,6 +263,7 @@ const ar: Dict = {
     dark: "داكن",
     system: "النظام",
     colors: "سمة الألوان",
+    tag: "بطاقة السعر",
     indigo: "نيلي",
     ocean: "المحيط",
     forest: "الغابة",
@@ -306,6 +313,12 @@ const ar: Dict = {
     "The shop refused the request. Some shops block automated visits.": "رفض المتجر الطلب. بعض المتاجر تحظر الزيارات الآلية.",
     "Could not open that page. Check the link and try again.": "تعذّر فتح هذه الصفحة. تحقّق من الرابط وحاول مرة أخرى.",
     "No price found on that page. Paste the link of a single product page.": "لم يُعثر على سعر في هذه الصفحة. الصق رابط صفحة منتج واحد.",
+    "That page was not found at the shop. Check the link and try again.":
+      "لم يتم العثور على هذه الصفحة في المتجر. تحقّق من الرابط وحاول مرة أخرى.",
+    "The shop's page returned an error. Try again later.":
+      "أعادت صفحة المتجر خطأً. حاول مرة أخرى لاحقًا.",
+    "The shop did not respond in time. Try again later.":
+      "لم يستجب المتجر في الوقت المناسب. حاول مرة أخرى لاحقًا.",
     "Adding links is not switched on for this site yet.": "إضافة الروابط غير مفعّلة لهذا الموقع بعد.",
     "This demo already tracks the maximum number of links.": "يتتبّع هذا العرض التجريبي الحد الأقصى من الروابط بالفعل.",
     "You added many links in the last hour. Try again later.": "أضفت روابط كثيرة خلال الساعة الماضية. حاول لاحقًا.",

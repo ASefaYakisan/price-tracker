@@ -41,6 +41,11 @@ const cs: Dict = {
     custom: "Přidáno odkazem",
   },
   home: {
+    heroTitle: "Zjistěte hned, když cena klesne",
+    heroLead: "Vložte odkaz na produkt. Cenu kontrolujeme každý den, ukazujeme její vývoj a upozorníme vás, když dosáhne vašeho cíle.",
+    step1: "Vložte libovolný odkaz na produkt",
+    step2: "Každý den ho kontrolujeme",
+    step3: "Upozornění při vaší ceně",
     title: "Sledované ceny",
     lastScrape: "Poslední stažení {date}",
     noScrapes: "Zatím žádná stažení",
@@ -115,6 +120,7 @@ const cs: Dict = {
     stopTracking: "Přestat sledovat",
     stopConfirm: "Přestat sledovat tuto položku? Smaže se i její historie cen a upozornění.",
     removing: "Odebírání…",
+    pending: "Obchod odmítl první načtení. Zkoušíme to znovu z jiného serveru; cena se obvykle objeví do hodiny.",
   },
   alertForm: {
     atOrBelow: "Upozornit při ceně nejvýše",
@@ -258,6 +264,7 @@ const cs: Dict = {
     dark: "Tmavý",
     system: "Systém",
     colors: "Barevný motiv",
+    tag: "Cenovka",
     indigo: "Indigo",
     ocean: "Oceán",
     forest: "Les",
@@ -309,6 +316,12 @@ const cs: Dict = {
     "Could not open that page. Check the link and try again.": "Stránku se nepodařilo otevřít. Zkontrolujte odkaz a zkuste to znovu.",
     "No price found on that page. Paste the link of a single product page.":
       "Na stránce nebyla nalezena žádná cena. Vložte odkaz na stránku jednoho produktu.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Tato stránka v obchodě nebyla nalezena. Zkontrolujte odkaz a zkuste to znovu.",
+    "The shop's page returned an error. Try again later.":
+      "Stránka obchodu vrátila chybu. Zkuste to později.",
+    "The shop did not respond in time. Try again later.":
+      "Obchod neodpověděl včas. Zkuste to později.",
     "Adding links is not switched on for this site yet.": "Přidávání odkazů zatím není na tomto webu zapnuté.",
     "This demo already tracks the maximum number of links.": "Toto demo už sleduje maximální počet odkazů.",
     "You added many links in the last hour. Try again later.": "Za poslední hodinu jste přidali mnoho odkazů. Zkuste to později.",

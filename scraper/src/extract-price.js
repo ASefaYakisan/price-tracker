@@ -16,7 +16,7 @@ export function readPrice(html, pageUrl) {
   const ctx = { $, html, url };
   for (const [layer, read] of LAYERS) {
     const found = read(ctx);
-    if (found?.price != null) return { layer, product: buildProduct(found, ctx) };
+    if (found?.price != null) return { layer, product: buildProduct(found, ctx, layer) };
   }
   return null;
 }
@@ -30,7 +30,7 @@ const LAYERS = [
 ];
 
 // The winning layer gives the price; anything it lacks comes from the page's general tags.
-function buildProduct(found, { $, url }) {
+function buildProduct(found, { $, url }, layer) {
   const meta = metaReader($);
   const currency =
     found.currency ?? meta('product:price:currency') ?? meta('og:price:currency') ?? itempropValue($, 'priceCurrency') ?? null;
@@ -46,6 +46,8 @@ function buildProduct(found, { $, url }) {
     currency: currency ? String(currency).toUpperCase() : null,
     in_stock: !/outofstock|out of stock|soldout|discontinued|unavailable|stokta yok|tükendi/i.test(String(availability)),
     rating: null,
+    // Which layer found the price, so track_attempts can count wins per kind of markup.
+    layer,
   };
 }
 

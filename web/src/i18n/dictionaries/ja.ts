@@ -41,6 +41,11 @@ const ja: Dict = {
     custom: "リンクで追加",
   },
   home: {
+    heroTitle: "値下がりをすぐに知る",
+    heroLead: "商品のリンクを貼り付けるだけ。毎日価格を確認して履歴をグラフにし、目標価格になったらお知らせします。",
+    step1: "商品リンクを貼り付け",
+    step2: "毎日チェック",
+    step3: "目標価格で通知",
     title: "追跡中の価格",
     lastScrape: "最終取得：{date}",
     noScrapes: "まだ取得されていません",
@@ -115,6 +120,7 @@ const ja: Dict = {
     stopTracking: "追跡を停止",
     stopConfirm: "この商品の追跡を停止しますか？価格履歴とアラートも削除されます。",
     removing: "削除中…",
+    pending: "ショップが最初の読み取りを拒否しました。別のサーバーから再試行しています。通常1時間以内に価格が表示されます。",
   },
   alertForm: {
     atOrBelow: "この価格以下で通知",
@@ -257,6 +263,7 @@ const ja: Dict = {
     dark: "ダーク",
     system: "システム",
     colors: "カラーテーマ",
+    tag: "値札",
     indigo: "インディゴ",
     ocean: "オーシャン",
     forest: "フォレスト",
@@ -308,6 +315,12 @@ const ja: Dict = {
     "Could not open that page. Check the link and try again.": "ページを開けませんでした。リンクを確認して、もう一度お試しください。",
     "No price found on that page. Paste the link of a single product page.":
       "このページに価格が見つかりません。個別の商品ページのリンクを貼り付けてください。",
+    "That page was not found at the shop. Check the link and try again.":
+      "ショップでそのページが見つかりませんでした。リンクを確認して、もう一度お試しください。",
+    "The shop's page returned an error. Try again later.":
+      "ショップのページがエラーを返しました。しばらくしてからもう一度お試しください。",
+    "The shop did not respond in time. Try again later.":
+      "ショップから時間内に応答がありませんでした。しばらくしてからもう一度お試しください。",
     "Adding links is not switched on for this site yet.": "このサイトではまだリンクの追加が有効になっていません。",
     "This demo already tracks the maximum number of links.": "このデモで追跡できるリンク数の上限に達しています。",
     "You added many links in the last hour. Try again later.": "この1時間に多くのリンクを追加しました。後でもう一度お試しください。",

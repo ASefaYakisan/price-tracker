@@ -41,6 +41,11 @@ const th: Dict = {
     custom: "เพิ่มจากลิงก์",
   },
   home: {
+    heroTitle: "รู้ทันทีเมื่อราคาลดลง",
+    heroLead: "วางลิงก์สินค้า เราตรวจราคาทุกวัน แสดงประวัติราคา และแจ้งเตือนเมื่อถึงราคาที่คุณต้องการ",
+    step1: "วางลิงก์สินค้าใดก็ได้",
+    step2: "เราตรวจทุกวัน",
+    step3: "รับการแจ้งเตือนที่ราคาของคุณ",
     title: "ราคาที่ติดตาม",
     lastScrape: "ดึงข้อมูลล่าสุด {date}",
     noScrapes: "ยังไม่มีการดึงข้อมูล",
@@ -115,6 +120,7 @@ const th: Dict = {
     stopTracking: "หยุดติดตาม",
     stopConfirm: "หยุดติดตามสินค้านี้ใช่ไหม ประวัติราคาและการแจ้งเตือนของสินค้านี้จะถูกลบด้วย",
     removing: "กำลังนำออก…",
+    pending: "ร้านค้าปฏิเสธการอ่านครั้งแรก เรากำลังลองใหม่จากเซิร์ฟเวอร์อื่น ปกติราคาจะแสดงภายในหนึ่งชั่วโมง",
   },
   alertForm: {
     atOrBelow: "แจ้งเตือนเมื่อราคาเท่ากับหรือต่ำกว่า",
@@ -258,6 +264,7 @@ const th: Dict = {
     dark: "มืด",
     system: "ตามระบบ",
     colors: "ธีมสี",
+    tag: "ป้ายราคา",
     indigo: "คราม",
     ocean: "มหาสมุทร",
     forest: "ป่าไม้",
@@ -308,6 +315,12 @@ const th: Dict = {
     "Could not open that page. Check the link and try again.": "เปิดหน้านั้นไม่ได้ โปรดตรวจสอบลิงก์แล้วลองอีกครั้ง",
     "No price found on that page. Paste the link of a single product page.":
       "ไม่พบราคาในหน้านั้น โปรดวางลิงก์ของหน้าสินค้าเพียงรายการเดียว",
+    "That page was not found at the shop. Check the link and try again.":
+      "ไม่พบหน้านี้ในร้านค้า ตรวจสอบลิงก์แล้วลองอีกครั้ง",
+    "The shop's page returned an error. Try again later.":
+      "หน้าของร้านค้าแจ้งข้อผิดพลาด ลองอีกครั้งในภายหลัง",
+    "The shop did not respond in time. Try again later.":
+      "ร้านค้าไม่ตอบกลับทันเวลา ลองอีกครั้งในภายหลัง",
     "Adding links is not switched on for this site yet.": "เว็บไซต์นี้ยังไม่ได้เปิดใช้การเพิ่มลิงก์",
     "This demo already tracks the maximum number of links.": "เดโมนี้ติดตามลิงก์ครบจำนวนสูงสุดแล้ว",
     "You added many links in the last hour. Try again later.": "คุณเพิ่มลิงก์จำนวนมากในชั่วโมงที่ผ่านมา ลองใหม่ภายหลัง",

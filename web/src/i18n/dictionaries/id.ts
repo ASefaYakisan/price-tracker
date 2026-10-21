@@ -41,6 +41,11 @@ const id: Dict = {
     custom: "Ditambahkan lewat tautan",
   },
   home: {
+    heroTitle: "Tahu saat harga turun",
+    heroLead: "Tempel tautan produk. Kami memeriksa harga setiap hari, menampilkan riwayatnya, dan memberi tahu Anda saat mencapai target.",
+    step1: "Tempel tautan produk apa pun",
+    step2: "Kami memeriksanya setiap hari",
+    step3: "Dapatkan peringatan di harga Anda",
     title: "Harga yang dilacak",
     lastScrape: "Pengambilan terakhir {date}",
     noScrapes: "Belum ada pengambilan data",
@@ -115,6 +120,7 @@ const id: Dict = {
     stopTracking: "Berhenti melacak",
     stopConfirm: "Berhenti melacak item ini? Riwayat harga dan peringatannya juga akan dihapus.",
     removing: "Menghapus…",
+    pending: "Toko menolak pembacaan pertama. Kami mencoba lagi dari server lain; harga biasanya muncul dalam satu jam.",
   },
   alertForm: {
     atOrBelow: "Beri tahu saya pada harga atau di bawah",
@@ -258,6 +264,7 @@ const id: Dict = {
     dark: "Gelap",
     system: "Sistem",
     colors: "Tema warna",
+    tag: "Label harga",
     indigo: "Nila",
     ocean: "Samudra",
     forest: "Hutan",
@@ -310,6 +317,12 @@ const id: Dict = {
     "Could not open that page. Check the link and try again.": "Tidak dapat membuka halaman tersebut. Periksa tautan dan coba lagi.",
     "No price found on that page. Paste the link of a single product page.":
       "Tidak ada harga di halaman tersebut. Tempel tautan halaman satu produk.",
+    "That page was not found at the shop. Check the link and try again.":
+      "Halaman itu tidak ditemukan di toko. Periksa tautan lalu coba lagi.",
+    "The shop's page returned an error. Try again later.":
+      "Halaman toko mengembalikan galat. Coba lagi nanti.",
+    "The shop did not respond in time. Try again later.":
+      "Toko tidak merespons tepat waktu. Coba lagi nanti.",
     "Adding links is not switched on for this site yet.": "Penambahan tautan belum diaktifkan untuk situs ini.",
     "This demo already tracks the maximum number of links.": "Demo ini sudah melacak jumlah tautan maksimum.",
     "You added many links in the last hour. Try again later.": "Kamu menambahkan banyak tautan dalam satu jam terakhir. Coba lagi nanti.",

@@ -41,6 +41,11 @@ const es: Dict = {
     custom: "Añadido por enlace",
   },
   home: {
+    heroTitle: "Entérate en cuanto baje un precio",
+    heroLead: "Pega el enlace de un producto. Revisamos el precio cada día, mostramos su historial y te avisamos cuando llegue a tu objetivo.",
+    step1: "Pega cualquier enlace de producto",
+    step2: "Lo revisamos cada día",
+    step3: "Recibe un aviso a tu precio",
     title: "Precios seguidos",
     lastScrape: "Última consulta {date}",
     noScrapes: "Aún no hay consultas",
@@ -115,6 +120,7 @@ const es: Dict = {
     stopTracking: "Dejar de seguir",
     stopConfirm: "¿Dejar de seguir este artículo? También se borran su historial de precios y sus alertas.",
     removing: "Quitando…",
+    pending: "La tienda rechazó la primera lectura. Lo intentamos de nuevo desde otro servidor; el precio suele aparecer en menos de una hora.",
   },
   alertForm: {
     atOrBelow: "Avisarme a partir de",
@@ -257,6 +263,7 @@ const es: Dict = {
     dark: "Oscuro",
     system: "Sistema",
     colors: "Tema de color",
+    tag: "Etiqueta",
     indigo: "Índigo",
     ocean: "Océano",
     forest: "Bosque",
@@ -308,6 +315,12 @@ const es: Dict = {
     "Could not open that page. Check the link and try again.": "No se pudo abrir esa página. Revisa el enlace e inténtalo de nuevo.",
     "No price found on that page. Paste the link of a single product page.":
       "No se encontró ningún precio en esa página. Pega el enlace de una página de producto concreta.",
+    "That page was not found at the shop. Check the link and try again.":
+      "No se encontró esa página en la tienda. Revisa el enlace e inténtalo de nuevo.",
+    "The shop's page returned an error. Try again later.":
+      "La página de la tienda devolvió un error. Inténtalo más tarde.",
+    "The shop did not respond in time. Try again later.":
+      "La tienda no respondió a tiempo. Inténtalo más tarde.",
     "Adding links is not switched on for this site yet.": "Añadir enlaces aún no está activado en este sitio.",
     "This demo already tracks the maximum number of links.": "Esta demo ya sigue el número máximo de enlaces.",
     "You added many links in the last hour. Try again later.": "Añadiste muchos enlaces en la última hora. Inténtalo más tarde.",
