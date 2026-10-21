@@ -11,14 +11,23 @@ export async function pendingLinks(db, now = Date.now()) {
   const since = new Date(now - WINDOW_HOURS * 3_600_000).toISOString();
   const { data, error } = await db
     .from('product_latest')
-    .select('url, added_by')
+    .select('id, url')
     .eq('source', 'custom')
     .is('scraped_at', null)
     .gte('created_at', since)
     .order('created_at')
     .limit(50);
   if (error) throw error;
-  return data;
+  if (!data.length) return [];
+
+  // The view predates added_by; its p.* does not include columns added later.
+  const { data: owners, error: ownerError } = await db
+    .from('products')
+    .select('id, added_by')
+    .in('id', data.map((product) => product.id));
+  if (ownerError) throw ownerError;
+  const ownerById = new Map(owners.map((product) => [product.id, product.added_by]));
+  return data.map(({ id, url }) => ({ url, added_by: ownerById.get(id) ?? null }));
 }
 
 async function main() {
