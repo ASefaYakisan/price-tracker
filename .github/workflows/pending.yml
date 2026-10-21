@@ -1,0 +1,32 @@
+name: Pending links
+
+# Links the site could not read (the shop refused Vercel's server) are saved without a price.
+# This reads them from GitHub's servers every 15 minutes for two days; the daily scrape takes over after that.
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: pending-links
+  cancel-in-progress: false
+
+jobs:
+  pending:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: scraper/package-lock.json
+      - run: npm ci
+      - run: npm run pending
+        env:
+          SUPABASE_URL: https://zaufbyefvjttfppirjrj.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

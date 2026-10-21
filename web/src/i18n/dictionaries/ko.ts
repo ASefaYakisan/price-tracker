@@ -115,6 +115,7 @@ const ko: Dict = {
     stopTracking: "추적 중지",
     stopConfirm: "이 상품의 추적을 중지할까요? 가격 기록과 알림도 함께 삭제됩니다.",
     removing: "삭제 중…",
+    pending: "쇼핑몰이 첫 번째 읽기를 거부했습니다. 다른 서버에서 다시 시도하고 있으며, 보통 1시간 안에 가격이 표시됩니다.",
   },
   alertForm: {
     atOrBelow: "이 가격 이하일 때 알림",

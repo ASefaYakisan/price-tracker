@@ -115,6 +115,7 @@ const sv: Dict = {
     stopTracking: "Sluta bevaka",
     stopConfirm: "Sluta bevaka den här artikeln? Dess prishistorik och bevakningar raderas också.",
     removing: "Tar bort…",
+    pending: "Butiken nekade första försöket. Vi försöker igen från en annan server; priset brukar synas inom en timme.",
   },
   alertForm: {
     atOrBelow: "Meddela mig vid eller under",

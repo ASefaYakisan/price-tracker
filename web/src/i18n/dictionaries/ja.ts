@@ -115,6 +115,7 @@ const ja: Dict = {
     stopTracking: "追跡を停止",
     stopConfirm: "この商品の追跡を停止しますか？価格履歴とアラートも削除されます。",
     removing: "削除中…",
+    pending: "ショップが最初の読み取りを拒否しました。別のサーバーから再試行しています。通常1時間以内に価格が表示されます。",
   },
   alertForm: {
     atOrBelow: "この価格以下で通知",

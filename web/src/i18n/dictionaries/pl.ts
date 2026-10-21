@@ -115,6 +115,7 @@ const pl: Dict = {
     stopTracking: "Przestań śledzić",
     stopConfirm: "Przestać śledzić tę pozycję? Jej historia cen i alerty też zostaną usunięte.",
     removing: "Usuwanie…",
+    pending: "Sklep odrzucił pierwszy odczyt. Próbujemy ponownie z innego serwera; cena zwykle pojawia się w ciągu godziny.",
   },
   alertForm: {
     atOrBelow: "Powiadom mnie przy cenie równej lub niższej niż",

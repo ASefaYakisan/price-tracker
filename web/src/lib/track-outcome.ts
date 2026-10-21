@@ -11,6 +11,11 @@ export function outcomeForError(err: unknown): TrackOutcome {
   return e?.name === "TimeoutError" || e?.cause?.name === "TimeoutError" ? "timeout" : "network";
 }
 
+// The shop turned the site's server away or was too slow: GitHub's servers get another go, so the link is kept.
+export function retryLater(outcome: TrackOutcome, httpStatus: number | null = null) {
+  return outcome === "timeout" || (outcome === "http_error" && httpStatus != null && BLOCKED_STATUSES.includes(httpStatus));
+}
+
 export function messageFor(outcome: TrackOutcome, httpStatus: number | null = null) {
   if (outcome === "http_error") {
     if (httpStatus != null && BLOCKED_STATUSES.includes(httpStatus)) return "The shop refused the request. Some shops block automated visits.";

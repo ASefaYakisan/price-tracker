@@ -115,6 +115,7 @@ const de: Dict = {
     stopTracking: "Nicht mehr verfolgen",
     stopConfirm: "Diesen Artikel nicht mehr verfolgen? Preisverlauf und Alarme werden ebenfalls gelöscht.",
     removing: "Wird entfernt…",
+    pending: "Der Shop hat den ersten Abruf abgelehnt. Wir versuchen es von einem anderen Server erneut; der Preis erscheint meist innerhalb einer Stunde.",
   },
   alertForm: {
     atOrBelow: "Benachrichtigen bei oder unter",

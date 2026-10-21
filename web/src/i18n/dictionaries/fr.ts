@@ -115,6 +115,7 @@ const fr: Dict = {
     stopTracking: "Ne plus suivre",
     stopConfirm: "Ne plus suivre cet article ? Son historique de prix et ses alertes seront aussi supprimés.",
     removing: "Suppression…",
+    pending: "La boutique a refusé la première lecture. Nous réessayons depuis un autre serveur ; le prix apparaît en général dans l'heure.",
   },
   alertForm: {
     atOrBelow: "M'alerter à ou sous",

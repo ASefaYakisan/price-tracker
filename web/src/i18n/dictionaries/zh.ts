@@ -115,6 +115,7 @@ const zh: Dict = {
     stopTracking: "停止跟踪",
     stopConfirm: "停止跟踪此商品？其价格历史和提醒也会被删除。",
     removing: "正在移除…",
+    pending: "商店拒绝了第一次读取。我们正在从另一台服务器重试，价格通常会在一小时内显示。",
   },
   alertForm: {
     atOrBelow: "价格低于或等于此值时提醒我",

@@ -115,6 +115,7 @@ const da: Dict = {
     stopTracking: "Stop med at følge",
     stopConfirm: "Stop med at følge denne vare? Dens prishistorik og alarmer slettes også.",
     removing: "Fjerner…",
+    pending: "Butikken afviste første forsøg. Vi prøver igen fra en anden server; prisen vises som regel inden for en time.",
   },
   alertForm: {
     atOrBelow: "Giv besked ved eller under",

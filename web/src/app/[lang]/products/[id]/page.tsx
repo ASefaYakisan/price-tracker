@@ -66,6 +66,12 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
         </div>
       </div>
 
+      {product.source === "custom" && !product.scraped_at && (
+        <p role="status" className="mt-6 rounded-xl border border-line bg-accent-soft px-4 py-3 text-sm text-ink">
+          {t.product.pending}
+        </p>
+      )}
+
       <section className="my-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="rounded-2xl border border-line bg-card p-4 shadow-soft">
           <div className="text-sm text-muted">{t.product.current}</div>
