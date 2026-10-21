@@ -33,6 +33,7 @@ npm test
 # 3. Dashboard
 cd ../web && npm install
 NEXT_PUBLIC_SUPABASE_URL=... NEXT_PUBLIC_SUPABASE_ANON_KEY=... npm run dev
+npm test   # runs the shared shop fixtures in scraper/test/fixtures/shops against the web extractor
 ```
 
 ## Daily schedule
@@ -41,7 +42,7 @@ NEXT_PUBLIC_SUPABASE_URL=... NEXT_PUBLIC_SUPABASE_ANON_KEY=... npm run dev
 
 ## Track any product by link
 
-Paste a product page link on the dashboard. The server reads the price from the structured data most shops publish for Google Shopping (JSON-LD `Product`/`Offer`, then `product:price` meta tags), saves it, and the daily job re-checks every added link (`source = custom`). Links that resolve to private network addresses are refused. Needs `SUPABASE_SERVICE_ROLE_KEY` as a server-side environment variable on Vercel.
+Paste a product page link on the dashboard. The server reads the price through a chain of layers, and the first one that finds a price wins: JSON-LD `Product`/`Offer` (including `AggregateOffer` and the variant that matches the link), schema.org microdata (attribute or visible text), `product:price` meta tags, the state JSON that shops embed for their own JavaScript (`__NEXT_DATA__`, `__INITIAL_STATE__` and similar), and finally small per-shop adapters (Trendyol, Hepsiburada, Amazon, n11). It saves the product, and the daily job re-checks every added link (`source = custom`). Links that resolve to private network addresses are refused. Needs `SUPABASE_SERVICE_ROLE_KEY` as a server-side environment variable on Vercel.
 
 ## Telegram and Google Sheets
 
@@ -89,7 +90,7 @@ Create `scraper/src/adapters/<site>.js` exporting `name` and either `startUrl` +
 - [x] Light and dark themes, mobile layout
 - [x] Multiple sources: crypto (CoinGecko), exchange rates (TCMB XML), gold
 - [x] Public JSON API with OpenAPI spec and Swagger UI
-- [x] Track any product by pasting its link (JSON-LD / meta price extraction)
+- [x] Track any product by pasting its link (JSON-LD, microdata, meta, embedded state JSON and shop adapters)
 - [x] Google Sheets sync
 - [x] Telegram price-drop digest
 - [x] Price-drop email alerts (sign up on the product page, sent after each scrape via Resend)

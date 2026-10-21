@@ -6,13 +6,14 @@ export const name = 'custom';
 
 export async function fetchAll({ db } = {}) {
   if (!db) return []; // nothing to refresh without the database that holds the links
-  const { data, error } = await db.from('products').select('url').eq('source', 'custom');
+  const { data, error } = await db.from('products').select('url, external_id').eq('source', 'custom');
   if (error) throw error;
   const products = [];
-  for (const { url } of data) {
+  for (const { url, external_id } of data) {
     try {
       const product = extractProduct(await fetchText(url, { headers: BROWSER_HEADERS }), url);
-      if (product) products.push(product);
+      // Keep the saved id, so a change in how links are shortened never splits one product into two rows.
+      if (product) products.push({ ...product, external_id });
       else console.warn(`  no price found on ${url}`);
     } catch (err) {
       console.warn(`  ${url}: ${err.message ?? err}`);
