@@ -4,11 +4,10 @@ import { currentUser } from "@/lib/supabase/server";
 import { isDemo } from "@/lib/data";
 import { canonicalUrl, extractProduct } from "@/lib/extract-price";
 import { assertPublicUrl } from "@/lib/safe-url";
+import { trackLimitMessage } from "@/lib/track-limits";
 import { attemptRow, messageFor, outcomeForError, retryLater, type TrackOutcome } from "@/lib/track-outcome";
 
-const MAX_CUSTOM = 5000; // safety ceiling for the whole site; the per-account limits below do the real work
-const PER_HOUR = 10; // links one account may add per hour
-const PER_ACCOUNT = 30; // links one account may own in total
+const MAX_CUSTOM = 5000; // safety ceiling for the whole site; the per-account limits in track-limits.ts do the real work
 const BROWSER_HEADERS = {
   "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
   accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -36,12 +35,14 @@ export async function POST(request: Request) {
     : null;
   if (db && user) {
     const hourAgo = new Date(Date.now() - 3_600_000).toISOString();
-    const [recent, owned] = await Promise.all([
+    // Failed reads count too (track_attempts), so an account cannot make the server open pages without end.
+    const [recent, owned, attempts] = await Promise.all([
       db.from("products").select("id", { count: "exact", head: true }).eq("added_by", user.id).gte("created_at", hourAgo),
       db.from("products").select("id", { count: "exact", head: true }).eq("added_by", user.id),
+      db.from("track_attempts").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("stage", "add").gte("created_at", hourAgo),
     ]);
-    if ((recent.count ?? 0) >= PER_HOUR) return fail("You added many links in the last hour. Try again later.", 429);
-    if ((owned.count ?? 0) >= PER_ACCOUNT) return fail("Your account already tracks the maximum number of links.", 429);
+    const limit = trackLimitMessage({ recentLinks: recent.count, ownedLinks: owned.count, recentAttempts: attempts.count });
+    if (limit) return fail(limit, 429);
   }
 
   const body = await request.json().catch(() => null);

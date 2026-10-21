@@ -41,6 +41,11 @@ const ja: Dict = {
     custom: "リンクで追加",
   },
   home: {
+    heroTitle: "値下がりをすぐに知る",
+    heroLead: "商品のリンクを貼り付けるだけ。毎日価格を確認して履歴をグラフにし、目標価格になったらお知らせします。",
+    step1: "商品リンクを貼り付け",
+    step2: "毎日チェック",
+    step3: "目標価格で通知",
     title: "追跡中の価格",
     lastScrape: "最終取得：{date}",
     noScrapes: "まだ取得されていません",

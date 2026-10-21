@@ -41,6 +41,11 @@ const cs: Dict = {
     custom: "Přidáno odkazem",
   },
   home: {
+    heroTitle: "Zjistěte hned, když cena klesne",
+    heroLead: "Vložte odkaz na produkt. Cenu kontrolujeme každý den, ukazujeme její vývoj a upozorníme vás, když dosáhne vašeho cíle.",
+    step1: "Vložte libovolný odkaz na produkt",
+    step2: "Každý den ho kontrolujeme",
+    step3: "Upozornění při vaší ceně",
     title: "Sledované ceny",
     lastScrape: "Poslední stažení {date}",
     noScrapes: "Zatím žádná stažení",

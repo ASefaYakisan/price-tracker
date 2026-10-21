@@ -41,6 +41,11 @@ const nl: Dict = {
     custom: "Toegevoegd via link",
   },
   home: {
+    heroTitle: "Weet het meteen als een prijs daalt",
+    heroLead: "Plak een productlink. We controleren de prijs elke dag, tonen het verloop en waarschuwen je zodra je doelprijs bereikt is.",
+    step1: "Plak een willekeurige productlink",
+    step2: "We controleren hem elke dag",
+    step3: "Melding bij jouw prijs",
     title: "Gevolgde prijzen",
     lastScrape: "Laatste scrape {date}",
     noScrapes: "Nog geen scrapes",

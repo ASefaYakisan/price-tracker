@@ -41,6 +41,11 @@ const pl: Dict = {
     custom: "Dodane przez link",
   },
   home: {
+    heroTitle: "Dowiedz się od razu, gdy cena spadnie",
+    heroLead: "Wklej link do produktu. Codziennie sprawdzamy cenę, pokazujemy jej historię i powiadamiamy, gdy osiągnie Twój cel.",
+    step1: "Wklej dowolny link do produktu",
+    step2: "Sprawdzamy go codziennie",
+    step3: "Powiadomienie przy Twojej cenie",
     title: "Śledzone ceny",
     lastScrape: "Ostatnie pobranie {date}",
     noScrapes: "Brak pobrań",

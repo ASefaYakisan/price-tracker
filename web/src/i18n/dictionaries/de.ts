@@ -41,6 +41,11 @@ const de: Dict = {
     custom: "Per Link hinzugefügt",
   },
   home: {
+    heroTitle: "Erfahre sofort, wenn ein Preis fällt",
+    heroLead: "Füge einen Produktlink ein. Wir prüfen den Preis täglich, zeigen seinen Verlauf und benachrichtigen dich, sobald dein Zielpreis erreicht ist.",
+    step1: "Beliebigen Produktlink einfügen",
+    step2: "Wir prüfen ihn täglich",
+    step3: "Benachrichtigung bei deinem Preis",
     title: "Verfolgte Preise",
     lastScrape: "Letzter Abruf {date}",
     noScrapes: "Noch keine Abrufe",

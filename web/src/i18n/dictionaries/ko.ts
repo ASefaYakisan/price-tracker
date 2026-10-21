@@ -41,6 +41,11 @@ const ko: Dict = {
     custom: "링크로 추가",
   },
   home: {
+    heroTitle: "가격이 내려가는 순간을 알려드려요",
+    heroLead: "상품 링크를 붙여넣으세요. 매일 가격을 확인하고 기록을 차트로 보여주며 목표 가격에 도달하면 알려드립니다.",
+    step1: "상품 링크 붙여넣기",
+    step2: "매일 확인",
+    step3: "원하는 가격에 알림",
     title: "추적 중인 가격",
     lastScrape: "마지막 수집 {date}",
     noScrapes: "아직 수집 기록이 없습니다",

@@ -41,6 +41,11 @@ const ro: Dict = {
     custom: "Adăugat prin link",
   },
   home: {
+    heroTitle: "Află imediat când scade un preț",
+    heroLead: "Lipește linkul unui produs. Verificăm prețul zilnic, îi arătăm istoricul și te anunțăm când ajunge la ținta ta.",
+    step1: "Lipește orice link de produs",
+    step2: "Îl verificăm zilnic",
+    step3: "Primești o alertă la prețul tău",
     title: "Prețuri urmărite",
     lastScrape: "Ultima colectare {date}",
     noScrapes: "Nicio colectare încă",

@@ -41,6 +41,11 @@ const sv: Dict = {
     custom: "Tillagd via länk",
   },
   home: {
+    heroTitle: "Få veta direkt när ett pris sjunker",
+    heroLead: "Klistra in en produktlänk. Vi kollar priset varje dag, visar historiken och meddelar dig när det når ditt mål.",
+    step1: "Klistra in valfri produktlänk",
+    step2: "Vi kollar den varje dag",
+    step3: "Få en avisering vid ditt pris",
     title: "Bevakade priser",
     lastScrape: "Senaste hämtning {date}",
     noScrapes: "Inga hämtningar än",
