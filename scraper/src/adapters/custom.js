@@ -1,4 +1,5 @@
 // Products people added by pasting a link. Re-reads each saved page with the generic extractor.
+import { createBrowserReader } from '../browser-fetch.js';
 import { extractProduct } from '../extract-price.js';
 import { fetchText, sleep } from '../fetch.js';
 import { attemptRow, outcomeForError } from '../track-outcome.js';
@@ -11,11 +12,16 @@ export async function fetchAll({ db } = {}) {
   if (error) throw error;
   const products = [];
   const attempts = [];
-  for (const { url, added_by: userId } of data) {
-    const attempt = await readLink(url);
-    attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
-    if (attempt.product) products.push(attempt.product);
-    await sleep(1500);
+  const browser = createBrowserReader();
+  try {
+    for (const { url, added_by: userId } of data) {
+      const attempt = await browser.retry(url, await readLink(url));
+      attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
+      if (attempt.product) products.push(attempt.product);
+      await sleep(1500);
+    }
+  } finally {
+    await browser.close();
   }
   await saveAttempts(db, attempts);
   return products;
