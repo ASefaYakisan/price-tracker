@@ -257,6 +257,7 @@ const pt: Dict = {
     dark: "Escuro",
     system: "Sistema",
     colors: "Tema de cores",
+    tag: "Etiqueta",
     indigo: "Índigo",
     ocean: "Oceano",
     forest: "Floresta",

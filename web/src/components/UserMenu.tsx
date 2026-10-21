@@ -47,7 +47,7 @@ export function UserMenu() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="grid size-8 place-items-center rounded-full bg-gradient-to-br from-accent to-teal text-sm font-semibold text-white"
+        className="grid size-8 place-items-center rounded-full bg-accent text-sm font-semibold text-accent-ink"
         aria-label={t.nav.accountMenu}
         aria-expanded={open}
       >

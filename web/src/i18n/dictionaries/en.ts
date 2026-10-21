@@ -257,6 +257,7 @@ const en = {
     dark: "Dark",
     system: "System",
     colors: "Color theme",
+    tag: "Price tag",
     indigo: "Indigo",
     ocean: "Ocean",
     forest: "Forest",

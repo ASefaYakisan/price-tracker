@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 /* Design tokens: every color the UI uses, defined once per theme.
-   Calm base (soft gray-blue), one indigo accent, a teal partner, and one soft hue per data source. */
+   Warm paper base, one price-tag orange accent, a teal partner, and one soft hue per data source. */
 :root {
-  --bg: #f4f5fa;
+  --bg: #f7f6f3;
   --card: #ffffff;
-  --ink: #1b2032;
-  --muted: #596079;
-  --faint: #8a91a6;
-  --line: #e4e7f0;
-  --hover: #f0f2f9;
-  --accent: #4f5bd5;
+  --ink: #1c1b18;
+  --muted: #5f5c55;
+  --faint: #8c887f;
+  --line: #e6e3dc;
+  --hover: #efede8;
+  --accent: #c2410c;
   --accent-ink: #ffffff;
-  --accent-soft: #eceefd;
+  --accent-soft: #fdece3;
   --teal: #0e8a7e;
   --teal-soft: #ddf3ef;
   --good: #0f7a52;
@@ -21,7 +21,7 @@
   --bad-soft: #fcebe8;
   --warn: #9a5b00;
   --warn-soft: #fff2d9;
-  --grid: #e8ebf2;
+  --grid: #ebe8e1;
   --books: #a8560c;
   --books-soft: #fdf0de;
   --crypto: #7046cf;
@@ -32,23 +32,23 @@
   --gold-soft: #faf2d6;
   --custom: #b8336a;
   --custom-soft: #fce8f0;
-  --shadow: 0 1px 2px rgb(27 32 50 / 0.04), 0 4px 16px rgb(27 32 50 / 0.05);
+  --shadow: 0 1px 2px rgb(28 27 24 / 0.05), 0 8px 24px rgb(28 27 24 / 0.08);
   color-scheme: light;
 }
 
 /* Dark theme: follows the system unless the visitor picked light or dark. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e1018;
-    --card: #161a25;
-    --ink: #eceff7;
-    --muted: #a4abbf;
-    --faint: #7a8197;
-    --line: #262b3a;
-    --hover: #1d2230;
-    --accent: #7d88f0;
-    --accent-ink: #0e1018;
-    --accent-soft: #1f2444;
+    --bg: #12110f;
+    --card: #1b1a17;
+    --ink: #f1efe9;
+    --muted: #aba79d;
+    --faint: #807c73;
+    --line: #2e2c27;
+    --hover: #24221f;
+    --accent: #fb8a4c;
+    --accent-ink: #1c1b18;
+    --accent-soft: #3a1d0f;
     --teal: #4cc9b8;
     --teal-soft: #13302d;
     --good: #4cc38a;
@@ -57,7 +57,7 @@
     --bad-soft: #33191a;
     --warn: #e7b65c;
     --warn-soft: #2e2512;
-    --grid: #232837;
+    --grid: #2a2824;
     --books: #f0a560;
     --books-soft: #33240f;
     --crypto: #b399f5;
@@ -74,16 +74,16 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: #0e1018;
-  --card: #161a25;
-  --ink: #eceff7;
-  --muted: #a4abbf;
-  --faint: #7a8197;
-  --line: #262b3a;
-  --hover: #1d2230;
-  --accent: #7d88f0;
-  --accent-ink: #0e1018;
-  --accent-soft: #1f2444;
+  --bg: #12110f;
+  --card: #1b1a17;
+  --ink: #f1efe9;
+  --muted: #aba79d;
+  --faint: #807c73;
+  --line: #2e2c27;
+  --hover: #24221f;
+  --accent: #fb8a4c;
+  --accent-ink: #1c1b18;
+  --accent-soft: #3a1d0f;
   --teal: #4cc9b8;
   --teal-soft: #13302d;
   --good: #4cc38a;
@@ -92,7 +92,7 @@
   --bad-soft: #33191a;
   --warn: #e7b65c;
   --warn-soft: #2e2512;
-  --grid: #232837;
+  --grid: #2a2824;
   --books: #f0a560;
   --books-soft: #33240f;
   --crypto: #b399f5;
@@ -108,6 +108,40 @@
 }
 
 /* Extra color themes: swap the accent pair and tint the background; everything else stays. */
+:root[data-palette="indigo"] {
+  --accent: #4f5bd5;
+  --accent-soft: #eceefd;
+  --bg: #f4f5fa;
+  --ink: #1b2032;
+  --muted: #596079;
+  --faint: #8a91a6;
+  --line: #e4e7f0;
+  --hover: #f0f2f9;
+}
+:root[data-palette="indigo"][data-theme="dark"] {
+  --accent: #7d88f0;
+  --accent-ink: #0e1018;
+  --accent-soft: #1f2444;
+  --bg: #0e1018;
+  --card: #161a25;
+  --ink: #eceff7;
+  --muted: #a4abbf;
+  --line: #262b3a;
+  --hover: #1d2230;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="indigo"]:not([data-theme="light"]) {
+    --accent: #7d88f0;
+    --accent-ink: #0e1018;
+    --accent-soft: #1f2444;
+    --bg: #0e1018;
+    --card: #161a25;
+    --ink: #eceff7;
+    --muted: #a4abbf;
+    --line: #262b3a;
+    --hover: #1d2230;
+  }
+}
 :root[data-palette="ocean"] {
   --accent: #1f72c4;
   --accent-soft: #e3effb;
@@ -258,7 +292,7 @@
   --color-custom: var(--custom);
   --color-custom-soft: var(--custom-soft);
   --shadow-soft: var(--shadow);
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-sans: var(--font-plex), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
 @layer base {

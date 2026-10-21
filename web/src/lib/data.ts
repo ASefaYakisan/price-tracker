@@ -69,14 +69,48 @@ export async function getPriceHistory(id: number, days = 90): Promise<PricePoint
   return (data as PricePoint[]).map((p) => ({ ...p, price: p.price == null ? null : Number(p.price) }));
 }
 
+// Last 30 days of prices per product, for the small trend line in the list.
+// Read in pages: Supabase returns at most 1000 rows per request.
+export async function getSparklines(ids: number[], days = 30): Promise<Record<number, number[]>> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("products");
+  const lines: Record<number, number[]> = {};
+  if (isDemo) {
+    for (const id of ids) lines[id] = demoHistory(id, days).flatMap((p) => (p.price == null ? [] : [p.price]));
+    return lines;
+  }
+  if (!ids.length) return lines;
+  const db = createClient(url!, anonKey!);
+  const since = new Date(Date.now() - days * 86_400_000).toISOString();
+  const PAGE = 1000;
+  for (let from = 0; from < 20 * PAGE; from += PAGE) {
+    const { data, error } = await db
+      .from("price_history")
+      .select("product_id, price")
+      .in("product_id", ids)
+      .gte("scraped_at", since)
+      .not("price", "is", null)
+      .order("product_id")
+      .order("scraped_at")
+      .range(from, from + PAGE - 1);
+    if (error) throw new Error(error.message);
+    for (const row of data as { product_id: number; price: number | string }[]) {
+      (lines[row.product_id] ??= []).push(Number(row.price));
+    }
+    if (data.length < PAGE) break;
+  }
+  return lines;
+}
+
 // Sample rows so the dashboard renders before Supabase is connected.
 const now = new Date().toISOString();
-const demo = (id: number, slug: string, title: string, price: number, previous: number, in_stock = true): ProductRow => ({
+const demo = (id: number, slug: string, title: string, price: number, previous: number, in_stock = true, image?: string): ProductRow => ({
   id,
   source: "books-toscrape",
   title,
   url: `https://books.toscrape.com/catalogue/${slug}/index.html`,
-  image_url: null,
+  image_url: image ? `https://books.toscrape.com/media/cache/${image}.jpg` : null,
   currency: "GBP",
   price,
   previous_price: previous,
@@ -95,8 +129,8 @@ const DEMO_PRODUCTS: ProductRow[] = [
   other(10, "coingecko", "Ethereum (ETH)", "https://www.coingecko.com/en/coins/ethereum", "USD", 4380.22, 4512.9),
   other(11, "tcmb", "US Dollar (USD/TRY)", "https://www.tcmb.gov.tr/", "TRY", 49.1802, 49.0915),
   other(12, "gold", "Gram Gold (TRY)", "https://github.com/fawazahmed0/exchange-api", "TRY", 6518.13, 6542.4),
-  demo(1, "a-light-in-the-attic_1000", "A Light in the Attic", 45.17, 51.77),
-  demo(2, "tipping-the-velvet_999", "Tipping the Velvet", 53.74, 53.74, false),
+  demo(1, "a-light-in-the-attic_1000", "A Light in the Attic", 45.17, 51.77, true, "2c/da/2cdad67c44b002e7ead0cc35693c0e8b"),
+  demo(2, "tipping-the-velvet_999", "Tipping the Velvet", 53.74, 53.74, false, "26/0c/260c6ae16bce31c8f8c95daddd9f4a1c"),
   demo(3, "soumission_998", "Soumission", 46.1, 50.1),
   demo(4, "sharp-objects_997", "Sharp Objects", 49.99, 47.82),
   demo(5, "sapiens-a-brief-history-of-humankind_996", "Sapiens: A Brief History of Humankind", 54.23, 54.23),

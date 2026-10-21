@@ -258,6 +258,7 @@ const pl: Dict = {
     dark: "Ciemny",
     system: "Systemowy",
     colors: "Motyw kolorystyczny",
+    tag: "Metka",
     indigo: "Indygo",
     ocean: "Ocean",
     forest: "Las",

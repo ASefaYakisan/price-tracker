@@ -257,6 +257,7 @@ const ko: Dict = {
     dark: "다크",
     system: "시스템",
     colors: "색상 테마",
+    tag: "가격표",
     indigo: "인디고",
     ocean: "오션",
     forest: "포레스트",

@@ -257,6 +257,7 @@ const tr: Dict = {
     dark: "Koyu",
     system: "Sistem",
     colors: "Renk teması",
+    tag: "Etiket",
     indigo: "Çivit",
     ocean: "Okyanus",
     forest: "Orman",

@@ -257,6 +257,7 @@ const ar: Dict = {
     dark: "داكن",
     system: "النظام",
     colors: "سمة الألوان",
+    tag: "بطاقة السعر",
     indigo: "نيلي",
     ocean: "المحيط",
     forest: "الغابة",

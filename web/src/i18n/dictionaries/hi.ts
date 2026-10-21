@@ -257,6 +257,7 @@ const hi: Dict = {
     dark: "डार्क",
     system: "सिस्टम",
     colors: "रंग थीम",
+    tag: "प्राइस टैग",
     indigo: "नील",
     ocean: "सागर",
     forest: "जंगल",

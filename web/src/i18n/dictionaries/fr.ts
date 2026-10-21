@@ -258,6 +258,7 @@ const fr: Dict = {
     dark: "Sombre",
     system: "Système",
     colors: "Thème de couleur",
+    tag: "Étiquette",
     indigo: "Indigo",
     ocean: "Océan",
     forest: "Forêt",

@@ -258,6 +258,7 @@ const uk: Dict = {
     dark: "Темний",
     system: "Системний",
     colors: "Колірна тема",
+    tag: "Цінник",
     indigo: "Індиго",
     ocean: "Океан",
     forest: "Ліс",
