@@ -1,6 +1,7 @@
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const USER_AGENT = 'FiyatTakipBot/0.1 (+https://github.com/ASefaYakisan/price-tracker)';
+// Set SCRAPER_USER_AGENT to add a contact address for shop operators, e.g. 'PriceTrackerBot/0.1 (+https://your-site)'.
+const USER_AGENT = process.env.SCRAPER_USER_AGENT || 'PriceTrackerBot/0.1';
 
 // Polite fetch: identifies itself, retries transient failures with backoff.
 // Errors for an HTTP answer carry its `status`; `timeoutMs` gives up on a slow server with a TimeoutError.

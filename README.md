@@ -38,7 +38,14 @@ npm test   # runs the shared shop fixtures in scraper/test/fixtures/shops agains
 
 ## Daily schedule
 
-`.github/workflows/scrape.yml` runs the scraper every day at 06:00 UTC and can be started by hand from the Actions tab. It needs one repository secret: `SUPABASE_SERVICE_ROLE_KEY`.
+`.github/workflows/scrape.yml` runs the scraper every day at 06:00 UTC and can be started by hand from the Actions tab. It needs one repository secret, `SUPABASE_SERVICE_ROLE_KEY`, and these repository variables (Settings → Secrets and variables → Actions → **Variables**):
+
+| Variable | Example | Used for |
+| --- | --- | --- |
+| `SUPABASE_URL` | `https://<project-ref>.supabase.co` | The database the scraper and the Pending links job write to (required) |
+| `SITE_URL` | `https://your-site.vercel.app` | Links in alert emails and the Telegram digest; without it they point to the shop page |
+| `ALERT_FROM` | `Price Tracker <alerts@your-domain>` | Sender of alert emails, a Resend-verified address; defaults to Resend's test sender |
+| `SCRAPER_USER_AGENT` | `PriceTrackerBot/0.1 (+https://your-site)` | Optional; the bot name shops see, defaults to `PriceTrackerBot/0.1` |
 
 ## Track any product by link
 
