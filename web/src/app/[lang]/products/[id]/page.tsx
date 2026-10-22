@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { BellIcon } from "@/components/BellIcon";
@@ -12,6 +13,27 @@ import { ListButton } from "@/components/ListButton";
 import { getDictionary, resolveLang } from "@/i18n/server";
 import { getPriceHistory, getProduct } from "@/lib/data";
 import { changeTone, dateTime, money, percent, percentChange, storeName } from "@/lib/format";
+
+// Tab, bookmark and link-preview title: the product's own name and price. getProduct is
+// "use cache"d, so this shares the page's fetch.
+export async function generateMetadata({ params }: PageProps<"/[lang]/products/[id]">): Promise<Metadata> {
+  const lang = await resolveLang(params);
+  const t = await getDictionary(lang);
+  const id = Number((await params).id);
+  const product = Number.isInteger(id) ? await getProduct(id) : null;
+  if (!product) return { title: t.meta.title, robots: { index: false } };
+
+  const title = `${product.title} · ${t.meta.title}`;
+  const description =
+    product.price == null
+      ? `${storeName(product, t)} · ${t.meta.description}`
+      : `${fill(t.meta.productPrice, { price: money(product.price, product.currency, lang) })} · ${storeName(product, t)}`;
+  return {
+    title,
+    description,
+    openGraph: { title, description, ...(product.image_url ? { images: [product.image_url] } : {}) },
+  };
+}
 
 export default function ProductPage({ params }: PageProps<"/[lang]/products/[id]">) {
   return (

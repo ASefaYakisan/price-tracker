@@ -7,6 +7,7 @@ const da: Dict = {
     alerts: "Dine alarmer",
     signIn: "Log ind",
     newPassword: "Ny adgangskode",
+    productPrice: "Aktuel pris {price} · prishistorik og alarmer",
   },
   nav: {
     alerts: "Alarmer",

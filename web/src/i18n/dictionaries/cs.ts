@@ -7,6 +7,7 @@ const cs: Dict = {
     alerts: "Vaše upozornění",
     signIn: "Přihlásit se",
     newPassword: "Nové heslo",
+    productPrice: "Aktuální cena {price} · historie cen a upozornění",
   },
   nav: {
     alerts: "Upozornění",

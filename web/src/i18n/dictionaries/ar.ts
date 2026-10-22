@@ -7,6 +7,7 @@ const ar: Dict = {
     alerts: "تنبيهاتك",
     signIn: "تسجيل الدخول",
     newPassword: "كلمة مرور جديدة",
+    productPrice: "السعر الحالي {price} · سجل الأسعار والتنبيهات",
   },
   nav: {
     alerts: "التنبيهات",

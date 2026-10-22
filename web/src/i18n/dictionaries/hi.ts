@@ -7,6 +7,7 @@ const hi: Dict = {
     alerts: "आपके अलर्ट",
     signIn: "साइन इन",
     newPassword: "नया पासवर्ड",
+    productPrice: "मौजूदा कीमत {price} · कीमत इतिहास और अलर्ट",
   },
   nav: {
     alerts: "अलर्ट",

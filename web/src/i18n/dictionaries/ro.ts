@@ -7,6 +7,7 @@ const ro: Dict = {
     alerts: "Alertele tale",
     signIn: "Conectare",
     newPassword: "Parolă nouă",
+    productPrice: "Preț actual {price} · istoric prețuri și alerte",
   },
   nav: {
     alerts: "Alerte",

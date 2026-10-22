@@ -7,6 +7,7 @@ const th: Dict = {
     alerts: "การแจ้งเตือนของคุณ",
     signIn: "เข้าสู่ระบบ",
     newPassword: "รหัสผ่านใหม่",
+    productPrice: "ราคาปัจจุบัน {price} · ประวัติราคาและการแจ้งเตือน",
   },
   nav: {
     alerts: "การแจ้งเตือน",
