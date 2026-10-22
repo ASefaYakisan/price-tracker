@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cacheLife, cacheTag } from "next/cache";
 import type { LinkState } from "@/lib/link-status";
 
@@ -34,13 +34,30 @@ export async function getProducts(): Promise<ProductRow[]> {
   cacheTag("products"); // refreshed right away when someone adds a link
   if (isDemo) return DEMO_PRODUCTS;
   const db = createClient(url!, anonKey!);
-  const list = (columns: string) =>
-    db.from("product_latest").select(columns).order("price_change", { ascending: true, nullsFirst: false }).limit(200);
-  let { data, error } = await list(`${LIST_COLUMNS}, ${STATUS_COLUMNS}`);
+  // Read in pages: Supabase returns at most 1000 rows per request. The list shows them a page at a time.
+  const PAGE = 1000;
+  const page = (columns: string, from: number) =>
+    db
+      .from("product_latest")
+      .select(columns)
+      .order("price_change", { ascending: true, nullsFirst: false })
+      .order("id")
+      .range(from, from + PAGE - 1);
   // Until migration 0009 adds the status columns, the list still renders without them.
-  if (error?.code === "42703") ({ data, error } = await list(LIST_COLUMNS));
-  if (error) throw new Error(error.message);
-  return (data as unknown as ProductRow[]).map(toNumbers);
+  let columns = `${LIST_COLUMNS}, ${STATUS_COLUMNS}`;
+  const rows: ProductRow[] = [];
+  for (let from = 0; from < 10 * PAGE; from += PAGE) {
+    let { data, error } = await page(columns, from);
+    if (error?.code === "42703" && columns !== LIST_COLUMNS) {
+      columns = LIST_COLUMNS;
+      ({ data, error } = await page(columns, from));
+    }
+    if (error) throw new Error(error.message);
+    const batch = (data ?? []) as unknown as ProductRow[];
+    rows.push(...batch.map(toNumbers));
+    if (batch.length < PAGE) break;
+  }
+  return rows;
 }
 
 // Postgres numeric can arrive as a string; the UI does arithmetic on these fields.
@@ -91,6 +108,12 @@ export async function getSparklines(ids: number[], days = 30): Promise<Record<nu
   if (!ids.length) return lines;
   const db = createClient(url!, anonKey!);
   const since = new Date(Date.now() - days * 86_400_000).toISOString();
+  // Ids go in the request address, so ask for a couple of hundred items at a time.
+  for (let i = 0; i < ids.length; i += 200) await readSparklines(db, ids.slice(i, i + 200), since, lines);
+  return lines;
+}
+
+async function readSparklines(db: SupabaseClient, ids: number[], since: string, lines: Record<number, number[]>) {
   const PAGE = 1000;
   for (let from = 0; from < 20 * PAGE; from += PAGE) {
     const { data, error } = await db
@@ -108,7 +131,6 @@ export async function getSparklines(ids: number[], days = 30): Promise<Record<nu
     }
     if (data.length < PAGE) break;
   }
-  return lines;
 }
 
 // Sample rows so the dashboard renders before Supabase is connected.

@@ -103,7 +103,7 @@ Guests manage their alerts from the browser that created them: each alert has a 
 
 ## Accounts
 
-Email and password sign in with Supabase Auth (`@supabase/ssr`, session cookies refreshed in `src/proxy.ts`). Signed-in users' alerts are saved to their account and readable on any device. Row level security lets each user read, change and delete only their own rows (`supabase/migrations/0005_alert_owners.sql`). Alerts made as a guest move into the account on first sign in. Password reset links open in a separate in-memory session, so they never sign in other tabs. A "Continue with Google" button appears on its own once the Google provider is switched on in Supabase.
+Email and password sign in with Supabase Auth (`@supabase/ssr`, session cookies refreshed in `src/proxy.ts`). Signed-in users' alerts are saved to their account and readable on any device. Row level security lets each user read, change and delete only their own rows (`supabase/migrations/0005_alert_owners.sql`). Alerts made as a guest move into the account on first sign in. Each user also keeps their own list of tracked items (`user_products`, `supabase/migrations/0010_user_products.sql`): two people can follow the same link, and one leaving it never removes the other's item, price history or alerts. The home page splits items into My list, Products (links people added), Markets and Samples. Password reset links open in a separate in-memory session, so they never sign in other tabs. A "Continue with Google" button appears on its own once the Google provider is switched on in Supabase.
 
 ## Languages
 

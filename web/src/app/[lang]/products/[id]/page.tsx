@@ -6,9 +6,9 @@ import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 import { LinkStatusNote, LinkStatusPill } from "@/components/LinkStatus";
 import { ProductThumb } from "@/components/ProductThumb";
-import { StopTracking } from "@/components/StopTracking";
 import { fill } from "@/i18n/config";
 import { BackLink } from "@/components/BackLink";
+import { ListButton } from "@/components/ListButton";
 import { getDictionary, resolveLang } from "@/i18n/server";
 import { getPriceHistory, getProduct } from "@/lib/data";
 import { changeTone, dateTime, money, percent, percentChange, storeName } from "@/lib/format";
@@ -116,7 +116,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
         <AlertForm productId={product.id} title={product.title} price={product.price} currency={cur} />
       </section>
 
-      {product.source === "custom" && <StopTracking productId={product.id} />}
+      <ListButton productId={product.id} />
     </>
   );
 }

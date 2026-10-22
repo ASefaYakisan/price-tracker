@@ -25,6 +25,8 @@ const SORTS = {
 };
 type SortKey = keyof typeof SORTS;
 
+const PAGE = 50; // rows shown at first and added by "Show more"
+
 function pct(p: ProductRow) {
   return percentChange(p.price, p.previous_price) ?? 0;
 }
@@ -45,6 +47,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
   const [filter, setFilter] = useState<FilterKey>("all");
   const [sort, setSort] = useState<SortKey>("drop");
   const [source, setSource] = useState("all");
+  const [shown, setShown] = useState(PAGE);
   const sources = useMemo(() => [...new Set(products.map((p) => p.source))].sort(), [products]);
 
   const rows = useMemo(() => {
@@ -139,7 +142,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
         <p className="border-t border-line py-12 text-center text-sm text-muted">{t.table.empty}</p>
       ) : (
         <ul className="divide-y divide-line border-y border-line">
-          {rows.map((p) => (
+          {rows.slice(0, shown).map((p) => (
             <li
               key={p.id}
               onClick={() => router.push(href(`/products/${p.id}`))}
@@ -175,6 +178,15 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
             </li>
           ))}
         </ul>
+      )}
+      {rows.length > shown && (
+        <button
+          type="button"
+          onClick={() => setShown((n) => n + PAGE)}
+          className="mx-auto mt-4 block h-9 rounded-lg border border-line bg-card px-4 text-sm font-medium text-ink hover:bg-hover"
+        >
+          {fill(t.table.showMore, { count: rows.length - shown })}
+        </button>
       )}
     </section>
   );

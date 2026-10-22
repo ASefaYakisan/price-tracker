@@ -4,6 +4,8 @@ import type { Dict } from "@/i18n/dictionaries/en";
 import { getDictionary } from "@/i18n/server";
 import { getProducts, type ProductRow } from "@/lib/data";
 import { sourceLabel } from "@/lib/format";
+import { isList, itemsInList } from "@/lib/lists";
+import { currentUser } from "@/lib/supabase/server";
 
 const COLUMNS: { key: keyof ProductRow; header: keyof Dict["export"]; width: number }[] = [
   { key: "title", header: "product", width: 48 },
@@ -66,13 +68,24 @@ async function toXlsx(products: ProductRow[], t: Dict, lang: Locale) {
   return book.xlsx.writeBuffer();
 }
 
-// GET ?format=csv|xlsx&lang=tr -> the price list with headers and labels in that language.
+// The signed-in visitor's list, read as that user so row level security applies; empty when signed out.
+async function myIds() {
+  const user = await currentUser();
+  if (!user) return new Set<number>();
+  const { data } = await user.db.from("user_products").select("product_id").limit(5000);
+  return new Set((data ?? []).map((row) => Number(row.product_id)));
+}
+
+// GET ?format=csv|xlsx&lang=tr&list=mine|explore|markets|sample -> that list (every item without one),
+// with headers and labels in that language.
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const format = params.get("format") === "xlsx" ? "xlsx" : "csv";
   const asked = params.get("lang");
   const lang = isLocale(asked) ? asked : DEFAULT_LOCALE;
-  const [products, t] = await Promise.all([getProducts(), getDictionary(lang)]);
+  const list = params.get("list");
+  const [all, t] = await Promise.all([getProducts(), getDictionary(lang)]);
+  const products = isList(list) ? itemsInList(all, list, list === "mine" ? await myIds() : null) : all;
   const filename = `${t.export.file}-${new Date().toISOString().slice(0, 10)}.${format}`;
   const body = format === "xlsx" ? await toXlsx(products, t, lang) : toCsv(products, t, lang);
   return new Response(body, {
