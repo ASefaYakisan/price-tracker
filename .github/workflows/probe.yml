@@ -14,7 +14,7 @@ on:
         type: boolean
         default: true
       country:
-        description: Country the scraping API opens pages from (e.g. tr); empty = the UNBLOCK_COUNTRY variable
+        description: Country the scraping API opens pages from (e.g. tr, none); empty = the UNBLOCK_COUNTRY variable, else tr
         default: ""
 
 jobs:

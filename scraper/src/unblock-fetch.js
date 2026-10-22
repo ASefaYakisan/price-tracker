@@ -10,8 +10,8 @@ import { fetchText } from './fetch.js';
 export const UNBLOCK_LAYER = 'unblock';
 export const UNBLOCK_RENDER_LAYER = 'unblock-render';
 const RENDER_COST = 10;
-// Shops whose product page is an empty app shell until its scripts run; override with UNBLOCK_RENDER_HOSTS.
-const DEFAULT_RENDER_HOSTS = 'trendyol.com';
+// Most tracked shops are Turkish, and some (Trendyol) show a country picker instead of the product to foreign addresses.
+const DEFAULT_COUNTRY = 'tr';
 const ENDPOINT = 'https://api.scraperapi.com/';
 const DEFAULT_MONTHLY_LIMIT = 900;
 const RETRY_AFTER_HOURS = 24; // a pending link that failed through the API waits this long before the next paid try
@@ -21,11 +21,17 @@ export function unblockConfig(env = process.env) {
   return {
     apiKey: env.SCRAPER_API_KEY?.trim() || null,
     hosts: (env.UNBLOCK_HOSTS ?? '').split(',').map(normalHost).filter(Boolean),
-    // Where the API opens pages from (ScraperAPI country_code); Turkish shops show a country picker to foreign addresses.
-    country: env.UNBLOCK_COUNTRY?.trim().toLowerCase() || null,
-    renderHosts: (env.UNBLOCK_RENDER_HOSTS ?? DEFAULT_RENDER_HOSTS).split(',').map(normalHost).filter(Boolean),
+    // Where the API opens pages from (ScraperAPI country_code); "none" lets the API pick.
+    country: countryCode(env.UNBLOCK_COUNTRY),
+    // Shops whose page is an empty app shell until its scripts run; none needed one so far.
+    renderHosts: (env.UNBLOCK_RENDER_HOSTS ?? '').split(',').map(normalHost).filter(Boolean),
     monthlyLimit: Number.isFinite(limit) && limit >= 0 ? limit : DEFAULT_MONTHLY_LIMIT,
   };
+}
+
+function countryCode(value) {
+  const code = value?.trim().toLowerCase() || DEFAULT_COUNTRY;
+  return code === 'none' ? null : code;
 }
 
 function normalHost(host) {
@@ -110,7 +116,13 @@ export function createUnblocker({ db, env = process.env, now = Date.now(), fetch
       const render = isListed(renderHosts, url);
       used += render ? RENDER_COST : 1;
       try {
-        return await fetcher(apiUrl(apiKey, url, { render, country }), { timeoutMs: 70_000, retries: 1 });
+        try {
+          return await fetcher(apiUrl(apiKey, url, { render, country }), { timeoutMs: 70_000, retries: 1 });
+        } catch (err) {
+          // A plan without that country answers 403; failed requests cost nothing, so try once without it.
+          if (!country || err.status !== 403) throw err;
+          return await fetcher(apiUrl(apiKey, url, { render }), { timeoutMs: 70_000, retries: 1 });
+        }
       } catch (err) {
         // fetchText puts the request URL in its message, and that URL carries the key.
         const reason = err.status ? `HTTP ${err.status}` : String(err.message ?? err).replaceAll(apiKey, '***');

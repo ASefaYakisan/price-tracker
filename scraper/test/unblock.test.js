@@ -177,13 +177,28 @@ test('a listed shop skips the browser and goes to the API', async () => {
 });
 
 test('config parsing and host matching', () => {
-  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], country: null, renderHosts: ['trendyol.com'], monthlyLimit: 900 });
+  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], country: 'tr', renderHosts: [], monthlyLimit: 900 });
   const config = unblockConfig({ SCRAPER_API_KEY: ' k ', UNBLOCK_HOSTS: 'www.Hepsiburada.com, ,vatanbilgisayar.com', UNBLOCK_MONTHLY_LIMIT: 'x' });
-  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], country: null, renderHosts: ['trendyol.com'], monthlyLimit: 900 });
+  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], country: 'tr', renderHosts: [], monthlyLimit: 900 });
   assert.ok(isListed(config.hosts, 'https://m.hepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'https://nothepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'not a url'));
   assert.equal(apiUrl('k', 'https://a.example/x?y=1'), 'https://api.scraperapi.com/?api_key=k&url=https%3A%2F%2Fa.example%2Fx%3Fy%3D1');
+});
+
+test('pages are opened from Turkey unless told otherwise, and without the country when the plan refuses it', async () => {
+  assert.equal(unblockConfig({ UNBLOCK_COUNTRY: 'none' }).country, null);
+  assert.equal(unblockConfig({ UNBLOCK_COUNTRY: ' DE ' }).country, 'de');
+  const urls = [];
+  globalThis.fetch = async (url) => {
+    urls.push(String(url));
+    if (!String(url).startsWith('https://api.scraperapi.com/')) return new Response('blocked', { status: 403 });
+    return String(url).includes('country_code=') ? new Response('no geotargeting on this plan', { status: 403 }) : new Response(PAGE);
+  };
+  const attempt = await readLink(LINK, { retries: 1, unblocker: createUnblocker({ db: fakeDb(), env: env() }) });
+  assert.match(urls[1], /country_code=tr/);
+  assert.doesNotMatch(urls[2], /country_code/);
+  assert.equal(attempt.outcome, 'ok');
 });
 
 test('render hosts are read with render=true, logged as rendered and counted at 10 credits', async () => {
@@ -192,7 +207,7 @@ test('render hosts are read with render=true, logged as rendered and counted at 
     urls.push(String(url));
     return String(url).startsWith('https://api.scraperapi.com/') ? new Response(PAGE) : new Response('blocked', { status: 403 });
   };
-  const unblocker = createUnblocker({ db: fakeDb(), env: env() });
+  const unblocker = createUnblocker({ db: fakeDb(), env: env({ UNBLOCK_RENDER_HOSTS: 'trendyol.com' }) });
   const attempt = await readLink('https://www.trendyol.com/x/y-p-1', { retries: 1, unblocker });
   assert.match(urls[1], /render=true/);
   assert.equal(attempt.layer, 'unblock-render:json-ld');
