@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { attemptRow, messageFor, outcomeForError } from '../src/track-outcome.js';
+import { attemptRow, botWall, messageFor, outcomeForError } from '../src/track-outcome.js';
 import { markdownTable, parseUrlList, probeRow } from '../src/probe.js';
 
 test('outcomeForError tells HTTP answers, timeouts and network failures apart', () => {
@@ -38,4 +38,12 @@ test('probe rows and table show how far reading got', () => {
   const blocked = probeRow('https://b.example/x', { outcome: 'http_error', httpStatus: 403, html: null, product: null });
   assert.equal(markdownTable([row, blocked]).split('\n')[3], '| b.example | 403 | - | - | - | - | http_error |');
   assert.deepEqual(parseUrlList('# shops\nhttps://a.example/1\n\n https://b.example/2 # note\n'), ['https://a.example/1', 'https://b.example/2']);
+});
+
+test('botWall spots robot-check pages but not product pages that mention a captcha', () => {
+  assert.equal(botWall('<form action="/errors/validateCaptcha">Robot Check</form>'), true);
+  assert.equal(botWall('<title>Just a moment...</title>'), true);
+  assert.equal(botWall('<h1>Kulaklık</h1>'), false);
+  assert.equal(botWall(`<p>captcha</p>${'x'.repeat(70_000)}`), false);
+  assert.equal(botWall(null), false);
 });
