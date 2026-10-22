@@ -4,7 +4,7 @@ import { extractProduct } from '../extract-price.js';
 import { fetchText, sleep } from '../fetch.js';
 import { saveStatuses, statusChange } from '../link-status.js';
 import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError } from '../track-outcome.js';
-import { createUnblocker, UNBLOCK_LAYER, UNBLOCK_RENDER_LAYER } from '../unblock-fetch.js';
+import { createUnblocker, UNBLOCK_LAYER, UNBLOCK_PLUS_LAYER } from '../unblock-fetch.js';
 
 export const name = 'custom';
 
@@ -79,7 +79,7 @@ export async function readLink(url, { retries = 3, externalId = null } = {}) {
 
 // The same read through the scraping API; logged with the "unblock" layer so the monthly count includes it.
 async function readViaApi(url, unblocker) {
-  const apiLayer = unblocker.renders?.(url) ? UNBLOCK_RENDER_LAYER : UNBLOCK_LAYER;
+  const apiLayer = unblocker.plus?.(url) ? UNBLOCK_PLUS_LAYER : UNBLOCK_LAYER;
   let html;
   try {
     html = await unblocker.fetchPage(url);

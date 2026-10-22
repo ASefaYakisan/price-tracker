@@ -13,6 +13,9 @@ on:
         description: Try the paid scraping API for links the browser could not read
         type: boolean
         default: true
+      premium:
+        description: Shops read with the API's premium option (comma-separated); empty = the UNBLOCK_PREMIUM_HOSTS variable
+        default: ""
       country:
         description: Country the scraping API opens pages from (e.g. tr, none); empty = the UNBLOCK_COUNTRY variable, else tr
         default: ""
@@ -43,3 +46,4 @@ jobs:
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
           UNBLOCK_COUNTRY: ${{ inputs.country || vars.UNBLOCK_COUNTRY }}
           UNBLOCK_RENDER_HOSTS: ${{ vars.UNBLOCK_RENDER_HOSTS }}
+          UNBLOCK_PREMIUM_HOSTS: ${{ inputs.premium || vars.UNBLOCK_PREMIUM_HOSTS }}

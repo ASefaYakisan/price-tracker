@@ -36,7 +36,7 @@ function fakeDb(used = 0, rendered = 0) {
         select: () => query,
         like: (_column, pattern) => ((prefix = pattern), query),
         gte: () => query,
-        then: (resolve) => resolve({ count: prefix.startsWith('unblock-render') ? rendered : used, error: null }),
+        then: (resolve) => resolve({ count: prefix.startsWith('unblock-plus') ? rendered : used, error: null }),
       };
       return query;
     },
@@ -177,9 +177,9 @@ test('a listed shop skips the browser and goes to the API', async () => {
 });
 
 test('config parsing and host matching', () => {
-  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], country: 'tr', renderHosts: [], monthlyLimit: 900 });
+  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], country: 'tr', renderHosts: [], premiumHosts: [], monthlyLimit: 900 });
   const config = unblockConfig({ SCRAPER_API_KEY: ' k ', UNBLOCK_HOSTS: 'www.Hepsiburada.com, ,vatanbilgisayar.com', UNBLOCK_MONTHLY_LIMIT: 'x' });
-  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], country: 'tr', renderHosts: [], monthlyLimit: 900 });
+  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], country: 'tr', renderHosts: [], premiumHosts: [], monthlyLimit: 900 });
   assert.ok(isListed(config.hosts, 'https://m.hepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'https://nothepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'not a url'));
@@ -201,7 +201,7 @@ test('pages are opened from Turkey unless told otherwise, and without the countr
   assert.equal(attempt.outcome, 'ok');
 });
 
-test('render hosts are read with render=true, logged as rendered and counted at 10 credits', async () => {
+test('render hosts are read with render=true, logged as unblock-plus and counted at 10 credits', async () => {
   const urls = [];
   globalThis.fetch = async (url) => {
     urls.push(String(url));
@@ -210,7 +210,8 @@ test('render hosts are read with render=true, logged as rendered and counted at 
   const unblocker = createUnblocker({ db: fakeDb(), env: env({ UNBLOCK_RENDER_HOSTS: 'trendyol.com' }) });
   const attempt = await readLink('https://www.trendyol.com/x/y-p-1', { retries: 1, unblocker });
   assert.match(urls[1], /render=true/);
-  assert.equal(attempt.layer, 'unblock-render:json-ld');
+  assert.equal(attempt.layer, 'unblock-plus:json-ld');
+  assert.match(apiUrl('k', 'https://a.example/x', { premium: true }), /premium=true/);
   assert.equal(apiUrl('k', 'https://a.example/x', { render: true }).endsWith('&render=true'), true);
   assert.equal(apiUrl('k', 'https://a.example/x', { country: 'tr' }).endsWith('&country_code=tr'), true);
   // 87 reads, 2 of them rendered: 85 + 2 x 10 = 105 credits, over a limit of 100.
