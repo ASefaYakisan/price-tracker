@@ -3,6 +3,16 @@ import type { Dict } from "@/i18n/dictionaries/en";
 
 export const sourceLabel = (source: string, t: Dict) => (t.sources as Record<string, string>)[source] ?? source;
 
+// Shop products are named by their site; the built-in feeds by their source.
+export function storeName(p: { source: string; url: string }, t: Dict) {
+  if (p.source !== "custom") return sourceLabel(p.source, t);
+  try {
+    return new URL(p.url).hostname.replace(/^www\./, "");
+  } catch {
+    return sourceLabel(p.source, t);
+  }
+}
+
 // Shoppers want prices to fall; for crypto, currencies and gold a rise is the good news.
 const MARKET_SOURCES = new Set(["coingecko", "tcmb", "gold"]);
 export const riseIsGood = (source: string) => MARKET_SOURCES.has(source);
