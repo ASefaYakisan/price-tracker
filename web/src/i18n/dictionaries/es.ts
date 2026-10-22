@@ -62,11 +62,11 @@ const es: Dict = {
   },
   track: {
     label: "Sigue cualquier producto: pega el enlace de una página de producto",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Pega el enlace de un producto o el texto para compartir de la tienda",
     submit: "Seguir precio",
     reading: "Leyendo precio…",
     found: "{title} encontrado a {price}. (Modo demo: no se guardó.)",
-    hint: "Funciona con tiendas que publican datos de producto para Google Shopping. Se revisa cada día.",
+    hint: "Funciona con la mayoría de las tiendas. Si el precio no se puede leer al momento, el enlace se guarda como pendiente y se reintenta automáticamente.",
     signIn: "Inicia sesión para añadir cualquier producto por su enlace.",
   },
   table: {

@@ -62,11 +62,11 @@ const ko: Dict = {
   },
   track: {
     label: "어떤 상품이든 추적하세요: 상품 페이지 링크를 붙여 넣으세요",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "상품 링크나 쇼핑몰 공유 문구를 붙여넣으세요",
     submit: "가격 추적",
     reading: "가격 읽는 중…",
     found: "{title}을(를) {price}에 찾았습니다. (데모 모드: 저장되지 않음)",
-    hint: "Google Shopping용 상품 데이터를 게시하는 쇼핑몰에서 작동합니다. 매일 다시 확인합니다.",
+    hint: "대부분의 쇼핑몰에서 작동합니다. 가격을 바로 읽지 못하면 링크가 대기 중으로 저장되고 자동으로 다시 시도합니다.",
     signIn: "로그인하면 링크로 어떤 상품이든 추가할 수 있습니다.",
   },
   table: {

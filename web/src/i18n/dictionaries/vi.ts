@@ -62,11 +62,11 @@ const vi: Dict = {
   },
   track: {
     label: "Theo dõi mọi sản phẩm: dán liên kết trang sản phẩm",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Dán liên kết sản phẩm hoặc nội dung chia sẻ của cửa hàng",
     submit: "Theo dõi giá",
     reading: "Đang đọc giá…",
     found: "Đã tìm thấy {title} với giá {price}. (Chế độ demo: không được lưu.)",
-    hint: "Hoạt động với các cửa hàng cung cấp dữ liệu sản phẩm cho Google Shopping. Được kiểm tra lại mỗi ngày.",
+    hint: "Hoạt động với hầu hết cửa hàng. Nếu chưa đọc được giá ngay, liên kết sẽ được lưu ở trạng thái chờ và tự động thử lại.",
     signIn: "Đăng nhập để thêm bất kỳ sản phẩm nào bằng liên kết của nó.",
   },
   table: {

@@ -62,11 +62,11 @@ const sv: Dict = {
   },
   track: {
     label: "Bevaka valfri produkt: klistra in en länk till en produktsida",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Klistra in en produktlänk eller butikens delningstext",
     submit: "Bevaka pris",
     reading: "Läser pris…",
     found: "Hittade {title} för {price}. (Demoläge: sparas inte.)",
-    hint: "Fungerar med butiker som publicerar produktdata för Google Shopping. Kontrolleras varje dag.",
+    hint: "Fungerar med de flesta butiker. Om priset inte kan läsas direkt sparas länken som väntande och försöks igen automatiskt.",
     signIn: "Logga in för att lägga till valfri produkt via dess länk.",
   },
   table: {

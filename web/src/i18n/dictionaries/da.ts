@@ -62,11 +62,11 @@ const da: Dict = {
   },
   track: {
     label: "Følg ethvert produkt: indsæt et link til en produktside",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Indsæt et produktlink eller butikkens delingstekst",
     submit: "Følg pris",
     reading: "Læser pris…",
     found: "Fandt {title} til {price}. (Demotilstand: ikke gemt.)",
-    hint: "Virker med butikker, der offentliggør produktdata til Google Shopping. Tjekkes igen hver dag.",
+    hint: "Virker med de fleste butikker. Kan prisen ikke læses med det samme, gemmes linket som afventende og prøves automatisk igen.",
     signIn: "Log ind for at tilføje et hvilket som helst produkt via dets link.",
   },
   table: {

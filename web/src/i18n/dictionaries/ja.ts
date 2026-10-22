@@ -62,11 +62,11 @@ const ja: Dict = {
   },
   track: {
     label: "どんな商品でも追跡：商品ページのリンクを貼り付けてください",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "商品リンクまたはショップの共有テキストを貼り付け",
     submit: "価格を追跡",
     reading: "価格を読み取り中…",
     found: "{title} が見つかりました：{price}（デモモード：保存されません）",
-    hint: "Google Shopping 向けに商品データを公開しているショップに対応。毎日再チェックします。",
+    hint: "ほとんどのショップに対応。すぐに価格を読み取れない場合は「保留中」として保存し、自動で再試行します。",
     signIn: "ログインすると、リンクから任意の商品を追加できます。",
   },
   table: {

@@ -62,11 +62,11 @@ const id: Dict = {
   },
   track: {
     label: "Lacak produk apa pun: tempel tautan halaman produk",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Tempel tautan produk atau teks bagikan dari toko",
     submit: "Lacak harga",
     reading: "Membaca harga…",
     found: "Ditemukan {title} seharga {price}. (Mode demo: tidak disimpan.)",
-    hint: "Berfungsi di toko yang memublikasikan data produk untuk Google Shopping. Diperiksa ulang setiap hari.",
+    hint: "Berfungsi di sebagian besar toko. Jika harga belum bisa dibaca, tautan disimpan sebagai tertunda dan dicoba lagi secara otomatis.",
     signIn: "Masuk untuk menambahkan produk apa pun lewat tautannya.",
   },
   table: {
