@@ -25,6 +25,15 @@ export function probeRow(url, { outcome, httpStatus, layer, html, product }) {
   };
 }
 
+// For a page that came back without a price: what it is and where a price might hide, to help write an adapter.
+export function pageHints(html) {
+  const title = html.match(/<title[^>]*>([^<]*)/i)?.[1]?.trim() ?? '';
+  const scriptIds = [...html.matchAll(/<script[^>]+id=["']([^"']+)/gi)].map((m) => m[1]);
+  const windowVars = [...new Set([...html.matchAll(/window(?:\.|\[["'])([\w$]+)["']?\]?\s*=/g)].map((m) => m[1]))];
+  const priceBits = [...html.matchAll(/.{0,60}(?:price|fiyat).{0,80}/gi)].slice(0, 8).map((m) => m[0].replace(/\s+/g, ' '));
+  return { title, scriptIds: scriptIds.slice(0, 20), windowVars: windowVars.slice(0, 20), priceBits };
+}
+
 export function markdownTable(rows) {
   const head = ['Shop', 'HTTP', 'HTML size', 'JSON-LD', 'Price', 'Layer', 'Outcome'];
   const lines = rows.map((r) => [r.host, r.status, r.size, r.jsonLd, r.price, r.layer, r.outcome]);
@@ -47,7 +56,9 @@ async function main() {
   const rows = [];
   try {
     for (const url of urls) {
-      rows.push(probeRow(url, await readThroughLayers(url, { retries: 1, browser, unblocker })));
+      const attempt = await readThroughLayers(url, { retries: 1, browser, unblocker });
+      if (attempt.outcome === 'no_price' && attempt.html) console.log(url, JSON.stringify(pageHints(attempt.html), null, 1));
+      rows.push(probeRow(url, attempt));
       await sleep(1000);
     }
   } finally {
