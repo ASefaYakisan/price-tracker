@@ -6,7 +6,7 @@ import { getDictionary, resolveLang } from "@/i18n/server";
 const ICONS = [
   { tone: "bg-accent-soft text-accent", path: <path d="M3 17l5-5 4 4 8-9M15 7h5v5" /> },
   { tone: "bg-good-soft text-good", path: <path d="M6 16V11a6 6 0 1112 0v5l2 2H4l2-2zM10 21h4" /> },
-  { tone: "bg-teal-soft text-teal", path: <path d="M21 4L3 11l6 2 2 6 3-4 5 4 2-15zM9 13l8-6" /> },
+  { tone: "bg-teal-soft text-teal", path: <path d="M10 14a4 4 0 006 0l3-3a4 4 0 00-6-6l-1 1M14 10a4 4 0 00-6 0l-3 3a4 4 0 006 6l1-1" /> },
   { tone: "bg-crypto-soft text-crypto", path: <path d="M4 6h16v10H4zM2 20h20M9 16v4M15 16v4" /> },
 ];
 

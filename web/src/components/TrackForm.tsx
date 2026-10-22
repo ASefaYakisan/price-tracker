@@ -22,16 +22,18 @@ export function TrackForm() {
   const [url, setUrl] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
   const [shared, setShared] = useState<string | null>(null);
+  const [pending, setPending] = useState<string | null>(null);
   const user = useUser();
   const signedOut = authEnabled && user === null;
 
   // A link pasted before signing in waits here and is back in the box after sign-in.
   useEffect(() => {
     try {
-      const pending = sessionStorage.getItem(PENDING_KEY);
-      if (!pending) return;
+      const saved = sessionStorage.getItem(PENDING_KEY);
+      if (!saved) return;
       sessionStorage.removeItem(PENDING_KEY);
-      setUrl(pending); // eslint-disable-line react-hooks/set-state-in-effect -- browser-only storage, read once after mount
+      setUrl(saved); // eslint-disable-line react-hooks/set-state-in-effect -- browser-only storage, read once after mount
+      setPending(saved);
     } catch {}
   }, []);
 
@@ -57,7 +59,7 @@ export function TrackForm() {
       try {
         sessionStorage.setItem(PENDING_KEY, link);
       } catch {}
-      router.push(href("/login"));
+      router.push(href("/login?reason=track"));
       return;
     }
     setState({ kind: "saving" });
@@ -84,6 +86,14 @@ export function TrackForm() {
     setShared(null); // eslint-disable-line react-hooks/set-state-in-effect -- runs once per shared link
     send(shared);
   }, [shared, user]); // eslint-disable-line react-hooks/exhaustive-deps -- send only reads the latest state
+
+  // Back from signing in: the waiting link is sent without a second click.
+  // Still signed out (the visitor came back without signing in): it just stays in the box.
+  useEffect(() => {
+    if (!pending || user === undefined) return;
+    setPending(null); // eslint-disable-line react-hooks/set-state-in-effect -- runs once per waiting link
+    if (user) send(pending);
+  }, [pending, user]); // eslint-disable-line react-hooks/exhaustive-deps -- send only reads the latest state
 
   return (
     <div>
