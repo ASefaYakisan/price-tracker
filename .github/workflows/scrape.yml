@@ -17,7 +17,7 @@ on:
 
 jobs:
   scrape:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Playwright 1.56 cannot install Chromium on ubuntu-latest (26.04)
     timeout-minutes: 40
     defaults:
       run:
@@ -35,12 +35,18 @@ jobs:
       - run: npm test
       - run: npm run scrape -- ${{ inputs.source || 'all' }} ${{ inputs.pages || '3' }}
         env:
-          SUPABASE_URL: https://zaufbyefvjttfppirjrj.supabase.co
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SCRAPER_USER_AGENT: ${{ vars.SCRAPER_USER_AGENT }}
           COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+          # Optional scraping API for shops that block GitHub's servers (see README, "Blocked shops").
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+          UNBLOCK_HOSTS: ${{ vars.UNBLOCK_HOSTS }}
+          UNBLOCK_MONTHLY_LIMIT: ${{ vars.UNBLOCK_MONTHLY_LIMIT }}
           # Optional: without it, due alerts are only logged, not emailed.
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          SITE_URL: https://price-tracker-shop.vercel.app
+          SITE_URL: ${{ vars.SITE_URL }}
+          ALERT_FROM: ${{ vars.ALERT_FROM }}
           # Optional: daily Telegram message with the day's price drops.
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

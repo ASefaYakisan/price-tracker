@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/i18n/client";
@@ -8,6 +9,8 @@ import { useUser } from "@/lib/auth";
 import { authEnabled } from "@/lib/supabase/client";
 
 const PENDING_KEY = "pending-link";
+// The phone's Share menu lands on /add, which sends the link here as /<lang>#track=<link>.
+const SHARED_HASH = "#track=";
 
 type Preview = { title: string; price: number; currency: string | null };
 type State = { kind: "idle" | "saving" } | { kind: "demo"; product: Preview } | { kind: "error"; message: string };
@@ -17,6 +20,7 @@ export function TrackForm() {
   const { t, lang, href, fill, apiError } = useI18n();
   const [url, setUrl] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
+  const [shared, setShared] = useState<string | null>(null);
   const user = useUser();
   const signedOut = authEnabled && user === null;
 
@@ -30,11 +34,27 @@ export function TrackForm() {
     } catch {}
   }, []);
 
-  async function submit(e: React.FormEvent) {
+  // A link shared from a shop app (via /add) fills the box.
+  useEffect(() => {
+    if (!location.hash.startsWith(SHARED_HASH)) return;
+    let link = location.hash.slice(SHARED_HASH.length);
+    try {
+      link = decodeURIComponent(link);
+    } catch {}
+    history.replaceState(null, "", location.pathname + location.search);
+    setUrl(link); // eslint-disable-line react-hooks/set-state-in-effect -- the address bar is browser-only, read once after mount
+    setShared(link);
+  }, []);
+
+  function submit(e: React.FormEvent) {
     e.preventDefault();
+    send(url);
+  }
+
+  async function send(link: string) {
     if (signedOut) {
       try {
-        sessionStorage.setItem(PENDING_KEY, url);
+        sessionStorage.setItem(PENDING_KEY, link);
       } catch {}
       router.push(href("/login"));
       return;
@@ -43,7 +63,7 @@ export function TrackForm() {
     const res = await fetch("/api/track", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({ url: link }),
     }).catch(() => null);
     const json = await res?.json().catch(() => null);
     if (res?.ok && json?.id) {
@@ -55,6 +75,13 @@ export function TrackForm() {
     } else if (res?.ok && json?.demo) setState({ kind: "demo", product: json.product });
     else setState({ kind: "error", message: apiError(json?.error) });
   }
+
+  // A shared link is sent once we know whether the visitor is signed in.
+  useEffect(() => {
+    if (!shared || user === undefined) return;
+    setShared(null); // eslint-disable-line react-hooks/set-state-in-effect -- runs once per shared link
+    send(shared);
+  }, [shared, user]); // eslint-disable-line react-hooks/exhaustive-deps -- send only reads the latest state
 
   return (
     <div>
@@ -74,9 +101,14 @@ export function TrackForm() {
           >
             <path d="M8.5 11.5a3.5 3.5 0 005 0l3-3a3.5 3.5 0 00-5-5l-1 1M11.5 8.5a3.5 3.5 0 00-5 0l-3 3a3.5 3.5 0 005 5l1-1" />
           </svg>
+          {/* text, not url: a shop app's share text ("Bu ürüne bak! https://ty.gl/...") is accepted as is */}
           <input
             id="track-url"
-            type="url"
+            type="text"
+            inputMode="url"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             required
             dir="ltr"
             placeholder={t.track.placeholder}
@@ -103,7 +135,12 @@ export function TrackForm() {
           {fill(t.track.found, { title: state.product.title, price: money(state.product.price, state.product.currency, lang) })}
         </p>
       )}
-      <p className="mt-2 text-xs text-faint">{signedOut ? t.track.signIn : t.track.hint}</p>
+      <p className="mt-2 text-xs text-faint">
+        {signedOut ? t.track.signIn : t.track.hint}{" "}
+        <Link href={href("/how-to-add")} className="font-medium text-accent underline-offset-4 hover:underline">
+          {t.howTo.link}
+        </Link>
+      </p>
     </div>
   );
 }

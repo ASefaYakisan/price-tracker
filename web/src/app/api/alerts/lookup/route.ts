@@ -1,12 +1,13 @@
 import { getProduct, isDemo } from "@/lib/data";
 import type { AlertStatus } from "@/lib/alert-status";
-import { adminDb, ALERT_COLUMNS, alertError as error, EMAIL, escapeLike, toStatus, UUID } from "@/lib/alerts-server";
+import { lookupKey } from "@/lib/alert-lookup";
+import { adminDb, ALERT_COLUMNS, alertError as error, toStatus } from "@/lib/alerts-server";
 
 type Ask = { id?: number; token?: string; productId?: number; email?: string };
 
 // Live status for the alerts this browser created: current price, whether the email went out.
-// Each alert is found by its id and manage token. Alerts saved before tokens existed are found
-// once by item and email (only while still open) and get their token handed back.
+// Each alert is found by its id and manage token only. Alerts saved before tokens existed come
+// back as missing, so the visitor sets a new one instead of anyone reading tokens by email.
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const asks: Ask[] = Array.isArray(body?.alerts) ? body.alerts.slice(0, 50) : [];
@@ -19,12 +20,14 @@ export async function POST(request: Request) {
     asks.map(async (ask, i): Promise<AlertStatus> => {
       const key = String(i);
       if (isDemo) return demoStatus(key, ask);
-      let q = admin!.from("alerts").select(ALERT_COLUMNS);
-      if (Number.isInteger(ask.id) && UUID.test(String(ask.token))) q = q.eq("id", ask.id!).eq("manage_token", ask.token!);
-      else if (Number.isInteger(ask.productId) && EMAIL.test(String(ask.email)))
-        q = q.eq("product_id", ask.productId!).ilike("email", escapeLike(ask.email!)).is("last_sent_at", null);
-      else return { key, missing: true };
-      const { data } = await q.order("created_at", { ascending: false }).limit(1).maybeSingle();
+      const match = lookupKey(ask);
+      if (!match) return { key, missing: true };
+      const { data } = await admin!
+        .from("alerts")
+        .select(ALERT_COLUMNS)
+        .eq("id", match.id)
+        .eq("manage_token", match.token)
+        .maybeSingle();
       if (!data) return { key, missing: true };
       return toStatus(key, data);
     }),
