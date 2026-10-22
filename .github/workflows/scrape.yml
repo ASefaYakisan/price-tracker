@@ -43,6 +43,7 @@ jobs:
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
           UNBLOCK_HOSTS: ${{ vars.UNBLOCK_HOSTS }}
           UNBLOCK_MONTHLY_LIMIT: ${{ vars.UNBLOCK_MONTHLY_LIMIT }}
+          UNBLOCK_RENDER_HOSTS: ${{ vars.UNBLOCK_RENDER_HOSTS }}
           # Optional: without it, due alerts are only logged, not emailed.
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}

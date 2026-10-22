@@ -71,9 +71,10 @@ The scraping API costs credits, so it is used only when needed:
 | --- | --- | --- |
 | `SCRAPER_API_KEY` | Actions secret | Turns the layer on. Without it nothing changes. |
 | `UNBLOCK_HOSTS` | Actions variable, optional | Comma-separated shops read through the API straight away, skipping the plain request and the browser, e.g. `vatanbilgisayar.com,trendyol.com`. Other shops use it only after both the plain request and the browser were blocked. |
-| `UNBLOCK_MONTHLY_LIMIT` | Actions variable, optional | Requests per calendar month (default 900). When reached, the layer switches off until the next month. |
+| `UNBLOCK_MONTHLY_LIMIT` | Actions variable, optional | Credits per calendar month (default 900). A plain read costs 1, a rendered read 10. When reached, the layer switches off until the next month. |
+| `UNBLOCK_RENDER_HOSTS` | Actions variable, optional | Comma-separated shops whose page is an empty app shell until its scripts run, so the API renders it first (`render=true`, 10 credits). Default `trendyol.com`. |
 
-Requests are counted from `track_attempts`: reads through the API are logged with the layer `unblock` (failed) or `unblock:<markup>` (price found, e.g. `unblock:json-ld`). A pending link that failed through the API is not sent again for 24 hours. If the monthly count cannot be read, no paid request is made.
+Requests are counted from `track_attempts`: reads through the API are logged with the layer `unblock` (failed) or `unblock:<markup>` (price found, e.g. `unblock:json-ld`), rendered reads as `unblock-render...`. A pending link that failed through the API is not sent again for 24 hours. If the monthly count cannot be read, no paid request is made.
 
 ## Telegram and Google Sheets
 

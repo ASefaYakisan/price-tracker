@@ -27,15 +27,20 @@ function fakeNetwork({ shopStatus = 403, apiStatus = 200, shopPage = null } = {}
   return calls;
 }
 
-// Only answers the monthly count query.
-function fakeDb(used = 0) {
-  const query = {
-    select: () => query,
-    like: () => query,
-    gte: () => query,
-    then: (resolve) => resolve({ count: used, error: null }),
+// Only answers the monthly count queries: `used` plain reads, `rendered` of them rendered.
+function fakeDb(used = 0, rendered = 0) {
+  return {
+    from: () => {
+      let prefix = '';
+      const query = {
+        select: () => query,
+        like: (_column, pattern) => ((prefix = pattern), query),
+        gte: () => query,
+        then: (resolve) => resolve({ count: prefix.startsWith('unblock-render') ? rendered : used, error: null }),
+      };
+      return query;
+    },
   };
-  return { from: () => query };
 }
 
 const env = (extra = {}) => ({ SCRAPER_API_KEY: KEY, ...extra });
@@ -172,13 +177,30 @@ test('a listed shop skips the browser and goes to the API', async () => {
 });
 
 test('config parsing and host matching', () => {
-  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], monthlyLimit: 900 });
+  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], renderHosts: ['trendyol.com'], monthlyLimit: 900 });
   const config = unblockConfig({ SCRAPER_API_KEY: ' k ', UNBLOCK_HOSTS: 'www.Hepsiburada.com, ,vatanbilgisayar.com', UNBLOCK_MONTHLY_LIMIT: 'x' });
-  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], monthlyLimit: 900 });
+  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], renderHosts: ['trendyol.com'], monthlyLimit: 900 });
   assert.ok(isListed(config.hosts, 'https://m.hepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'https://nothepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'not a url'));
   assert.equal(apiUrl('k', 'https://a.example/x?y=1'), 'https://api.scraperapi.com/?api_key=k&url=https%3A%2F%2Fa.example%2Fx%3Fy%3D1');
+});
+
+test('render hosts are read with render=true, logged as rendered and counted at 10 credits', async () => {
+  const urls = [];
+  globalThis.fetch = async (url) => {
+    urls.push(String(url));
+    return String(url).startsWith('https://api.scraperapi.com/') ? new Response(PAGE) : new Response('blocked', { status: 403 });
+  };
+  const unblocker = createUnblocker({ db: fakeDb(), env: env() });
+  const attempt = await readLink('https://www.trendyol.com/x/y-p-1', { retries: 1, unblocker });
+  assert.match(urls[1], /render=true/);
+  assert.equal(attempt.layer, 'unblock-render:json-ld');
+  assert.equal(apiUrl('k', 'https://a.example/x', { render: true }).endsWith('&render=true'), true);
+  // 87 reads, 2 of them rendered: 85 + 2 x 10 = 105 credits, over a limit of 100.
+  const spent = createUnblocker({ db: fakeDb(87, 2), env: env({ UNBLOCK_MONTHLY_LIMIT: '100' }) });
+  assert.equal(await spent.hasCredit(), false);
+  assert.equal(await createUnblocker({ db: fakeDb(87, 0), env: env({ UNBLOCK_MONTHLY_LIMIT: '100' }) }).hasCredit(), true);
 });
 
 test('a product read through the API keeps its saved external id', async () => {
