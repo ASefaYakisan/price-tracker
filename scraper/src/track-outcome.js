@@ -3,6 +3,14 @@
 
 export const BLOCKED_STATUSES = [401, 403, 429, 503];
 
+// A small page that answered 200 but is a robot check, not the product (Amazon's captcha page, Cloudflare's wait page).
+// It counts as the shop turning the request away, so the next layer gets a go.
+const BOT_WALL = /captcha|robot check|are you a (?:human|robot)|unusual traffic|pardon our interruption|just a moment\.\.\.|cf-chl|access denied|request blocked/i;
+
+export function botWall(html) {
+  return typeof html === 'string' && html.length < 60_000 && BOT_WALL.test(html);
+}
+
 export function outcomeForError(err) {
   if (err?.status) return 'http_error';
   return err?.name === 'TimeoutError' || err?.cause?.name === 'TimeoutError' ? 'timeout' : 'network';

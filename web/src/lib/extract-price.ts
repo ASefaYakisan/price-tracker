@@ -173,11 +173,14 @@ function firstImage(image: Json): string | null {
   return (typeof first === "string" ? first : (first?.url ?? first?.contentUrl)) ?? null;
 }
 
+const WRAPPER_KEYS = ["@graph", "object", "mainEntity"];
+
 function* walk(node: Json): Generator<Json> {
   if (Array.isArray(node)) for (const n of node) yield* walk(n);
   else if (node && typeof node === "object") {
     yield node;
-    if (node["@graph"]) yield* walk(node["@graph"]);
+    // A page may wrap the product: {"@graph": [...]}, or an action/page around it (MediaMarkt: BuyAction.object).
+    for (const key of WRAPPER_KEYS) if (node[key]) yield* walk(node[key]);
   }
 }
 
