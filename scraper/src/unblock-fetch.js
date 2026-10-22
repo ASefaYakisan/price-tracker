@@ -119,8 +119,9 @@ export function createUnblocker({ db, env = process.env, now = Date.now(), fetch
         try {
           return await fetcher(apiUrl(apiKey, url, { render, country }), { timeoutMs: 70_000, retries: 1 });
         } catch (err) {
-          // A plan without that country answers 403; failed requests cost nothing, so try once without it.
-          if (!country || err.status !== 403) throw err;
+          // A plan without that country answers 403, and some shops fail (500) only from that country;
+          // failed requests cost nothing, so try once without it.
+          if (!country || ![403, 500].includes(err.status)) throw err;
           return await fetcher(apiUrl(apiKey, url, { render }), { timeoutMs: 70_000, retries: 1 });
         }
       } catch (err) {

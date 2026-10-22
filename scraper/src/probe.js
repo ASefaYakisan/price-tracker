@@ -32,7 +32,16 @@ export function pageHints(html) {
   const windowVars = [...new Set([...html.matchAll(/window(?:\.|\[["'])([\w$]+)["']?\]?\s*=/g)].map((m) => m[1]))];
   const priceBits = [...html.matchAll(/.{0,60}(?:price|fiyat).{0,80}/gi)].slice(0, 8).map((m) => m[0].replace(/\s+/g, ' '));
   const text = html.replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
-  return { title, text, scriptIds: scriptIds.slice(0, 20), windowVars: windowVars.slice(0, 20), priceBits };
+  const jsonLd = [...html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)].map((m) => {
+    let parses = true;
+    try {
+      JSON.parse(m[1]);
+    } catch {
+      parses = false;
+    }
+    return { parses, start: m[1].trim().slice(0, 700) };
+  });
+  return { title, text, jsonLd, scriptIds: scriptIds.slice(0, 20), windowVars: windowVars.slice(0, 20), priceBits };
 }
 
 export function markdownTable(rows) {
