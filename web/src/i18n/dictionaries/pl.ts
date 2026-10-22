@@ -62,11 +62,11 @@ const pl: Dict = {
   },
   track: {
     label: "Śledź dowolny produkt: wklej link do strony produktu",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Wklej link do produktu lub tekst udostępnienia ze sklepu",
     submit: "Śledź cenę",
     reading: "Odczytywanie ceny…",
     found: "Znaleziono {title} za {price}. (Tryb demo: nie zapisano.)",
-    hint: "Działa ze sklepami, które publikują dane produktów dla Google Shopping. Sprawdzane codziennie.",
+    hint: "Działa z większością sklepów. Jeśli ceny nie da się od razu odczytać, link zostaje zapisany jako oczekujący i automatycznie ponowiony.",
     signIn: "Zaloguj się, aby dodać dowolny produkt przez link.",
   },
   table: {

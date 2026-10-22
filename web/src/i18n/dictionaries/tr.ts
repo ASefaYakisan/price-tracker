@@ -62,11 +62,11 @@ const tr: Dict = {
   },
   track: {
     label: "Herhangi bir ürünü takip et: ürün sayfası bağlantısını yapıştır",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Ürün linkini ya da paylaş metnini yapıştır",
     submit: "Fiyatı takip et",
     reading: "Fiyat okunuyor…",
     found: "{title} bulundu: {price}. (Demo modu: kaydedilmedi.)",
-    hint: "Google Alışveriş için ürün verisi yayınlayan mağazalarla çalışır. Her gün yeniden kontrol edilir.",
+    hint: "Çoğu mağazada çalışır. Fiyat hemen okunamazsa link \"bekliyor\" olarak eklenir ve otomatik olarak tekrar denenir.",
     signIn: "Herhangi bir ürünü bağlantısıyla eklemek için giriş yap.",
   },
   table: {

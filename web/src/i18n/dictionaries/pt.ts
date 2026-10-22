@@ -62,11 +62,11 @@ const pt: Dict = {
   },
   track: {
     label: "Acompanhe qualquer produto: cole o link de uma página de produto",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Cole o link de um produto ou o texto de partilha da loja",
     submit: "Acompanhar preço",
     reading: "Lendo preço…",
     found: "{title} encontrado por {price}. (Modo demo: não foi salvo.)",
-    hint: "Funciona com lojas que publicam dados de produto para o Google Shopping. Verificado novamente todos os dias.",
+    hint: "Funciona com a maioria das lojas. Se o preço não puder ser lido logo, o link fica salvo como pendente e é tentado de novo automaticamente.",
     signIn: "Entre para adicionar qualquer produto pelo link.",
   },
   table: {

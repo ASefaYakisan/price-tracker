@@ -62,11 +62,11 @@ const fr: Dict = {
   },
   track: {
     label: "Suivez n'importe quel produit : collez le lien d'une page produit",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Collez un lien produit ou le texte de partage d'une boutique",
     submit: "Suivre le prix",
     reading: "Lecture du prix…",
     found: "{title} trouvé à {price}. (Mode démo : non enregistré.)",
-    hint: "Fonctionne avec les boutiques qui publient leurs données produit pour Google Shopping. Vérifié chaque jour.",
+    hint: "Fonctionne avec la plupart des boutiques. Si le prix ne peut pas être lu tout de suite, le lien est enregistré en attente et réessayé automatiquement.",
     signIn: "Connectez-vous pour ajouter n'importe quel produit par son lien.",
   },
   table: {

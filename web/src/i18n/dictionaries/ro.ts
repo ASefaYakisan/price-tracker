@@ -62,11 +62,11 @@ const ro: Dict = {
   },
   track: {
     label: "Urmărește orice produs: lipește linkul paginii produsului",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Lipește linkul unui produs sau textul de partajare al magazinului",
     submit: "Urmărește prețul",
     reading: "Se citește prețul…",
     found: "Am găsit {title} la {price}. (Mod demo: nesalvat.)",
-    hint: "Funcționează cu magazinele care publică date despre produse pentru Google Shopping. Verificat zilnic.",
+    hint: "Funcționează cu majoritatea magazinelor. Dacă prețul nu poate fi citit imediat, linkul este salvat ca în așteptare și reîncercat automat.",
     signIn: "Conectează-te pentru a adăuga orice produs prin linkul său.",
   },
   table: {

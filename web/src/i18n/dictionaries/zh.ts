@@ -62,11 +62,11 @@ const zh: Dict = {
   },
   track: {
     label: "追踪任意商品：粘贴商品页面链接",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "粘贴商品链接或商店的分享文字",
     submit: "追踪价格",
     reading: "正在读取价格…",
     found: "找到 {title}，价格 {price}。（演示模式：未保存。）",
-    hint: "适用于向 Google Shopping 提供商品数据的商店。每天自动重新检查。",
+    hint: "适用于大多数商店。如果暂时读不到价格，链接会保存为待处理，并自动重试。",
     signIn: "登录后即可通过链接添加任意商品。",
   },
   table: {

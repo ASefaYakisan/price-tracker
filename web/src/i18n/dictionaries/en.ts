@@ -62,11 +62,11 @@ const en = {
   },
   track: {
     label: "Track any product: paste a product page link",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Paste a product link or share text",
     submit: "Track price",
     reading: "Reading price…",
     found: "Found {title} at {price}. (Demo mode: not saved.)",
-    hint: "Works with shops that publish product data for Google Shopping. Checked again every day.",
+    hint: "Works with most shops. If the price can't be read right away, the link is saved as pending and retried automatically.",
     signIn: "Sign in to add any product by its link.",
   },
   table: {

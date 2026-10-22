@@ -62,11 +62,11 @@ const cs: Dict = {
   },
   track: {
     label: "Sledujte libovolný produkt: vložte odkaz na stránku produktu",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Vložte odkaz na produkt nebo text sdílení z obchodu",
     submit: "Sledovat cenu",
     reading: "Načítání ceny…",
     found: "Nalezeno: {title} za {price}. (Ukázkový režim: neuloženo.)",
-    hint: "Funguje s obchody, které zveřejňují data o produktech pro Google Shopping. Kontrolováno každý den.",
+    hint: "Funguje s většinou obchodů. Pokud cenu nelze hned přečíst, odkaz se uloží jako čekající a automaticky se zkusí znovu.",
     signIn: "Přihlaste se a přidávejte libovolné produkty odkazem.",
   },
   table: {

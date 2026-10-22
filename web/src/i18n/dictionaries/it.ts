@@ -62,11 +62,11 @@ const it: Dict = {
   },
   track: {
     label: "Monitora qualsiasi prodotto: incolla il link di una pagina prodotto",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Incolla il link di un prodotto o il testo di condivisione del negozio",
     submit: "Monitora prezzo",
     reading: "Lettura del prezzo…",
     found: "Trovato {title} a {price}. (Modalità demo: non salvato.)",
-    hint: "Funziona con i negozi che pubblicano i dati dei prodotti per Google Shopping. Ricontrollato ogni giorno.",
+    hint: "Funziona con la maggior parte dei negozi. Se il prezzo non si riesce a leggere subito, il link viene salvato in attesa e riprovato automaticamente.",
     signIn: "Accedi per aggiungere qualsiasi prodotto tramite il suo link.",
   },
   table: {

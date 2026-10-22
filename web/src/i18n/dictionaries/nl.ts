@@ -62,11 +62,11 @@ const nl: Dict = {
   },
   track: {
     label: "Volg elk product: plak de link van een productpagina",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Plak een productlink of de deeltekst van een winkel",
     submit: "Prijs volgen",
     reading: "Prijs ophalen…",
     found: "{title} gevonden voor {price}. (Demomodus: niet opgeslagen.)",
-    hint: "Werkt met winkels die productgegevens publiceren voor Google Shopping. Elke dag opnieuw gecontroleerd.",
+    hint: "Werkt met de meeste winkels. Kan de prijs niet meteen worden gelezen, dan wordt de link als in behandeling opgeslagen en automatisch opnieuw geprobeerd.",
     signIn: "Log in om elk product via de link toe te voegen.",
   },
   table: {

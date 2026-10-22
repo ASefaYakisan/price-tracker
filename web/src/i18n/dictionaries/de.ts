@@ -62,11 +62,11 @@ const de: Dict = {
   },
   track: {
     label: "Beliebiges Produkt verfolgen: Link zur Produktseite einfügen",
-    placeholder: "https://www.example-shop.com/product/123",
+    placeholder: "Produktlink oder Teilen-Text eines Shops einfügen",
     submit: "Preis verfolgen",
     reading: "Preis wird gelesen…",
     found: "{title} für {price} gefunden. (Demomodus: nicht gespeichert.)",
-    hint: "Funktioniert mit Shops, die Produktdaten für Google Shopping bereitstellen. Wird täglich erneut geprüft.",
+    hint: "Funktioniert mit den meisten Shops. Kann der Preis nicht sofort gelesen werden, wird der Link als ausstehend gespeichert und automatisch erneut versucht.",
     signIn: "Melde dich an, um beliebige Produkte per Link hinzuzufügen.",
   },
   table: {
