@@ -122,6 +122,23 @@ const vi: Dict = {
     removing: "Đang xóa…",
     pending: "Cửa hàng đã từ chối lần đọc đầu tiên. Chúng tôi đang thử lại từ máy chủ khác; giá thường xuất hiện trong vòng một giờ.",
   },
+  linkStatus: {
+    pending: "Đang chờ",
+    failed: "Không đọc được",
+    lastTry: "Lần thử gần nhất {date}: {reason}.",
+    failedTitle: "Chúng tôi không đọc được giá từ liên kết này",
+    failedText: "Lần thử gần nhất vào {date} thất bại: {reason}. Chúng tôi vẫn kiểm tra mỗi ngày một lần.",
+    checkFailed: "Lần kiểm tra gần nhất vào {date} thất bại: {reason}. Giá hiển thị là từ lần đọc thành công gần nhất.",
+    retry: "Thử lại",
+    retrying: "Đang thử…",
+    retried: "Đã xếp hàng. Chúng tôi sẽ thử lại trong vòng 15 phút.",
+    blocked: "cửa hàng đã chặn yêu cầu",
+    notFound: "không tìm thấy trang",
+    httpError: "trang của cửa hàng trả về lỗi",
+    noPrice: "không tìm thấy giá trên trang",
+    timeout: "cửa hàng không phản hồi kịp thời",
+    network: "không thể mở trang",
+  },
   alertForm: {
     atOrBelow: "Báo cho tôi khi giá bằng hoặc thấp hơn",
     create: "Tạo cảnh báo",
@@ -350,6 +367,8 @@ const vi: Dict = {
     "You created many alerts in the last hour. Try again later.": "Bạn đã tạo nhiều cảnh báo trong giờ qua. Thử lại sau.",
     "Could not save the product. Please try again.": "Không thể lưu sản phẩm. Vui lòng thử lại.",
     "Could not save the price. Please try again.": "Không thể lưu giá. Vui lòng thử lại.",
+    "Only the person who added this item can retry it.": "Chỉ người đã thêm sản phẩm này mới có thể thử lại.",
+    "Could not queue the item. Please try again.": "Không thể xếp hàng sản phẩm. Vui lòng thử lại.",
   },
 };
 

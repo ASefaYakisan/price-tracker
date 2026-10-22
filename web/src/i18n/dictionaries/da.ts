@@ -122,6 +122,23 @@ const da: Dict = {
     removing: "Fjerner…",
     pending: "Butikken afviste første forsøg. Vi prøver igen fra en anden server; prisen vises som regel inden for en time.",
   },
+  linkStatus: {
+    pending: "Afventer",
+    failed: "Kunne ikke læses",
+    lastTry: "Seneste forsøg {date}: {reason}.",
+    failedTitle: "Vi kunne ikke læse en pris fra dette link",
+    failedText: "Vores seneste forsøg {date} mislykkedes: {reason}. Vi tjekker det stadig én gang om dagen.",
+    checkFailed: "Seneste tjek {date} mislykkedes: {reason}. Den viste pris er fra seneste vellykkede aflæsning.",
+    retry: "Prøv igen",
+    retrying: "Prøver…",
+    retried: "I kø. Vi prøver igen inden for 15 minutter.",
+    blocked: "butikken blokerede forespørgslen",
+    notFound: "siden blev ikke fundet",
+    httpError: "butikkens side returnerede en fejl",
+    noPrice: "der blev ikke fundet nogen pris på siden",
+    timeout: "butikken svarede ikke i tide",
+    network: "siden kunne ikke åbnes",
+  },
   alertForm: {
     atOrBelow: "Giv besked ved eller under",
     create: "Opret alarm",
@@ -350,6 +367,8 @@ const da: Dict = {
     "You created many alerts in the last hour. Try again later.": "Du har oprettet mange alarmer den seneste time. Prøv igen senere.",
     "Could not save the product. Please try again.": "Produktet kunne ikke gemmes. Prøv igen.",
     "Could not save the price. Please try again.": "Prisen kunne ikke gemmes. Prøv igen.",
+    "Only the person who added this item can retry it.": "Kun den person, der tilføjede denne vare, kan prøve igen.",
+    "Could not queue the item. Please try again.": "Varen kunne ikke sættes i kø. Prøv igen.",
   },
 };
 

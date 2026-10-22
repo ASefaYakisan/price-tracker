@@ -122,6 +122,23 @@ const th: Dict = {
     removing: "กำลังนำออก…",
     pending: "ร้านค้าปฏิเสธการอ่านครั้งแรก เรากำลังลองใหม่จากเซิร์ฟเวอร์อื่น ปกติราคาจะแสดงภายในหนึ่งชั่วโมง",
   },
+  linkStatus: {
+    pending: "รอดำเนินการ",
+    failed: "อ่านไม่ได้",
+    lastTry: "ลองครั้งล่าสุด {date}: {reason}",
+    failedTitle: "เราอ่านราคาจากลิงก์นี้ไม่ได้",
+    failedText: "การลองครั้งล่าสุดเมื่อ {date} ล้มเหลว: {reason} เรายังตรวจสอบวันละครั้ง",
+    checkFailed: "การตรวจสอบครั้งล่าสุดเมื่อ {date} ล้มเหลว: {reason} ราคาที่แสดงมาจากการอ่านที่สำเร็จครั้งล่าสุด",
+    retry: "ลองอีกครั้ง",
+    retrying: "กำลังลอง…",
+    retried: "เข้าคิวแล้ว เราจะลองอีกครั้งภายใน 15 นาที",
+    blocked: "ร้านค้าบล็อกคำขอ",
+    notFound: "ไม่พบหน้า",
+    httpError: "หน้าของร้านค้าแจ้งข้อผิดพลาด",
+    noPrice: "ไม่พบราคาในหน้า",
+    timeout: "ร้านค้าไม่ตอบกลับทันเวลา",
+    network: "เปิดหน้าไม่ได้",
+  },
   alertForm: {
     atOrBelow: "แจ้งเตือนเมื่อราคาเท่ากับหรือต่ำกว่า",
     create: "สร้างการแจ้งเตือน",
@@ -349,6 +366,8 @@ const th: Dict = {
     "You created many alerts in the last hour. Try again later.": "คุณสร้างการแจ้งเตือนจำนวนมากในชั่วโมงที่ผ่านมา ลองใหม่ภายหลัง",
     "Could not save the product. Please try again.": "บันทึกสินค้าไม่สำเร็จ โปรดลองอีกครั้ง",
     "Could not save the price. Please try again.": "บันทึกราคาไม่สำเร็จ โปรดลองอีกครั้ง",
+    "Only the person who added this item can retry it.": "เฉพาะผู้ที่เพิ่มสินค้านี้เท่านั้นที่ลองอีกครั้งได้",
+    "Could not queue the item. Please try again.": "ไม่สามารถเข้าคิวสินค้าได้ โปรดลองอีกครั้ง",
   },
 };
 

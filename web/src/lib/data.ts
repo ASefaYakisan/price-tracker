@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { cacheLife, cacheTag } from "next/cache";
+import type { LinkState } from "@/lib/link-status";
 
 export type ProductRow = {
   id: number;
@@ -13,6 +14,10 @@ export type ProductRow = {
   price_change: number | null;
   in_stock: boolean | null;
   scraped_at: string | null;
+  // Pasted links only (migration 0009); see lib/link-status.ts.
+  status?: LinkState | null;
+  last_error?: string | null;
+  last_checked_at?: string | null;
 };
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -20,19 +25,22 @@ const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export const isDemo = !url || !anonKey;
 
+const LIST_COLUMNS = "id, source, title, url, image_url, currency, price, previous_price, price_change, in_stock, scraped_at";
+const STATUS_COLUMNS = "status, last_error, last_checked_at"; // migration 0009
+
 export async function getProducts(): Promise<ProductRow[]> {
   "use cache";
   cacheLife("minutes");
   cacheTag("products"); // refreshed right away when someone adds a link
   if (isDemo) return DEMO_PRODUCTS;
   const db = createClient(url!, anonKey!);
-  const { data, error } = await db
-    .from("product_latest")
-    .select("id, source, title, url, image_url, currency, price, previous_price, price_change, in_stock, scraped_at")
-    .order("price_change", { ascending: true, nullsFirst: false })
-    .limit(200);
+  const list = (columns: string) =>
+    db.from("product_latest").select(columns).order("price_change", { ascending: true, nullsFirst: false }).limit(200);
+  let { data, error } = await list(`${LIST_COLUMNS}, ${STATUS_COLUMNS}`);
+  // Until migration 0009 adds the status columns, the list still renders without them.
+  if (error?.code === "42703") ({ data, error } = await list(LIST_COLUMNS));
   if (error) throw new Error(error.message);
-  return (data as ProductRow[]).map(toNumbers);
+  return (data as unknown as ProductRow[]).map(toNumbers);
 }
 
 // Postgres numeric can arrive as a string; the UI does arithmetic on these fields.

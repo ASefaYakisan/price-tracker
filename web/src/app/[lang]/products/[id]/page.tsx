@@ -4,6 +4,7 @@ import { BellIcon } from "@/components/BellIcon";
 import { AlertForm } from "@/components/AlertForm";
 import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
+import { LinkStatusNote, LinkStatusPill } from "@/components/LinkStatus";
 import { ProductThumb } from "@/components/ProductThumb";
 import { StopTracking } from "@/components/StopTracking";
 import { fill } from "@/i18n/config";
@@ -57,6 +58,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
             <span className="truncate font-medium">{storeName(product, t)}</span>
             <StockPill inStock={product.in_stock} t={t} />
+            <LinkStatusPill product={product} t={t} />
           </div>
           <h1 className="mt-1 text-xl font-bold tracking-tight text-balance sm:text-3xl">{product.title}</h1>
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -86,11 +88,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
         </div>
       </header>
 
-      {product.source === "custom" && !product.scraped_at && (
-        <p role="status" className="mt-6 border-s-2 border-accent ps-3 text-sm text-ink">
-          {t.product.pending}
-        </p>
-      )}
+      <LinkStatusNote product={product} t={t} lang={lang} />
 
       {figures.length > 0 && (
         <dl className="mt-8 flex divide-x divide-line border-y border-line rtl:divide-x-reverse">

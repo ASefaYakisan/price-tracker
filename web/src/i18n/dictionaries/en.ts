@@ -122,6 +122,23 @@ const en = {
     removing: "Removing…",
     pending: "The shop turned away our first read. We are trying again from another server; the price usually appears within an hour.",
   },
+  linkStatus: {
+    pending: "Pending",
+    failed: "Couldn't read",
+    lastTry: "Last try {date}: {reason}.",
+    failedTitle: "We could not read a price from this link",
+    failedText: "Our last try on {date} failed: {reason}. We still check it once a day.",
+    checkFailed: "The last check on {date} failed: {reason}. The price shown is from the last successful read.",
+    retry: "Try again",
+    retrying: "Trying…",
+    retried: "Queued. We will try again within 15 minutes.",
+    blocked: "the shop blocked the request",
+    notFound: "the page was not found",
+    httpError: "the shop's page returned an error",
+    noPrice: "no price was found on the page",
+    timeout: "the shop did not respond in time",
+    network: "the page could not be opened",
+  },
   alertForm: {
     atOrBelow: "Alert me at or below",
     create: "Create alert",
@@ -349,6 +366,8 @@ const en = {
     "You created many alerts in the last hour. Try again later.": "You created many alerts in the last hour. Try again later.",
     "Could not save the product. Please try again.": "Could not save the product. Please try again.",
     "Could not save the price. Please try again.": "Could not save the price. Please try again.",
+    "Only the person who added this item can retry it.": "Only the person who added this item can retry it.",
+    "Could not queue the item. Please try again.": "Could not queue the item. Please try again.",
   },
 };
 

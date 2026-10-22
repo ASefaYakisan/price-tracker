@@ -8,6 +8,7 @@ import { money, percentChange, sourceLabel, storeName } from "@/lib/format";
 import { useI18n } from "@/i18n/client";
 import type { Dict } from "@/i18n/dictionaries/en";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
+import { LinkStatusPill } from "@/components/LinkStatus";
 import { BellIcon } from "@/components/BellIcon";
 import { useVisibleAlerts } from "@/lib/account-alerts";
 import { Sparkline } from "@/components/Sparkline";
@@ -152,6 +153,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
                 <div className="mt-0.5 flex min-w-0 items-center gap-2 text-xs text-muted">
                   <span className="truncate">{storeName(p, t)}</span>
                   <StockPill inStock={p.in_stock} t={t} />
+                  <LinkStatusPill product={p} t={t} />
                 </div>
               </div>
               <Sparkline points={sparklines[p.id]} source={p.source} className="hidden md:block" />

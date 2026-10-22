@@ -122,6 +122,23 @@ const ar: Dict = {
     removing: "جارٍ الإزالة…",
     pending: "رفض المتجر القراءة الأولى. نحاول مجددًا من خادم آخر، وعادةً يظهر السعر خلال ساعة.",
   },
+  linkStatus: {
+    pending: "قيد الانتظار",
+    failed: "تعذّرت القراءة",
+    lastTry: "آخر محاولة {date}: {reason}.",
+    failedTitle: "تعذّرت قراءة السعر من هذا الرابط",
+    failedText: "فشلت محاولتنا الأخيرة في {date}: {reason}. ما زلنا نفحصه مرة يوميًا.",
+    checkFailed: "فشل آخر فحص في {date}: {reason}. السعر المعروض من آخر قراءة ناجحة.",
+    retry: "أعد المحاولة",
+    retrying: "جارٍ المحاولة…",
+    retried: "في قائمة الانتظار. سنحاول مجددًا خلال 15 دقيقة.",
+    blocked: "حظر المتجر الطلب",
+    notFound: "لم يتم العثور على الصفحة",
+    httpError: "أعادت صفحة المتجر خطأً",
+    noPrice: "لم يُعثر على سعر في الصفحة",
+    timeout: "لم يستجب المتجر في الوقت المناسب",
+    network: "تعذّر فتح الصفحة",
+  },
   alertForm: {
     atOrBelow: "نبّهني عند سعر أقل من أو يساوي",
     create: "إنشاء تنبيه",
@@ -347,6 +364,8 @@ const ar: Dict = {
     "You created many alerts in the last hour. Try again later.": "أنشأت تنبيهات كثيرة خلال الساعة الماضية. حاول لاحقًا.",
     "Could not save the product. Please try again.": "تعذّر حفظ المنتج. يُرجى المحاولة مرة أخرى.",
     "Could not save the price. Please try again.": "تعذّر حفظ السعر. يُرجى المحاولة مرة أخرى.",
+    "Only the person who added this item can retry it.": "يمكن فقط لمن أضاف هذا المنتج إعادة المحاولة.",
+    "Could not queue the item. Please try again.": "تعذّرت إضافة المنتج إلى قائمة الانتظار. حاول مرة أخرى.",
   },
 };
 

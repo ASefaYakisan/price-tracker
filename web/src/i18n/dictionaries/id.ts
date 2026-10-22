@@ -122,6 +122,23 @@ const id: Dict = {
     removing: "Menghapus…",
     pending: "Toko menolak pembacaan pertama. Kami mencoba lagi dari server lain; harga biasanya muncul dalam satu jam.",
   },
+  linkStatus: {
+    pending: "Menunggu",
+    failed: "Tidak terbaca",
+    lastTry: "Percobaan terakhir {date}: {reason}.",
+    failedTitle: "Kami tidak dapat membaca harga dari tautan ini",
+    failedText: "Percobaan terakhir kami pada {date} gagal: {reason}. Kami tetap memeriksanya sekali sehari.",
+    checkFailed: "Pemeriksaan terakhir pada {date} gagal: {reason}. Harga yang ditampilkan dari pembacaan terakhir yang berhasil.",
+    retry: "Coba lagi",
+    retrying: "Mencoba…",
+    retried: "Masuk antrean. Kami akan mencoba lagi dalam 15 menit.",
+    blocked: "toko memblokir permintaan",
+    notFound: "halaman tidak ditemukan",
+    httpError: "halaman toko mengembalikan galat",
+    noPrice: "tidak ada harga di halaman",
+    timeout: "toko tidak merespons tepat waktu",
+    network: "halaman tidak dapat dibuka",
+  },
   alertForm: {
     atOrBelow: "Beri tahu saya pada harga atau di bawah",
     create: "Buat peringatan",
@@ -351,6 +368,8 @@ const id: Dict = {
     "You created many alerts in the last hour. Try again later.": "Kamu membuat banyak peringatan dalam satu jam terakhir. Coba lagi nanti.",
     "Could not save the product. Please try again.": "Tidak dapat menyimpan produk. Silakan coba lagi.",
     "Could not save the price. Please try again.": "Tidak dapat menyimpan harga. Silakan coba lagi.",
+    "Only the person who added this item can retry it.": "Hanya orang yang menambahkan item ini yang dapat mencoba lagi.",
+    "Could not queue the item. Please try again.": "Tidak dapat memasukkan item ke antrean. Silakan coba lagi.",
   },
 };
 

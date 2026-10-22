@@ -122,6 +122,23 @@ const ro: Dict = {
     removing: "Se elimină…",
     pending: "Magazinul a refuzat prima citire. Încercăm din nou de pe alt server; prețul apare de obicei în cel mult o oră.",
   },
+  linkStatus: {
+    pending: "În așteptare",
+    failed: "Nu s-a putut citi",
+    lastTry: "Ultima încercare {date}: {reason}.",
+    failedTitle: "Nu am putut citi un preț de la acest link",
+    failedText: "Ultima noastră încercare din {date} a eșuat: {reason}. Îl verificăm în continuare o dată pe zi.",
+    checkFailed: "Ultima verificare din {date} a eșuat: {reason}. Prețul afișat provine din ultima citire reușită.",
+    retry: "Încearcă din nou",
+    retrying: "Se încearcă…",
+    retried: "În coadă. Vom încerca din nou în 15 minute.",
+    blocked: "magazinul a blocat cererea",
+    notFound: "pagina nu a fost găsită",
+    httpError: "pagina magazinului a returnat o eroare",
+    noPrice: "nu s-a găsit niciun preț pe pagină",
+    timeout: "magazinul nu a răspuns la timp",
+    network: "pagina nu a putut fi deschisă",
+  },
   alertForm: {
     atOrBelow: "Anunță-mă la sau sub",
     create: "Creează alerta",
@@ -350,6 +367,8 @@ const ro: Dict = {
     "You created many alerts in the last hour. Try again later.": "Ai creat multe alerte în ultima oră. Încearcă mai târziu.",
     "Could not save the product. Please try again.": "Produsul nu a putut fi salvat. Încearcă din nou.",
     "Could not save the price. Please try again.": "Prețul nu a putut fi salvat. Încearcă din nou.",
+    "Only the person who added this item can retry it.": "Doar persoana care a adăugat acest produs poate încerca din nou.",
+    "Could not queue the item. Please try again.": "Produsul nu a putut fi pus în coadă. Încearcă din nou.",
   },
 };
 
