@@ -7,6 +7,7 @@ const el: Dict = {
     alerts: "Οι ειδοποιήσεις σας",
     signIn: "Σύνδεση",
     newPassword: "Νέος κωδικός",
+    productPrice: "Τρέχουσα τιμή {price} · ιστορικό τιμών και ειδοποιήσεις",
   },
   nav: {
     alerts: "Ειδοποιήσεις",

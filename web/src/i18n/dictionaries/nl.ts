@@ -7,6 +7,7 @@ const nl: Dict = {
     alerts: "Je alerts",
     signIn: "Inloggen",
     newPassword: "Nieuw wachtwoord",
+    productPrice: "Huidige prijs {price} · prijsgeschiedenis en meldingen",
   },
   nav: {
     alerts: "Alerts",

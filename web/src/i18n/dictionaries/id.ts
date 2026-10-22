@@ -7,6 +7,7 @@ const id: Dict = {
     alerts: "Peringatan Anda",
     signIn: "Masuk",
     newPassword: "Kata sandi baru",
+    productPrice: "Harga saat ini {price} · riwayat harga dan peringatan",
   },
   nav: {
     alerts: "Peringatan",

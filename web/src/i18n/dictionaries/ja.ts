@@ -7,6 +7,7 @@ const ja: Dict = {
     alerts: "マイアラート",
     signIn: "ログイン",
     newPassword: "新しいパスワード",
+    productPrice: "現在の価格 {price} · 価格履歴とアラート",
   },
   nav: {
     alerts: "アラート",

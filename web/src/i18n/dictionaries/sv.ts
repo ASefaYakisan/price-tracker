@@ -7,6 +7,7 @@ const sv: Dict = {
     alerts: "Dina bevakningar",
     signIn: "Logga in",
     newPassword: "Nytt lösenord",
+    productPrice: "Aktuellt pris {price} · prishistorik och larm",
   },
   nav: {
     alerts: "Bevakningar",

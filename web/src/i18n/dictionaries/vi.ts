@@ -7,6 +7,7 @@ const vi: Dict = {
     alerts: "Cảnh báo của bạn",
     signIn: "Đăng nhập",
     newPassword: "Mật khẩu mới",
+    productPrice: "Giá hiện tại {price} · lịch sử giá và cảnh báo",
   },
   nav: {
     alerts: "Cảnh báo",

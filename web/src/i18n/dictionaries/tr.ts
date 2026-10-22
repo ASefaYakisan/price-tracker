@@ -7,6 +7,7 @@ const tr: Dict = {
     alerts: "Alarmların",
     signIn: "Giriş yap",
     newPassword: "Yeni şifre",
+    productPrice: "Güncel fiyat {price} · fiyat geçmişi ve alarm",
   },
   nav: {
     alerts: "Alarmlar",

@@ -7,6 +7,7 @@ const en = {
     alerts: "Your alerts",
     signIn: "Sign in",
     newPassword: "New password",
+    productPrice: "Current price {price} · price history and alerts",
   },
   nav: {
     alerts: "Alerts",

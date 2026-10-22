@@ -7,6 +7,7 @@ const pt: Dict = {
     alerts: "Seus alertas",
     signIn: "Entrar",
     newPassword: "Nova senha",
+    productPrice: "Preço atual {price} · histórico de preços e alertas",
   },
   nav: {
     alerts: "Alertas",

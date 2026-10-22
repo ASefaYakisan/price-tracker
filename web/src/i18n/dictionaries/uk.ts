@@ -7,6 +7,7 @@ const uk: Dict = {
     alerts: "Ваші сповіщення",
     signIn: "Вхід",
     newPassword: "Новий пароль",
+    productPrice: "Поточна ціна {price} · історія цін і сповіщення",
   },
   nav: {
     alerts: "Сповіщення",

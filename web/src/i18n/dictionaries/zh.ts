@@ -7,6 +7,7 @@ const zh: Dict = {
     alerts: "我的提醒",
     signIn: "登录",
     newPassword: "新密码",
+    productPrice: "当前价格 {price} · 价格历史与提醒",
   },
   nav: {
     alerts: "提醒",

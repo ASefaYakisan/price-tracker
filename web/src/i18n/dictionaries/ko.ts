@@ -7,6 +7,7 @@ const ko: Dict = {
     alerts: "내 알림",
     signIn: "로그인",
     newPassword: "새 비밀번호",
+    productPrice: "현재 가격 {price} · 가격 기록 및 알림",
   },
   nav: {
     alerts: "알림",
