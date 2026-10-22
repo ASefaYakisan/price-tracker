@@ -39,7 +39,7 @@ async function sendEmail(to, { subject, text }) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ from: process.env.ALERT_FROM ?? 'Price Tracker <onboarding@resend.dev>', to, subject, text }),
+    body: JSON.stringify({ from: process.env.ALERT_FROM || 'Price Tracker <onboarding@resend.dev>', to, subject, text }),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
   return true;
