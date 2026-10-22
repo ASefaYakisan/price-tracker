@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cacheLife, cacheTag } from "next/cache";
+import type { LinkState } from "@/lib/link-status";
 
 export type ProductRow = {
   id: number;
@@ -13,12 +14,19 @@ export type ProductRow = {
   price_change: number | null;
   in_stock: boolean | null;
   scraped_at: string | null;
+  // Pasted links only (migration 0009); see lib/link-status.ts.
+  status?: LinkState | null;
+  last_error?: string | null;
+  last_checked_at?: string | null;
 };
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export const isDemo = !url || !anonKey;
+
+const LIST_COLUMNS = "id, source, title, url, image_url, currency, price, previous_price, price_change, in_stock, scraped_at";
+const STATUS_COLUMNS = "status, last_error, last_checked_at"; // migration 0009
 
 export async function getProducts(): Promise<ProductRow[]> {
   "use cache";
@@ -27,18 +35,27 @@ export async function getProducts(): Promise<ProductRow[]> {
   if (isDemo) return DEMO_PRODUCTS;
   const db = createClient(url!, anonKey!);
   // Read in pages: Supabase returns at most 1000 rows per request. The list shows them a page at a time.
-  const rows: ProductRow[] = [];
   const PAGE = 1000;
-  for (let from = 0; from < 10 * PAGE; from += PAGE) {
-    const { data, error } = await db
+  const page = (columns: string, from: number) =>
+    db
       .from("product_latest")
-      .select("id, source, title, url, image_url, currency, price, previous_price, price_change, in_stock, scraped_at")
+      .select(columns)
       .order("price_change", { ascending: true, nullsFirst: false })
       .order("id")
       .range(from, from + PAGE - 1);
+  // Until migration 0009 adds the status columns, the list still renders without them.
+  let columns = `${LIST_COLUMNS}, ${STATUS_COLUMNS}`;
+  const rows: ProductRow[] = [];
+  for (let from = 0; from < 10 * PAGE; from += PAGE) {
+    let { data, error } = await page(columns, from);
+    if (error?.code === "42703" && columns !== LIST_COLUMNS) {
+      columns = LIST_COLUMNS;
+      ({ data, error } = await page(columns, from));
+    }
     if (error) throw new Error(error.message);
-    rows.push(...(data as ProductRow[]).map(toNumbers));
-    if (data.length < PAGE) break;
+    const batch = (data ?? []) as unknown as ProductRow[];
+    rows.push(...batch.map(toNumbers));
+    if (batch.length < PAGE) break;
   }
   return rows;
 }

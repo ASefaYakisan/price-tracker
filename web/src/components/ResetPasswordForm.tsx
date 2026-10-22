@@ -68,7 +68,7 @@ export function ResetPasswordForm() {
     );
 
   return (
-    <section className="rounded-2xl border border-line bg-card p-6 shadow-soft sm:p-8">
+    <section className="rounded-xl border border-line bg-card p-6 sm:p-8">
       {done ? (
         <>
           <span

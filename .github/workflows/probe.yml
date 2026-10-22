@@ -2,17 +2,28 @@ name: Shop probe
 
 # Run by hand from the Actions tab: opens sample product links from GitHub's servers and writes,
 # per shop, how far reading got (HTTP code, JSON-LD, price, layer) to the job summary.
+# Links go through the same layers as the daily refresh: plain request, real Chromium, then the scraping API.
 on:
   workflow_dispatch:
     inputs:
       urls:
         description: Links to check, separated by spaces (empty = scraper/probe-urls.txt)
         default: ""
+      api:
+        description: Try the paid scraping API for links the browser could not read
+        type: boolean
+        default: true
+      premium:
+        description: Shops read with the API's premium option (comma-separated); empty = the UNBLOCK_PREMIUM_HOSTS variable
+        default: ""
+      country:
+        description: Country the scraping API opens pages from (e.g. tr, none); empty = the UNBLOCK_COUNTRY variable, else tr
+        default: ""
 
 jobs:
   probe:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: scraper
@@ -24,6 +35,15 @@ jobs:
           cache: npm
           cache-dependency-path: scraper/package-lock.json
       - run: npm ci
+      - run: npx playwright install --with-deps chromium
       - run: set -f; npm run probe -- $URLS # set -f: a "*" in a link stays a "*"
         env:
           URLS: ${{ inputs.urls }}
+          PROBE_API: ${{ inputs.api && '1' || '0' }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SCRAPER_USER_AGENT: ${{ vars.SCRAPER_USER_AGENT }}
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+          UNBLOCK_COUNTRY: ${{ inputs.country || vars.UNBLOCK_COUNTRY }}
+          UNBLOCK_RENDER_HOSTS: ${{ vars.UNBLOCK_RENDER_HOSTS }}
+          UNBLOCK_PREMIUM_HOSTS: ${{ inputs.premium || vars.UNBLOCK_PREMIUM_HOSTS }}

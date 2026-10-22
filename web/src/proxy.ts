@@ -16,8 +16,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip static files, the API docs and the public read-only API, which never use the session.
+  // Skip static files, the web app manifest, the API docs and the public read-only API, which never use the session.
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api/products|api/openapi.json|docs|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|api/products|api/openapi.json|docs|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml)$).*)",
   ],
 };

@@ -3,9 +3,10 @@ import { revalidateTag } from "next/cache";
 import { currentUser } from "@/lib/supabase/server";
 import { isDemo } from "@/lib/data";
 import { canonicalUrl, extractProduct } from "@/lib/extract-price";
+import { findUrl } from "@/lib/find-url";
 import { assertPublicUrl } from "@/lib/safe-url";
 import { trackLimitMessage } from "@/lib/track-limits";
-import { attemptRow, messageFor, outcomeForError, retryLater, type TrackOutcome } from "@/lib/track-outcome";
+import { attemptRow, botWall, messageFor, outcomeForError, retryLater, type TrackOutcome } from "@/lib/track-outcome";
 
 const MAX_CUSTOM = 5000; // safety ceiling for the whole site; the per-account limits in track-limits.ts do the real work
 const BROWSER_HEADERS = {
@@ -48,7 +49,9 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   let url: URL;
   try {
-    url = await assertPublicUrl(String(body?.url ?? ""));
+    // The box also takes a shop app's share text; the link inside it is what gets read.
+    const text = String(body?.url ?? "");
+    url = await assertPublicUrl(findUrl(text) ?? text);
   } catch (err) {
     return fail((err as Error).message, 400);
   }
@@ -79,6 +82,7 @@ export async function POST(request: Request) {
     db,
     attemptRow({ url: url.href, stage: "add", outcome: product ? "ok" : "no_price", httpStatus: status, layer: product?.layer, userId: user?.id }),
   );
+  if (!product && db && user && botWall(html)) return savePending(db, url, user.id, messageFor("http_error", 403));
   if (!product) return fail(messageFor("no_price"), 422);
   if (isDemo || !db || !user) return Response.json({ ok: true, demo: true, product });
 

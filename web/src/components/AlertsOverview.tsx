@@ -8,6 +8,7 @@ import { authEnabled } from "@/lib/supabase/client";
 import { money, percent, shortDate } from "@/lib/format";
 import { useI18n } from "@/i18n/client";
 import { SourceChip } from "@/components/SourceChip";
+import { ProductThumb } from "@/components/ProductThumb";
 import { refreshAccountAlerts, useAccountAlerts, useVisibleAlerts } from "@/lib/account-alerts";
 import { removeAlert, replaceAlert, type SavedAlert, useMyAlerts } from "@/lib/my-alerts";
 
@@ -57,7 +58,7 @@ export function AlertsOverview() {
     return (
       <div className="space-y-3" aria-busy>
         {[0, 1].map((i) => (
-          <div key={i} className="h-40 animate-pulse rounded-2xl border border-line bg-card" />
+          <div key={i} className="h-32 animate-pulse rounded-xl bg-hover" />
         ))}
       </div>
     );
@@ -65,10 +66,8 @@ export function AlertsOverview() {
 
   if (authEnabled && !user) {
     return (
-      <section className="flex flex-col items-center rounded-2xl border border-line bg-card px-6 py-12 text-center shadow-soft">
-        <span className="grid size-12 place-items-center rounded-full bg-accent-soft text-accent">
-          <BellIcon className="size-6" />
-        </span>
+      <section className="flex flex-col items-center border-y border-line px-6 py-14 text-center">
+        <BellIcon className="size-8 text-accent" />
         <h2 className="mt-4 font-medium">{t.alerts.signInTitle}</h2>
         <p className="mt-1 max-w-md text-sm text-muted">{t.alerts.signInText}</p>
         <Link
@@ -83,10 +82,8 @@ export function AlertsOverview() {
 
   if (!saved.length) {
     return (
-      <section className="flex flex-col items-center rounded-2xl border border-line bg-card px-6 py-12 text-center shadow-soft">
-        <span className="grid size-12 place-items-center rounded-full bg-accent-soft text-accent">
-          <BellIcon className="size-6" />
-        </span>
+      <section className="flex flex-col items-center border-y border-line px-6 py-14 text-center">
+        <BellIcon className="size-8 text-accent" />
         <h2 className="mt-4 font-medium">{t.alerts.emptyTitle}</h2>
         <p className="mt-1 max-w-sm text-sm text-muted">{t.alerts.emptyText}</p>
         <Link href={href("/")} className="mt-5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90">
@@ -101,12 +98,12 @@ export function AlertsOverview() {
   const reached = rows.filter((r) => r.live && !("missing" in r.live) && !r.live.sentAt && isReached(r.live)).length;
   return (
     <>
-      <div className="mb-4 grid grid-cols-3 gap-3">
-        <Summary label={t.alerts.count} value={saved.length} tone="accent" />
-        <Summary label={t.alerts.reached} value={live ? reached : "–"} tone="good" />
-        <Summary label={t.alerts.sent} value={live ? sent : "–"} tone="teal" />
-      </div>
-      <ul className="space-y-3">
+      <dl className="mb-4 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+        <Summary label={t.alerts.count} value={saved.length} />
+        <Summary label={t.alerts.reached} value={live ? reached : "–"} good />
+        <Summary label={t.alerts.sent} value={live ? sent : "–"} />
+      </dl>
+      <ul className="divide-y divide-line border-y border-line">
         {rows.map(({ saved, live }) => (
           <AlertCard key={`${saved.id ?? ""}-${saved.productId}-${saved.email}`} saved={saved} live={live} account={signedIn} />
         ))}
@@ -129,13 +126,12 @@ export function AlertsOverview() {
   );
 }
 
-const SUMMARY_TONES = { accent: "border-t-accent", good: "border-t-good", teal: "border-t-teal" };
-
-function Summary({ label, value, tone }: { label: string; value: number | string; tone: keyof typeof SUMMARY_TONES }) {
+// One plain figure in the summary line, like the home page: no cards.
+function Summary({ label, value, good = false }: { label: string; value: number | string; good?: boolean }) {
   return (
-    <div className={`rounded-2xl border border-t-4 border-line bg-card p-4 shadow-soft ${SUMMARY_TONES[tone]}`}>
-      <div className="text-xs text-muted">{label}</div>
-      <div className={`mt-1 text-2xl font-semibold tabular-nums ${tone === "good" && value ? "text-good" : "text-ink"}`}>{value}</div>
+    <div className="flex items-baseline gap-1.5">
+      <dt className="text-muted">{label}</dt>
+      <dd className={`font-semibold tabular-nums ${good && value ? "text-good" : "text-ink"}`}>{value}</dd>
     </div>
   );
 }
@@ -200,18 +196,11 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
   const progress = l?.price ? Math.min(1, l.target / l.price) : 0;
   const gap = l?.price != null ? l.price - l.target : null;
 
-  const input = "h-10 rounded-lg border border-line bg-bg px-3 text-sm text-ink focus:border-accent focus:outline-none";
+  const input = "h-10 rounded-lg border border-line bg-card px-3 text-sm text-ink focus:border-accent focus:outline-none";
   return (
-    <li className="rounded-2xl border border-line bg-card p-4 shadow-soft sm:p-5">
+    <li className="py-5 sm:px-2">
       <div className="flex items-start gap-4">
-        {l?.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element -- small remote thumbnails, no optimisation needed
-          <img src={l.imageUrl} alt="" className="size-12 shrink-0 rounded-lg bg-white object-contain p-1" />
-        ) : (
-          <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-accent-soft font-semibold text-accent" aria-hidden>
-            {(l?.title ?? saved.title).replace(/^(the|a|an)\s+/i, "").slice(0, 1)}
-          </span>
-        )}
+        <ProductThumb product={{ image_url: l?.imageUrl ?? null, source: l?.source ?? "custom" }} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div className="min-w-0">
