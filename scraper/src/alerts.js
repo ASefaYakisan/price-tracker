@@ -1,10 +1,15 @@
 // After each scrape: email everyone whose target price has been reached, once.
 
 // Pure part, easy to test: which open alerts are due given the latest prices.
+// Out-of-stock products wait (the alert stays open until they are back);
+// unknown stock (null, e.g. crypto or currency rates) counts as in stock.
 export function dueAlerts(alerts, latestById) {
   return alerts
     .map((a) => ({ ...a, product: latestById.get(a.product_id) }))
-    .filter((a) => a.product?.price != null && Number(a.product.price) <= Number(a.target_price));
+    .filter(
+      (a) =>
+        a.product?.price != null && a.product.in_stock !== false && Number(a.product.price) <= Number(a.target_price),
+    );
 }
 
 export function alertEmail({ product, target_price }, siteUrl) {
@@ -48,7 +53,7 @@ export async function processAlerts(db, { siteUrl = process.env.SITE_URL } = {})
   const ids = [...new Set(alerts.map((a) => a.product_id))];
   const { data: latest, error: latestError } = await db
     .from('product_latest')
-    .select('id, title, url, currency, price')
+    .select('id, title, url, currency, price, in_stock')
     .in('id', ids);
   if (latestError) throw latestError;
 

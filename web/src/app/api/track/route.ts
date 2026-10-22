@@ -3,6 +3,7 @@ import { revalidateTag } from "next/cache";
 import { currentUser } from "@/lib/supabase/server";
 import { isDemo } from "@/lib/data";
 import { canonicalUrl, extractProduct } from "@/lib/extract-price";
+import { findUrl } from "@/lib/find-url";
 import { assertPublicUrl } from "@/lib/safe-url";
 import { trackLimitMessage } from "@/lib/track-limits";
 import { attemptRow, messageFor, outcomeForError, retryLater, type TrackOutcome } from "@/lib/track-outcome";
@@ -48,7 +49,9 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   let url: URL;
   try {
-    url = await assertPublicUrl(String(body?.url ?? ""));
+    // The box also takes a shop app's share text; the link inside it is what gets read.
+    const text = String(body?.url ?? "");
+    url = await assertPublicUrl(findUrl(text) ?? text);
   } catch (err) {
     return fail((err as Error).message, 400);
   }

@@ -3,7 +3,7 @@ import type { AlertStatus } from "@/lib/alert-status";
 import { getProduct } from "@/lib/data";
 
 export const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export { UUID } from "@/lib/alert-lookup";
 
 // Server-only client. Visitors can insert alerts but never read them, so anything that
 // reads or changes an alert goes through here and checks the alert's manage token.
