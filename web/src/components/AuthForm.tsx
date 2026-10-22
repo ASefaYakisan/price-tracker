@@ -57,6 +57,8 @@ export function AuthForm() {
   const params = useSearchParams();
   const { t, href, fill, lang } = useI18n();
   const urlError = params.get("error");
+  // Sent here from the link box: say why signing in is needed.
+  const fromTrack = params.get("reason") === "track";
   // Where to go after signing in, e.g. back to the item whose alert the visitor wanted to set.
   const nextParam = params.get("next");
   const next =
@@ -275,7 +277,7 @@ export function AuthForm() {
             {mode === "sign-in" ? t.auth.welcome : t.auth.createTitle}
           </h2>
           <p className="mt-1 text-sm text-muted">
-            {mode === "sign-in" ? t.auth.welcomeText : t.auth.createText}
+            {fromTrack ? t.auth.trackText : mode === "sign-in" ? t.auth.welcomeText : t.auth.createText}
           </p>
           <div className="mt-5 flex gap-1 rounded-lg bg-bg p-1">
             {tab("sign-in", t.auth.signIn)}
