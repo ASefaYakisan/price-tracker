@@ -3,7 +3,7 @@ import { createBrowserReader } from '../browser-fetch.js';
 import { extractProduct } from '../extract-price.js';
 import { fetchText, sleep } from '../fetch.js';
 import { saveStatuses, statusChange } from '../link-status.js';
-import { attemptRow, BLOCKED_STATUSES, outcomeForError } from '../track-outcome.js';
+import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError } from '../track-outcome.js';
 import { createUnblocker, UNBLOCK_LAYER } from '../unblock-fetch.js';
 
 export const name = 'custom';
@@ -51,8 +51,9 @@ async function readCheapestFirst(url, { retries, externalId, browser, unblocker 
   return readViaApi(url, unblocker);
 }
 
-// The shop answered with a status that means it blocks automated visits.
+// The shop answered with a status that means it blocks automated visits, or with a robot-check page.
 function refused(attempt) {
+  if (attempt.outcome === 'no_price') return botWall(attempt.html);
   return attempt.outcome === 'http_error' && BLOCKED_STATUSES.includes(attempt.httpStatus);
 }
 

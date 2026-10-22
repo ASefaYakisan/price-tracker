@@ -5,6 +5,14 @@ export type TrackOutcome = "ok" | "http_error" | "no_price" | "timeout" | "netwo
 
 export const BLOCKED_STATUSES = [401, 403, 429, 503];
 
+// A small page that answered 200 but is a robot check, not the product (Amazon's captcha page, Cloudflare's wait page).
+// It counts as the shop turning the request away, so the link is kept for GitHub's servers.
+const BOT_WALL = /captcha|robot check|are you a (?:human|robot)|unusual traffic|pardon our interruption|just a moment\.\.\.|cf-chl|access denied|request blocked/i;
+
+export function botWall(html: string) {
+  return html.length < 60_000 && BOT_WALL.test(html);
+}
+
 export function outcomeForError(err: unknown): TrackOutcome {
   const e = err as { status?: number; name?: string; cause?: { name?: string } } | null;
   if (e?.status) return "http_error";

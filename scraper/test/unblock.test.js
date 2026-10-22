@@ -15,13 +15,14 @@ afterEach(() => {
 });
 
 // The shop answers with `shopStatus`; anything sent to the API gets `apiStatus` (and PAGE when 200).
-function fakeNetwork({ shopStatus = 403, apiStatus = 200 } = {}) {
+function fakeNetwork({ shopStatus = 403, apiStatus = 200, shopPage = null } = {}) {
   const calls = [];
   globalThis.fetch = async (url) => {
     const toApi = String(url).startsWith('https://api.scraperapi.com/');
     calls.push(toApi ? 'api' : 'shop');
     const status = toApi ? apiStatus : shopStatus;
-    return new Response(status === 200 ? PAGE : 'blocked', { status });
+    const body = !toApi && shopPage ? shopPage : status === 200 ? PAGE : 'blocked';
+    return new Response(body, { status });
   };
   return calls;
 }
@@ -76,6 +77,14 @@ test('a page the shop serves is not sent to the API', async () => {
   const attempt = await readLink(LINK, { retries: 1, unblocker: createUnblocker({ db: fakeDb(), env: env() }) });
   assert.deepEqual(calls, ['shop']);
   assert.equal(attempt.layer, 'json-ld');
+});
+
+test('a robot-check page served with 200 counts as blocked and goes to the API', async () => {
+  const calls = fakeNetwork({ shopStatus: 200, shopPage: '<html><title>Amazon.com.tr</title><form action="/errors/validateCaptcha"></form></html>' });
+  const attempt = await readLink(LINK, { retries: 1, unblocker: createUnblocker({ db: fakeDb(), env: env() }) });
+  assert.deepEqual(calls, ['shop', 'api']);
+  assert.equal(attempt.outcome, 'ok');
+  assert.equal(attempt.layer, 'unblock:json-ld');
 });
 
 test('a listed shop goes straight to the API', async () => {
