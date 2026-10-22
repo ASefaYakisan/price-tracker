@@ -38,6 +38,10 @@ jobs:
           SUPABASE_URL: https://zaufbyefvjttfppirjrj.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+          # Optional scraping API for shops that block GitHub's servers (see README, "Blocked shops").
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+          UNBLOCK_HOSTS: ${{ vars.UNBLOCK_HOSTS }}
+          UNBLOCK_MONTHLY_LIMIT: ${{ vars.UNBLOCK_MONTHLY_LIMIT }}
           # Optional: without it, due alerts are only logged, not emailed.
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SITE_URL: https://price-tracker-shop.vercel.app
