@@ -44,6 +44,7 @@ jobs:
           UNBLOCK_HOSTS: ${{ vars.UNBLOCK_HOSTS }}
           UNBLOCK_MONTHLY_LIMIT: ${{ vars.UNBLOCK_MONTHLY_LIMIT }}
           UNBLOCK_RENDER_HOSTS: ${{ vars.UNBLOCK_RENDER_HOSTS }}
+          UNBLOCK_COUNTRY: ${{ vars.UNBLOCK_COUNTRY }}
           # Optional: without it, due alerts are only logged, not emailed.
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}

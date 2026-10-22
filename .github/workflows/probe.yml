@@ -13,6 +13,9 @@ on:
         description: Try the paid scraping API for links the browser could not read
         type: boolean
         default: true
+      country:
+        description: Country the scraping API opens pages from (e.g. tr); empty = the UNBLOCK_COUNTRY variable
+        default: ""
 
 jobs:
   probe:
@@ -38,3 +41,5 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SCRAPER_USER_AGENT: ${{ vars.SCRAPER_USER_AGENT }}
           SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
+          UNBLOCK_COUNTRY: ${{ inputs.country || vars.UNBLOCK_COUNTRY }}
+          UNBLOCK_RENDER_HOSTS: ${{ vars.UNBLOCK_RENDER_HOSTS }}

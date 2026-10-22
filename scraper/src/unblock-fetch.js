@@ -21,6 +21,8 @@ export function unblockConfig(env = process.env) {
   return {
     apiKey: env.SCRAPER_API_KEY?.trim() || null,
     hosts: (env.UNBLOCK_HOSTS ?? '').split(',').map(normalHost).filter(Boolean),
+    // Where the API opens pages from (ScraperAPI country_code); Turkish shops show a country picker to foreign addresses.
+    country: env.UNBLOCK_COUNTRY?.trim().toLowerCase() || null,
     renderHosts: (env.UNBLOCK_RENDER_HOSTS ?? DEFAULT_RENDER_HOSTS).split(',').map(normalHost).filter(Boolean),
     monthlyLimit: Number.isFinite(limit) && limit >= 0 ? limit : DEFAULT_MONTHLY_LIMIT,
   };
@@ -41,8 +43,9 @@ export function isListed(hosts, url) {
   return hosts.some((listed) => host === listed || host.endsWith(`.${listed}`));
 }
 
-export function apiUrl(apiKey, url, { render = false } = {}) {
-  return `${ENDPOINT}?${new URLSearchParams({ api_key: apiKey, url, ...(render ? { render: 'true' } : {}) })}`;
+export function apiUrl(apiKey, url, { render = false, country = null } = {}) {
+  const extra = { ...(render ? { render: 'true' } : {}), ...(country ? { country_code: country } : {}) };
+  return `${ENDPOINT}?${new URLSearchParams({ api_key: apiKey, url, ...extra })}`;
 }
 
 function monthStart(now) {
@@ -82,7 +85,7 @@ export async function recentlyUnblocked(db, urls, now = Date.now()) {
 
 // Returns null when the layer is off. The monthly count needs the database, so without one it stays off too.
 export function createUnblocker({ db, env = process.env, now = Date.now(), fetcher = fetchText } = {}) {
-  const { apiKey, hosts, renderHosts, monthlyLimit } = unblockConfig(env);
+  const { apiKey, hosts, renderHosts, country, monthlyLimit } = unblockConfig(env);
   if (!apiKey || !db) return null;
   let used;
   let warned = false;
@@ -107,7 +110,7 @@ export function createUnblocker({ db, env = process.env, now = Date.now(), fetch
       const render = isListed(renderHosts, url);
       used += render ? RENDER_COST : 1;
       try {
-        return await fetcher(apiUrl(apiKey, url, { render }), { timeoutMs: 70_000, retries: 1 });
+        return await fetcher(apiUrl(apiKey, url, { render, country }), { timeoutMs: 70_000, retries: 1 });
       } catch (err) {
         // fetchText puts the request URL in its message, and that URL carries the key.
         const reason = err.status ? `HTTP ${err.status}` : String(err.message ?? err).replaceAll(apiKey, '***');

@@ -177,9 +177,9 @@ test('a listed shop skips the browser and goes to the API', async () => {
 });
 
 test('config parsing and host matching', () => {
-  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], renderHosts: ['trendyol.com'], monthlyLimit: 900 });
+  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], country: null, renderHosts: ['trendyol.com'], monthlyLimit: 900 });
   const config = unblockConfig({ SCRAPER_API_KEY: ' k ', UNBLOCK_HOSTS: 'www.Hepsiburada.com, ,vatanbilgisayar.com', UNBLOCK_MONTHLY_LIMIT: 'x' });
-  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], renderHosts: ['trendyol.com'], monthlyLimit: 900 });
+  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], country: null, renderHosts: ['trendyol.com'], monthlyLimit: 900 });
   assert.ok(isListed(config.hosts, 'https://m.hepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'https://nothepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'not a url'));
@@ -197,6 +197,7 @@ test('render hosts are read with render=true, logged as rendered and counted at 
   assert.match(urls[1], /render=true/);
   assert.equal(attempt.layer, 'unblock-render:json-ld');
   assert.equal(apiUrl('k', 'https://a.example/x', { render: true }).endsWith('&render=true'), true);
+  assert.equal(apiUrl('k', 'https://a.example/x', { country: 'tr' }).endsWith('&country_code=tr'), true);
   // 87 reads, 2 of them rendered: 85 + 2 x 10 = 105 credits, over a limit of 100.
   const spent = createUnblocker({ db: fakeDb(87, 2), env: env({ UNBLOCK_MONTHLY_LIMIT: '100' }) });
   assert.equal(await spent.hasCredit(), false);
