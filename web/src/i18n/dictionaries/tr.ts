@@ -80,6 +80,8 @@ const tr: Dict = {
     found: "{title} bulundu: {price}. (Demo modu: kaydedilmedi.)",
     hint: "Çoğu mağazada çalışır. Fiyat hemen okunamazsa link \"bekliyor\" olarak eklenir ve otomatik olarak tekrar denenir.",
     signIn: "Herhangi bir ürünü bağlantısıyla eklemek için giriş yap.",
+    matches: "Sitede zaten takip edilenler",
+    noMatch: "Bu adla takip edilen bir ürün yok. Eklemek için ürünün linkini yapıştır.",
   },
   table: {
     search: "Ara…",

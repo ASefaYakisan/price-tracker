@@ -80,6 +80,8 @@ const cs: Dict = {
     found: "Nalezeno: {title} za {price}. (Ukázkový režim: neuloženo.)",
     hint: "Funguje s většinou obchodů. Pokud cenu nelze hned přečíst, odkaz se uloží jako čekající a automaticky se zkusí znovu.",
     signIn: "Přihlaste se a přidávejte libovolné produkty odkazem.",
+    matches: "Už sledováno na tomto webu",
+    noMatch: "Pod tímto názvem se zatím nic nesleduje. Vlož odkaz na produkt a přidej ho.",
   },
   table: {
     search: "Hledat…",

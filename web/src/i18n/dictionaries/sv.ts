@@ -80,6 +80,8 @@ const sv: Dict = {
     found: "Hittade {title} för {price}. (Demoläge: sparas inte.)",
     hint: "Fungerar med de flesta butiker. Om priset inte kan läsas direkt sparas länken som väntande och försöks igen automatiskt.",
     signIn: "Logga in för att lägga till valfri produkt via dess länk.",
+    matches: "Redan bevakade på den här sidan",
+    noMatch: "Inget bevakas under det namnet ännu. Klistra in produktens länk för att lägga till den.",
   },
   table: {
     search: "Sök…",

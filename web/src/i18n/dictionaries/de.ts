@@ -80,6 +80,8 @@ const de: Dict = {
     found: "{title} für {price} gefunden. (Demomodus: nicht gespeichert.)",
     hint: "Funktioniert mit den meisten Shops. Kann der Preis nicht sofort gelesen werden, wird der Link als ausstehend gespeichert und automatisch erneut versucht.",
     signIn: "Melde dich an, um beliebige Produkte per Link hinzuzufügen.",
+    matches: "Auf dieser Seite bereits verfolgt",
+    noMatch: "Unter diesem Namen wird noch nichts verfolgt. Füge den Link des Produkts ein, um es hinzuzufügen.",
   },
   table: {
     search: "Suchen…",

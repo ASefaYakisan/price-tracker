@@ -80,6 +80,8 @@ const nl: Dict = {
     found: "{title} gevonden voor {price}. (Demomodus: niet opgeslagen.)",
     hint: "Werkt met de meeste winkels. Kan de prijs niet meteen worden gelezen, dan wordt de link als in behandeling opgeslagen en automatisch opnieuw geprobeerd.",
     signIn: "Log in om elk product via de link toe te voegen.",
+    matches: "Al gevolgd op deze site",
+    noMatch: "Nog niets gevolgd onder die naam. Plak de link van het product om het toe te voegen.",
   },
   table: {
     search: "Zoeken…",
