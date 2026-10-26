@@ -7,8 +7,9 @@ import { APPEARANCE_SCRIPT } from "@/lib/appearance";
 import { LanguagePicker } from "@/components/LanguagePicker";
 import { UserMenu } from "@/components/UserMenu";
 import { I18nProvider } from "@/i18n/client";
-import { isRtl, LOCALE_CODES } from "@/i18n/config";
+import { isRtl, intlLocale, LOCALE_CODES } from "@/i18n/config";
 import { getDictionary, resolveLang } from "@/i18n/server";
+import { siteUrl } from "@/lib/site-url";
 import "../globals.css";
 
 // Plex has tabular figures, so prices line up; scripts it lacks (Arabic, Thai, CJK...) fall back to the system font.
@@ -23,11 +24,20 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
-  const t = await getDictionary(await resolveLang(params));
+  const lang = await resolveLang(params);
+  const t = await getDictionary(lang);
   return {
     title: t.meta.title,
     description: t.meta.description,
-    alternates: { languages: Object.fromEntries(LOCALE_CODES.map((l) => [l, `/${l}`])) },
+    metadataBase: siteUrl(),
+    openGraph: {
+      siteName: t.meta.title,
+      title: t.meta.title,
+      description: t.meta.description,
+      locale: lang === "ar" ? "ar_AR" : intlLocale(lang).replace("-", "_"),
+      type: "website",
+    },
+    twitter: { card: "summary_large_image" },
   };
 }
 

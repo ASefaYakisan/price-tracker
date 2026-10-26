@@ -12,7 +12,7 @@ const ICONS = [
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/login">): Promise<Metadata> {
   const t = await getDictionary(await resolveLang(params));
-  return { title: `${t.meta.signIn} · ${t.meta.title}` };
+  return { robots: { index: false }, title: `${t.meta.signIn} · ${t.meta.title}` };
 }
 
 export default async function LoginPage({ params }: PageProps<"/[lang]/login">) {
