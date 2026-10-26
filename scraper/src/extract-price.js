@@ -1,6 +1,6 @@
 // Reads the price from any shop's product page. Tries a series of layers, cheapest and most
 // reliable first, and the first layer that finds a price wins:
-//   json-ld -> microdata -> meta -> embedded-state -> shop adapter
+//   json-ld -> json-ld-list -> microdata -> meta -> embedded-state -> shop adapter
 // web/src/lib/extract-price.ts is a TypeScript port of this file; keep them in step.
 // Both run the shared fixtures in test/fixtures/shops, so a drift shows up as a failing test.
 import * as cheerio from 'cheerio';
@@ -23,6 +23,7 @@ export function readPrice(html, pageUrl) {
 
 const LAYERS = [
   ['json-ld', jsonLdProduct],
+  ['json-ld-list', jsonLdListing],
   ['microdata', microdataProduct],
   ['meta', metaProduct],
   ['embedded-state', embeddedStateProduct],
@@ -146,6 +147,48 @@ function* walk(node) {
     // A page may wrap the product: {"@graph": [...]}, or an action/page around it (MediaMarkt: BuyAction.object).
     for (const key of WRAPPER_KEYS) if (node[key]) yield* walk(node[key]);
   }
+}
+
+
+// ---- json-ld-list: a category or search page whose JSON-LD is an ItemList of products (Akakçe /ekran-karti/rtx-5070.html) ----
+// There is no single product here, so the page is tracked at its lowest listed price, named after the page itself.
+
+function jsonLdListing({ $, url }) {
+  const prices = [];
+  let image = null;
+  let currency = null;
+  let inStock = false;
+  for (const el of $('script[type="application/ld+json"]').toArray()) {
+    let data;
+    try {
+      data = JSON.parse($(el).text());
+    } catch {
+      continue;
+    }
+    for (const list of walk(data)) {
+      if (![].concat(list['@type'] ?? []).includes('ItemList')) continue;
+      for (const entry of [].concat(list.itemListElement ?? [])) {
+        const item = entry?.item && typeof entry.item === 'object' ? entry.item : entry;
+        if (!item || typeof item !== 'object' || ![].concat(item['@type'] ?? []).includes('Product')) continue;
+        const offer = pickOffer(ldOffers(item), url);
+        if (!offer) continue;
+        prices.push(offer.price);
+        image ??= firstImage(item.image);
+        currency ??= offer.currency;
+        inStock ||= !/outofstock|soldout|discontinued/i.test(offer.availability);
+      }
+    }
+  }
+  if (!prices.length) return null;
+  const meta = metaReader($);
+  const heading = (meta('og:title') ?? $('title').first().text()).split(/\s+[|–-]\s+/)[0].trim();
+  return {
+    name: heading || null,
+    image,
+    price: Math.min(...prices),
+    currency,
+    availability: inStock ? null : 'OutOfStock',
+  };
 }
 
 // ---- microdata: itemprop="price" in the content attribute or in the element's text ----
