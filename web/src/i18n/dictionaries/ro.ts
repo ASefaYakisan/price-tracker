@@ -58,6 +58,8 @@ const ro: Dict = {
     priceRises: "Creșteri de preț",
     outOfStock: "Stoc epuizat",
     sinceLastScrape: "de la ultima colectare",
+    noChanges: "Nicio schimbare de preț încă",
+    readingPrice: "Se citește prețul…",
     rightNow: "în acest moment",
     download: "Descarcă",
     listsLabel: "Liste",

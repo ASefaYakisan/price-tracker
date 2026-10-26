@@ -58,6 +58,8 @@ const cs: Dict = {
     priceRises: "Nárůsty cen",
     outOfStock: "Vyprodáno",
     sinceLastScrape: "od posledního stažení",
+    noChanges: "Zatím žádné změny cen",
+    readingPrice: "Načítání ceny…",
     rightNow: "právě teď",
     download: "Stáhnout",
     listsLabel: "Seznamy",

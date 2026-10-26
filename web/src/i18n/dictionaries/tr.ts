@@ -58,6 +58,8 @@ const tr: Dict = {
     priceRises: "Fiyat artışları",
     outOfStock: "Stokta yok",
     sinceLastScrape: "son taramadan beri",
+    noChanges: "Henüz fiyat değişimi yok",
+    readingPrice: "Fiyat okunuyor…",
     rightNow: "şu anda",
     download: "İndir",
     listsLabel: "Listeler",

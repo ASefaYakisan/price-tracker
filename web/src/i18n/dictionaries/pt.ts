@@ -58,6 +58,8 @@ const pt: Dict = {
     priceRises: "Altas de preço",
     outOfStock: "Esgotado",
     sinceLastScrape: "desde a última coleta",
+    noChanges: "Ainda sem mudanças de preço",
+    readingPrice: "Lendo o preço…",
     rightNow: "agora",
     download: "Baixar",
     listsLabel: "Listas",

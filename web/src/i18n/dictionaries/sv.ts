@@ -58,6 +58,8 @@ const sv: Dict = {
     priceRises: "Prishöjningar",
     outOfStock: "Slut i lager",
     sinceLastScrape: "sedan senaste hämtningen",
+    noChanges: "Inga prisändringar än",
+    readingPrice: "Läser priset…",
     rightNow: "just nu",
     download: "Ladda ner",
     listsLabel: "Listor",

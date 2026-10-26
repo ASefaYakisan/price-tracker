@@ -9,6 +9,7 @@ import { useI18n } from "@/i18n/client";
 import type { Dict } from "@/i18n/dictionaries/en";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 import { LinkStatusPill } from "@/components/LinkStatus";
+import { linkState } from "@/lib/link-status";
 import { BellIcon } from "@/components/BellIcon";
 import { useVisibleAlerts } from "@/lib/account-alerts";
 import { Sparkline } from "@/components/Sparkline";
@@ -161,7 +162,11 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
               </div>
               <Sparkline points={sparklines[p.id]} source={p.source} className="hidden md:block" />
               <div className="shrink-0 text-end">
-                <div className="text-base font-semibold tabular-nums sm:text-lg">{money(p.price, p.currency, lang)}</div>
+                {p.price == null && linkState(p) ? (
+                  <div className="text-sm text-muted">{linkState(p) === "failed" ? t.linkStatus.failed : t.home.readingPrice}</div>
+                ) : (
+                  <div className="text-base font-semibold tabular-nums sm:text-lg">{money(p.price, p.currency, lang)}</div>
+                )}
                 <ChangeBadge price={p.price} previous={p.previous_price} currency={p.currency} source={p.source} t={t} lang={lang} />
               </div>
               <Link

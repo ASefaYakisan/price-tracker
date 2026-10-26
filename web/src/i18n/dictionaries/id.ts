@@ -58,6 +58,8 @@ const id: Dict = {
     priceRises: "Harga naik",
     outOfStock: "Stok habis",
     sinceLastScrape: "sejak pengambilan terakhir",
+    noChanges: "Belum ada perubahan harga",
+    readingPrice: "Membaca harga…",
     rightNow: "saat ini",
     download: "Unduh",
     listsLabel: "Daftar",

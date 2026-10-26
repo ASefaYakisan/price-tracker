@@ -58,6 +58,8 @@ const da: Dict = {
     priceRises: "Prisstigninger",
     outOfStock: "Udsolgt",
     sinceLastScrape: "siden seneste hentning",
+    noChanges: "Ingen prisændringer endnu",
+    readingPrice: "Læser prisen…",
     rightNow: "lige nu",
     download: "Download",
     listsLabel: "Lister",

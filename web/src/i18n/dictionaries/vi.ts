@@ -58,6 +58,8 @@ const vi: Dict = {
     priceRises: "Tăng giá",
     outOfStock: "Hết hàng",
     sinceLastScrape: "kể từ lần thu thập trước",
+    noChanges: "Chưa có thay đổi giá",
+    readingPrice: "Đang đọc giá…",
     rightNow: "hiện tại",
     download: "Tải xuống",
     listsLabel: "Danh sách",
