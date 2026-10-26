@@ -19,7 +19,7 @@ Nasıl doğrularım: giriş sayfasında kutu görünür ve giriş çalışır. K
 ## 2. E-posta şablonları ve kod uzunluğu
 
 1. Supabase → **Authentication → Email Templates**.
-2. **Confirm signup**: `supabase/email-templates/confirm-signup.html` içeriğini yapıştır. Konu: `Your Price Tracker code` (istediğin gibi değiştirebilirsin). Şablon `{{ .Token }}` kullanır; bağlantı değil kod gider.
+2. **Confirm signup**: `supabase/email-templates/confirm-signup.html` içeriğini yapıştır. Konu: `Your Price Tracker code` (istediğin gibi değiştirebilirsin). Şablon 8 haneli kodu (`{{ .Token }}`) gösterir.
 3. **Reset password**: `supabase/email-templates/reset-password.html` içeriğini yapıştır.
 4. Kod uzunluğu: **Authentication → Sign In / Providers → Email** (veya Auth ayarları) içinde **OTP length** = **8** olmalı. Site 8 kutu gösterir; farklıysa kod girilemez.
 
