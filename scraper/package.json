@@ -8,7 +8,8 @@
     "scrape": "node src/index.js",
     "test": "node --test test/*.test.js",
     "probe": "node src/probe.js",
-    "pending": "node src/pending.js"
+    "pending": "node src/pending.js",
+    "fix-products": "node src/fix-products.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.0.0",
