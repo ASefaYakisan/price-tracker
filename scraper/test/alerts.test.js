@@ -87,3 +87,20 @@ test('processAlerts selects manage_token and passes List-Unsubscribe to Resend',
   assert.equal(payload.to, 'test@example.com');
   assert.equal(marked, true);
 });
+
+test('alertEmail accepts a language and falls back to the English text for any of them', () => {
+  const en = alertEmail({ product, target_price: '62000' }, 'https://example.app/');
+  assert.deepEqual(alertEmail({ product, target_price: '62000' }, 'https://example.app/', 'tr'), en);
+  assert.deepEqual(alertEmail({ product, target_price: '62000' }, 'https://example.app/', 'zz'), en);
+});
+
+test('processAlerts retries without lang when the column does not exist yet', async () => {
+  const asked = [];
+  const db = { from() { return { select(fields) {
+    asked.push(fields);
+    return { is: async () => (fields.includes('lang') ? { data: null, error: { code: '42703' } } : { data: [], error: null }) };
+  } }; } };
+  assert.deepEqual(await processAlerts(db, {}), { checked: 0, sent: 0 });
+  assert.equal(asked.length, 2);
+  assert.ok(!asked[1].includes('lang'));
+});
