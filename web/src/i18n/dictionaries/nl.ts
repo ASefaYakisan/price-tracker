@@ -58,6 +58,8 @@ const nl: Dict = {
     priceRises: "Prijsstijgingen",
     outOfStock: "Niet op voorraad",
     sinceLastScrape: "sinds de laatste scrape",
+    noChanges: "Nog geen prijswijzigingen",
+    readingPrice: "Prijs wordt gelezen…",
     rightNow: "op dit moment",
     download: "Downloaden",
     listsLabel: "Lijsten",

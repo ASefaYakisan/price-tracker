@@ -58,6 +58,8 @@ const el: Dict = {
     priceRises: "Αυξήσεις τιμών",
     outOfStock: "Εξαντλημένα",
     sinceLastScrape: "από την τελευταία συλλογή",
+    noChanges: "Καμία αλλαγή τιμής ακόμη",
+    readingPrice: "Ανάγνωση τιμής…",
     rightNow: "αυτή τη στιγμή",
     download: "Λήψη",
     listsLabel: "Λίστες",

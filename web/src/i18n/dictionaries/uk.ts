@@ -58,6 +58,8 @@ const uk: Dict = {
     priceRises: "Підвищення цін",
     outOfStock: "Немає в наявності",
     sinceLastScrape: "з останнього збору",
+    noChanges: "Змін цін поки немає",
+    readingPrice: "Зчитуємо ціну…",
     rightNow: "зараз",
     download: "Завантажити",
     listsLabel: "Списки",

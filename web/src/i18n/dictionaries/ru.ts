@@ -58,6 +58,8 @@ const ru: Dict = {
     priceRises: "Повышения цен",
     outOfStock: "Нет в наличии",
     sinceLastScrape: "с последнего сбора",
+    noChanges: "Изменений цен пока нет",
+    readingPrice: "Читаем цену…",
     rightNow: "сейчас",
     download: "Скачать",
     listsLabel: "Списки",

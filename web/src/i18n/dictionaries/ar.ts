@@ -58,6 +58,8 @@ const ar: Dict = {
     priceRises: "ارتفاعات الأسعار",
     outOfStock: "غير متوفر",
     sinceLastScrape: "منذ آخر جمع",
+    noChanges: "لا توجد تغييرات في الأسعار بعد",
+    readingPrice: "جارٍ قراءة السعر…",
     rightNow: "الآن",
     download: "تنزيل",
     listsLabel: "القوائم",

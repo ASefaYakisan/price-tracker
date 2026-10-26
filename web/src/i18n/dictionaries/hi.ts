@@ -58,6 +58,8 @@ const hi: Dict = {
     priceRises: "कीमत में बढ़ोतरी",
     outOfStock: "स्टॉक में नहीं",
     sinceLastScrape: "पिछले स्क्रेप से",
+    noChanges: "अभी तक कोई मूल्य परिवर्तन नहीं",
+    readingPrice: "कीमत पढ़ी जा रही है…",
     rightNow: "अभी",
     download: "डाउनलोड",
     listsLabel: "सूचियाँ",

@@ -58,6 +58,8 @@ const ja: Dict = {
     priceRises: "値上がり",
     outOfStock: "在庫切れ",
     sinceLastScrape: "前回の取得から",
+    noChanges: "価格の変動はまだありません",
+    readingPrice: "価格を読み取り中…",
     rightNow: "現在",
     download: "ダウンロード",
     listsLabel: "リスト",

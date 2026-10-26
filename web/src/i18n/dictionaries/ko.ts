@@ -58,6 +58,8 @@ const ko: Dict = {
     priceRises: "가격 상승",
     outOfStock: "품절",
     sinceLastScrape: "마지막 수집 이후",
+    noChanges: "아직 가격 변동이 없습니다",
+    readingPrice: "가격을 읽는 중…",
     rightNow: "현재",
     download: "다운로드",
     listsLabel: "목록",

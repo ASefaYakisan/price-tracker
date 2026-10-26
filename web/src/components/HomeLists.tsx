@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import type { ProductRow } from "@/lib/data";
-import { dateTime, percentChange } from "@/lib/format";
+import { dateTime } from "@/lib/format";
+import { changeCounts } from "@/lib/change-counts";
 import { defaultList, itemsInList, LISTS, type ListKey } from "@/lib/lists";
 import { useMyProducts } from "@/lib/my-products";
 import { useI18n } from "@/i18n/client";
@@ -26,9 +27,7 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
   const list = picked && tabs.includes(picked) ? picked : fallback;
   const items = itemsInList(products, list, mine);
 
-  const changes = items.map((p) => percentChange(p.price, p.previous_price)).filter((c): c is number => c != null);
-  const drops = changes.filter((c) => c < 0).length;
-  const rises = changes.filter((c) => c > 0).length;
+  const { drops, rises } = changeCounts(items);
   const outOfStock = items.filter((p) => p.in_stock === false).length;
   const lastRun = items
     .map((p) => p.scraped_at)
@@ -64,8 +63,16 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
           {lastRun ? fill(t.home.lastScrape, { date: dateTime(lastRun, lang) }) : t.home.noScrapes}
         </p>
         <dl className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-          <Figure label={t.home.priceDrops} value={drops} tone="text-ink" />
-          <Figure label={t.home.priceRises} value={rises} tone="text-ink" />
+          {drops + rises === 0 ? (
+            <div>
+              <dd className="text-muted">{t.home.noChanges}</dd>
+            </div>
+          ) : (
+            <>
+              <Figure label={t.home.priceDrops} value={drops} tone="text-ink" hint={t.home.sinceLastScrape} />
+              <Figure label={t.home.priceRises} value={rises} tone="text-ink" hint={t.home.sinceLastScrape} />
+            </>
+          )}
           <Figure label={t.home.outOfStock} value={outOfStock} tone={outOfStock ? "text-warn" : "text-ink"} />
           {items.length > 0 && (
             <div className="hidden items-baseline gap-2 sm:flex">
@@ -121,9 +128,9 @@ function EmptyList({ title, text, cta }: { title: string; text: string; cta: str
 }
 
 // One plain figure in the summary line: no cards, no icons.
-function Figure({ label, value, tone }: { label: string; value: number; tone: string }) {
+function Figure({ label, value, tone, hint }: { label: string; value: number; tone: string; hint?: string }) {
   return (
-    <div className="flex items-baseline gap-1.5">
+    <div className="flex items-baseline gap-1.5" title={hint}>
       <dt className="text-muted">{label}</dt>
       <dd className={`font-semibold tabular-nums ${tone}`}>{value}</dd>
     </div>

@@ -58,6 +58,8 @@ const zh: Dict = {
     priceRises: "涨价",
     outOfStock: "缺货",
     sinceLastScrape: "自上次抓取以来",
+    noChanges: "暂无价格变化",
+    readingPrice: "正在读取价格…",
     rightNow: "当前",
     download: "下载",
     listsLabel: "列表",

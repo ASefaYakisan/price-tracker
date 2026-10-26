@@ -58,6 +58,8 @@ const th: Dict = {
     priceRises: "ราคาเพิ่มขึ้น",
     outOfStock: "สินค้าหมด",
     sinceLastScrape: "นับจากการดึงข้อมูลครั้งก่อน",
+    noChanges: "ยังไม่มีการเปลี่ยนแปลงราคา",
+    readingPrice: "กำลังอ่านราคา…",
     rightNow: "ขณะนี้",
     download: "ดาวน์โหลด",
     listsLabel: "รายการ",

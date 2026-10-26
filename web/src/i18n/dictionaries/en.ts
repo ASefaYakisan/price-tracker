@@ -58,6 +58,8 @@ const en = {
     priceRises: "Price rises",
     outOfStock: "Out of stock",
     sinceLastScrape: "since the last scrape",
+    noChanges: "No price changes yet",
+    readingPrice: "Reading price…",
     rightNow: "right now",
     download: "Download",
     listsLabel: "Lists",
