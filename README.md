@@ -1,5 +1,7 @@
 # Price Tracker
 
+[![CI](https://github.com/ASefaYakisan/price-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/ASefaYakisan/price-tracker/actions/workflows/ci.yml)
+
 **Live demo:** https://price-tracker-shop.vercel.app
 
 A Node.js scraper collects prices from four sources on a schedule (an e-commerce catalogue, crypto, exchange rates and gold) and stores every run in Supabase (Postgres). A Next.js dashboard shows current prices, the change since the last run and stock status.
