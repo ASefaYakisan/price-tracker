@@ -4,6 +4,7 @@
 // web/src/lib/extract-price.ts is a TypeScript port of this file; keep them in step.
 // Both run the shared fixtures in test/fixtures/shops, so a drift shows up as a failing test.
 import * as cheerio from 'cheerio';
+import { cleanTitle, pickImage } from './clean-product.js';
 
 export function extractProduct(html, pageUrl) {
   return readPrice(html, pageUrl)?.product ?? null;
@@ -35,13 +36,17 @@ function buildProduct(found, { $, url }, layer) {
   const currency =
     found.currency ?? meta('product:price:currency') ?? meta('og:price:currency') ?? itempropValue($, 'priceCurrency') ?? null;
   const availability = found.availability ?? meta('product:availability') ?? $('[itemprop="availability"]').first().attr('href') ?? '';
-  const image = found.image ?? meta('og:image') ?? null;
+  // The layer's own picture first, then the page's general tags; logos and placeholders are skipped (clean-product.js).
+  const image = pickImage(
+    [found.image, meta('og:image'), meta('twitter:image'), $('link[rel="image_src"]').attr('href'), itempropValue($, 'image')],
+    url,
+  );
   const external_id = canonicalUrl(url.href);
   return {
     external_id,
-    title: (found.name ?? meta('og:title') ?? $('title').first().text()).trim().slice(0, 300) || external_id,
+    title: cleanTitle(found.name ?? meta('og:title') ?? $('title').first().text()).slice(0, 300) || external_id,
     url: url.href,
-    image_url: image ? new URL(image, url).href : null,
+    image_url: image,
     price: found.price,
     currency: currency ? String(currency).toUpperCase() : null,
     in_stock: !/outofstock|out of stock|soldout|discontinued|unavailable|stokta yok|tükendi/i.test(String(availability)),

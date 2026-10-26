@@ -1,0 +1,28 @@
+{
+  "titles": [
+    ["En ucuz razer viper v3 pro kablosuz oyuncu mouse fiyatı,1255022203", "Razer Viper V3 Pro Kablosuz Oyuncu Mouse"],
+    ["En ucuz Apple iPhone 16 128 GB Fiyatları", "Apple iPhone 16 128 GB"],
+    ["Samsung Galaxy S25 Ultra 256 GB - Akakçe", "Samsung Galaxy S25 Ultra 256 GB"],
+    ["Samsung Galaxy S25 Ultra 256 GB | Trendyol", "Samsung Galaxy S25 Ultra 256 GB"],
+    ["Hepsiburada.com - Logitech MX Master 3S Mouse", "Logitech MX Master 3S Mouse"],
+    ["Sony WH-1000XM5 Kulaklık Fiyatı, Özellikleri ve Yorumları", "Sony WH-1000XM5 Kulaklık"],
+    ["Sony WH-1000XM5 Kulaklık - Fiyatı ve Özellikleri | Vatan Bilgisayar", "Sony WH-1000XM5 Kulaklık"],
+    ["LOGITECH G502 HERO OYUNCU MOUSE", "Logitech G502 Hero Oyuncu Mouse"],
+    ["razer viper v3 pro", "Razer Viper V3 Pro"],
+    ["  Çelik   Çaydanlık 2 L ", "Çelik Çaydanlık 2 L"],
+    ["Rtx 5070", "Rtx 5070"],
+    ["Wireless Headphones", "Wireless Headphones"],
+    ["Amazon.com: Kindle Paperwhite (16 GB)", "Kindle Paperwhite (16 GB)"],
+    ["Sony PlayStation 5 Slim: Amazon.com.tr", "Sony PlayStation 5 Slim"],
+    ["Bluetooth Kulaklık", "Bluetooth Kulaklık"],
+    ["IŞIK GÜNEŞ LAMBASI 20W", "Işık Güneş Lambası 20W"]
+  ],
+  "images": [
+    { "candidates": ["/static/img/logo.png", "https://cdn.example/p/mouse-1.jpg"], "base": "https://shop.example/p/1", "expect": "https://cdn.example/p/mouse-1.jpg" },
+    { "candidates": ["https://shop.example/assets/site-logo.svg"], "base": "https://shop.example/p/1", "expect": null },
+    { "candidates": ["//cdn.example/img/product.jpg"], "base": "https://shop.example/p/1", "expect": "https://cdn.example/img/product.jpg" },
+    { "candidates": ["https://shop.example/images/placeholder.png", "/media/no-image.jpg", "/favicon.ico"], "base": "https://shop.example/p/1", "expect": null },
+    { "candidates": [null, "", "data:image/png;base64,AAAA", "/u/viper.webp"], "base": "https://shop.example/p/1", "expect": "https://shop.example/u/viper.webp" },
+    { "candidates": ["https://cdn.example/products/blog-headphones-1.jpg"], "base": "https://shop.example/", "expect": "https://cdn.example/products/blog-headphones-1.jpg" }
+  ]
+}

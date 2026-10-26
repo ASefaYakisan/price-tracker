@@ -1,6 +1,7 @@
 // Second try for links a plain request could not read: open the page in a real Chromium (Playwright),
 // let its scripts run, then read the price from the rendered page.
 // Used by the pending-links run and the daily refresh; the site itself never launches a browser.
+import { cleanTitle, pickImage } from './clean-product.js';
 import { canonicalUrl, extractProduct, parseAmount } from './extract-price.js';
 
 const PAGE_TIMEOUT_MS = 30_000;
@@ -113,9 +114,9 @@ export function productFromDom({ price, title, image }, url) {
   if (amount == null) return null;
   return {
     external_id: canonicalUrl(url),
-    title: (title || url).slice(0, 300),
+    title: cleanTitle(title || '').slice(0, 300) || url.slice(0, 300),
     url,
-    image_url: image ? new URL(image, url).href : null,
+    image_url: pickImage([image], url),
     price: amount,
     currency: currencyFromText(price),
     in_stock: true,

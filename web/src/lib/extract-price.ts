@@ -4,6 +4,7 @@
 // Port of scraper/src/extract-price.js (the scraper re-checks these links daily); keep them in step.
 // Both run the shared fixtures in scraper/test/fixtures/shops, so a drift shows up as a failing test.
 import * as cheerio from "cheerio";
+import { cleanTitle, pickImage } from "./clean-product.ts";
 
 export type ExtractedProduct = {
   external_id: string;
@@ -63,13 +64,16 @@ function buildProduct(found: Found, { $, url }: Ctx, layer: Layer): ExtractedPro
   const currency =
     found.currency ?? meta("product:price:currency") ?? meta("og:price:currency") ?? itempropValue($, "priceCurrency") ?? null;
   const availability = found.availability ?? meta("product:availability") ?? $('[itemprop="availability"]').first().attr("href") ?? "";
-  const image = found.image ?? meta("og:image") ?? null;
+  const image = pickImage(
+    [found.image, meta("og:image"), meta("twitter:image"), $('link[rel="image_src"]').attr("href"), itempropValue($, "image")],
+    url,
+  );
   const external_id = canonicalUrl(url.href);
   return {
     external_id,
-    title: (found.name ?? meta("og:title") ?? $("title").first().text()).trim().slice(0, 300) || external_id,
+    title: cleanTitle(found.name ?? meta("og:title") ?? $("title").first().text()).slice(0, 300) || external_id,
     url: url.href,
-    image_url: image ? new URL(image, url).href : null,
+    image_url: image,
     price: found.price,
     currency: currency ? String(currency).toUpperCase() : null,
     in_stock: !/outofstock|out of stock|soldout|discontinued|unavailable|stokta yok|tükendi/i.test(String(availability)),
