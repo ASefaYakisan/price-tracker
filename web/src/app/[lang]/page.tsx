@@ -1,7 +1,20 @@
+import type { Metadata } from "next";
+import { LOCALE_CODES } from "@/i18n/config";
 import { getProducts, getSparklines, isDemo } from "@/lib/data";
 import { HomeLists } from "@/components/HomeLists";
 import { TrackForm } from "@/components/TrackForm";
 import { getDictionary, resolveLang } from "@/i18n/server";
+
+// Home alternates must not be inherited by product and account pages.
+export async function generateMetadata({ params }: PageProps<"/[lang]">): Promise<Metadata> {
+  const lang = await resolveLang(params);
+  return {
+    alternates: {
+      canonical: `/${lang}`,
+      languages: Object.fromEntries(LOCALE_CODES.map((l) => [l, `/${l}`])),
+    },
+  };
+}
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const lang = await resolveLang(params);

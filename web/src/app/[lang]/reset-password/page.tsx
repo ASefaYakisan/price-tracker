@@ -4,7 +4,7 @@ import { getDictionary, resolveLang } from "@/i18n/server";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/reset-password">): Promise<Metadata> {
   const t = await getDictionary(await resolveLang(params));
-  return { title: `${t.meta.newPassword} · ${t.meta.title}` };
+  return { robots: { index: false }, title: `${t.meta.newPassword} · ${t.meta.title}` };
 }
 
 export default function ResetPasswordPage() {
