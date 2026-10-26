@@ -124,6 +124,7 @@ const ar: Dict = {
     history: "سجل الأسعار",
     chartLabel: "سجل الأسعار من {from} إلى {to}، بين {min} و{max}",
     notEnough: "لا يوجد سجل كافٍ بعد. يظهر الرسم البياني بعد عمليتي جمع.",
+    trackingStarted: "بدأ التتبع في {date}. يمتلئ الرسم البياني مع كل فحص.",
     showTable: "عرض البيانات كجدول",
     date: "التاريخ",
     price: "السعر",

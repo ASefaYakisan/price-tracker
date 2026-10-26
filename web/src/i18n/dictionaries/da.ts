@@ -124,6 +124,7 @@ const da: Dict = {
     history: "Prishistorik",
     chartLabel: "Prishistorik fra {from} til {to}, mellem {min} og {max}",
     notEnough: "Ikke nok historik endnu. Grafen vises efter to hentninger.",
+    trackingStarted: "Overvågningen startede {date}. Grafen udfyldes ved hver kontrol.",
     showTable: "Vis data som tabel",
     date: "Dato",
     price: "Pris",

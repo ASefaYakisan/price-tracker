@@ -124,6 +124,7 @@ const en = {
     history: "Price history",
     chartLabel: "Price history from {from} to {to}, between {min} and {max}",
     notEnough: "Not enough history yet. The chart appears after two scrapes.",
+    trackingStarted: "Tracking started {date}. The chart fills in with every check.",
     showTable: "Show data as table",
     date: "Date",
     price: "Price",
