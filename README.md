@@ -65,6 +65,8 @@ In the table, **Secret** and **Variable** mean GitHub repository Settings → Se
 | `TELEGRAM_MIN_DROP` | scraper | Optional | Local root `.env` / process environment | Minimum percentage drop; `2` when unset. Current workflows do not forward this setting, so scheduled runs use 2%. Do not set it to an empty string (that becomes zero). |
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | scraper | For Sheets | Actions Secret / root `.env` | Service account JSON; missing credentials or sheet ID skips sync. |
 | `GOOGLE_SHEET_ID` | scraper | For Sheets | Actions Secret / root `.env` | Target spreadsheet ID; no default. |
+| `GITHUB_DISPATCH_TOKEN` | web server | Optional | Vercel / `web/.env.local` | Fine-grained GitHub token (this repo, Actions read/write). With `GITHUB_DISPATCH_REPO` it starts the Pending links workflow as soon as a link is saved unread; without it the 15-minute schedule is the only trigger. |
+| `GITHUB_DISPATCH_REPO` | web server | Optional | Vercel / `web/.env.local` | `owner/repo` that holds the workflow; `GITHUB_DISPATCH_REF` picks the branch (`main`). |
 | `SCRAPER_API_KEY` | scraper | Optional | Actions Secret / root `.env` | Enables the paid fallback; see [Blocked shops](#blocked-shops-optional-scraping-api). Disabled without a key. |
 | `UNBLOCK_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts sent directly to the paid fallback; empty by default. |
 | `UNBLOCK_MONTHLY_LIMIT` | scraper | Optional | Actions Variable / root `.env` | Monthly credit ceiling; `900`; `0` disables paid reads. |

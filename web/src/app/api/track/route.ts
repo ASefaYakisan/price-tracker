@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { revalidateTag } from "next/cache";
 import { currentUser } from "@/lib/supabase/server";
+import { dispatchPendingRun } from "@/lib/dispatch-pending";
 import { isDemo } from "@/lib/data";
 import { canonicalUrl, extractProduct } from "@/lib/extract-price";
 import { findUrl } from "@/lib/find-url";
@@ -122,6 +123,8 @@ async function savePending(db: SupabaseClient, url: URL, userId: string, readErr
   await db.from("products").update({ added_by: userId }).eq("id", row.id).is("added_by", null);
   await addToList(db, userId, row.id);
   revalidateTag("products", { expire: 0 });
+  // Start the reader on GitHub now; if that fails the 15-minute schedule still picks the link up.
+  await dispatchPendingRun();
   return Response.json({ ok: true, id: row.id, pending: true });
 }
 
