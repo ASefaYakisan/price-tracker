@@ -12,7 +12,9 @@ export function dueAlerts(alerts, latestById) {
     );
 }
 
-export function alertEmail({ id, manage_token, product, target_price }, siteUrl) {
+// lang: the alert's saved site language (alert.lang). English is the only text so far; the languages are added with
+// the alert-i18n texts, and an unknown language falls back to English.
+export function alertEmail({ id, manage_token, product, target_price }, siteUrl, lang = 'en') {
   const fmt = (v) =>
     new Intl.NumberFormat('en-GB', { style: 'currency', currency: product.currency ?? 'USD', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 8 }).format(v);
   const link = siteUrl ? `${siteUrl.replace(/\/$/, '')}/products/${product.id}` : product.url;
@@ -52,7 +54,10 @@ async function sendEmail(to, { subject, text, headers }) {
 }
 
 export async function processAlerts(db, { siteUrl = process.env.SITE_URL } = {}) {
-  const { data: alerts, error } = await db.from('alerts').select('id, product_id, email, target_price, manage_token').is('last_sent_at', null);
+  const columns = 'id, product_id, email, target_price, manage_token';
+  let { data: alerts, error } = await db.from('alerts').select(`${columns}, lang`).is('last_sent_at', null);
+  // Migration 0012 (lang column) not applied yet: keep sending, in English.
+  if (error) ({ data: alerts, error } = await db.from('alerts').select(columns).is('last_sent_at', null));
   if (error) throw error;
   if (!alerts.length) return { checked: 0, sent: 0 };
 
@@ -66,7 +71,7 @@ export async function processAlerts(db, { siteUrl = process.env.SITE_URL } = {})
   let sent = 0;
   for (const alert of dueAlerts(alerts, new Map(latest.map((p) => [p.id, p])))) {
     try {
-      if (!(await sendEmail(alert.email, alertEmail(alert, siteUrl)))) continue;
+      if (!(await sendEmail(alert.email, alertEmail(alert, siteUrl, alert.lang ?? 'en')))) continue;
       const { error: markError } = await db.from('alerts').update({ last_sent_at: new Date().toISOString() }).eq('id', alert.id);
       if (markError) throw markError;
       sent++;
