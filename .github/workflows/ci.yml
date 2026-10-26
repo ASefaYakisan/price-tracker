@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      scraper: ${{ steps.paths.outputs.scraper }}
+      web: ${{ steps.paths.outputs.web }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Detect affected projects
+        id: paths
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ "$BASE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            BASE_SHA=$(git hash-object -t tree /dev/null)
+          fi
+          files=$(git diff --name-only "$BASE_SHA" HEAD)
+          for project in scraper web; do
+            pattern="^($project/|\\.github/workflows/ci\\.yml$)"
+            if [[ "$project" == "web" ]]; then
+              pattern='^(web/|scraper/test/fixtures/shops/|\.github/workflows/ci\.yml$)'
+            fi
+            if grep -qE "$pattern" <<< "$files"; then
+              echo "$project=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "$project=false" >> "$GITHUB_OUTPUT"
+            fi
+          done
+
+  scraper:
+    needs: changes
+    if: needs.changes.outputs.scraper == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: scraper/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: web
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+      - run: npm run build
