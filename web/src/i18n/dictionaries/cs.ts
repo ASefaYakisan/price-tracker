@@ -176,6 +176,11 @@ const cs: Dict = {
     savedBrowser: "Uloženo v tomto prohlížeči.",
     oneEmail: "Jakmile cena dosáhne cíle, dostanete jeden e-mail.",
   },
+  removeAlert: {
+    title: "Odstranit toto upozornění",
+    done: "Upozornění bylo odstraněno nebo již neexistovalo.",
+    invalid: "Tento odkaz je neplatný. Otevřete celý odkaz z e-mailu.",
+  },
   alerts: {
     title: "Upozornění na cenu",
     emptyTitle: "Zatím žádná upozornění",

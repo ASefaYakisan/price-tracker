@@ -176,6 +176,11 @@ const en = {
     savedBrowser: "Saved in this browser.",
     oneEmail: "You get one email when the price reaches the target.",
   },
+  removeAlert: {
+    title: "Remove this alert",
+    done: "This alert has been removed or was already absent.",
+    invalid: "This alert link is invalid. Open the full link from your email.",
+  },
   alerts: {
     title: "Price alerts",
     emptyTitle: "No alerts yet",

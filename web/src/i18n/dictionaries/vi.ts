@@ -176,6 +176,11 @@ const vi: Dict = {
     savedBrowser: "Đã lưu trong trình duyệt này.",
     oneEmail: "Bạn sẽ nhận một email khi giá đạt mức mục tiêu.",
   },
+  removeAlert: {
+    title: "Xóa thông báo này",
+    done: "Thông báo này đã được xóa hoặc không còn tồn tại.",
+    invalid: "Liên kết thông báo không hợp lệ. Hãy mở liên kết đầy đủ trong email của bạn.",
+  },
   alerts: {
     title: "Cảnh báo giá",
     emptyTitle: "Chưa có cảnh báo",

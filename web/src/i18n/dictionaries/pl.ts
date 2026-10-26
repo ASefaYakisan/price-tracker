@@ -176,6 +176,11 @@ const pl: Dict = {
     savedBrowser: "Zapisano w tej przeglądarce.",
     oneEmail: "Otrzymasz jeden e-mail, gdy cena osiągnie cel.",
   },
+  removeAlert: {
+    title: "Usuń ten alert",
+    done: "Ten alert został usunięty lub już nie istniał.",
+    invalid: "Ten link jest nieprawidłowy. Otwórz pełny link z wiadomości e-mail.",
+  },
   alerts: {
     title: "Alerty cenowe",
     emptyTitle: "Brak alertów",

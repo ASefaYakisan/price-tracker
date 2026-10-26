@@ -176,6 +176,11 @@ const id: Dict = {
     savedBrowser: "Disimpan di browser ini.",
     oneEmail: "Anda menerima satu email saat harga mencapai target.",
   },
+  removeAlert: {
+    title: "Hapus peringatan ini",
+    done: "Peringatan ini telah dihapus atau sudah tidak ada.",
+    invalid: "Tautan peringatan ini tidak valid. Buka tautan lengkap dari email Anda.",
+  },
   alerts: {
     title: "Peringatan harga",
     emptyTitle: "Belum ada peringatan",

@@ -176,6 +176,11 @@ const es: Dict = {
     savedBrowser: "Guardada en este navegador.",
     oneEmail: "Recibes un solo correo cuando el precio llega al objetivo.",
   },
+  removeAlert: {
+    title: "Eliminar esta alerta",
+    done: "Esta alerta se ha eliminado o ya no existía.",
+    invalid: "Este enlace no es válido. Abre el enlace completo de tu correo.",
+  },
   alerts: {
     title: "Alertas de precio",
     emptyTitle: "Aún no hay alertas",

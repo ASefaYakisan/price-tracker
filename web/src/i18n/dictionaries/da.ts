@@ -176,6 +176,11 @@ const da: Dict = {
     savedBrowser: "Gemt i denne browser.",
     oneEmail: "Du får én e-mail, når prisen når målet.",
   },
+  removeAlert: {
+    title: "Fjern denne alarm",
+    done: "Alarmen er fjernet eller fandtes ikke længere.",
+    invalid: "Linket er ugyldigt. Åbn hele linket fra din e-mail.",
+  },
   alerts: {
     title: "Prisalarmer",
     emptyTitle: "Ingen alarmer endnu",

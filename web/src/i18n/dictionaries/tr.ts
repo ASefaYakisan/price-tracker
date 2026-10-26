@@ -176,6 +176,11 @@ const tr: Dict = {
     savedBrowser: "Bu tarayıcıya kaydedildi.",
     oneEmail: "Fiyat hedefe ulaştığında tek bir e-posta alırsın.",
   },
+  removeAlert: {
+    title: "Bu alarmı kaldır",
+    done: "Bu alarm kaldırıldı veya zaten mevcut değildi.",
+    invalid: "Bu alarm bağlantısı geçersiz. E-postanızdaki bağlantının tamamını açın.",
+  },
   alerts: {
     title: "Fiyat alarmları",
     emptyTitle: "Henüz alarm yok",

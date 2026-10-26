@@ -176,6 +176,11 @@ const ja: Dict = {
     savedBrowser: "このブラウザに保存されています。",
     oneEmail: "価格が目標に達すると、メールが 1 通届きます。",
   },
+  removeAlert: {
+    title: "この通知を削除",
+    done: "この通知は削除されたか、すでに存在していません。",
+    invalid: "この通知リンクは無効です。メール内の完全なリンクを開いてください。",
+  },
   alerts: {
     title: "価格アラート",
     emptyTitle: "アラートはまだありません",
