@@ -176,6 +176,11 @@ const zh: Dict = {
     savedBrowser: "已保存在此浏览器中。",
     oneEmail: "价格达到目标时，你会收到一封邮件。",
   },
+  removeAlert: {
+    title: "移除此提醒",
+    done: "此提醒已移除或已不存在。",
+    invalid: "此提醒链接无效。请打开邮件中的完整链接。",
+  },
   alerts: {
     title: "价格提醒",
     emptyTitle: "暂无提醒",

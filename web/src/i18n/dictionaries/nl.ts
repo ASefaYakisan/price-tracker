@@ -176,6 +176,11 @@ const nl: Dict = {
     savedBrowser: "Opgeslagen in deze browser.",
     oneEmail: "Je krijgt één e-mail zodra de prijs het doel bereikt.",
   },
+  removeAlert: {
+    title: "Verwijder deze melding",
+    done: "Deze melding is verwijderd of bestond al niet meer.",
+    invalid: "Deze link is ongeldig. Open de volledige link uit je e-mail.",
+  },
   alerts: {
     title: "Prijsalerts",
     emptyTitle: "Nog geen alerts",

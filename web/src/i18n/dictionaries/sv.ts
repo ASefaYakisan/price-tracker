@@ -176,6 +176,11 @@ const sv: Dict = {
     savedBrowser: "Sparad i den här webbläsaren.",
     oneEmail: "Du får ett mejl när priset når målet.",
   },
+  removeAlert: {
+    title: "Ta bort denna avisering",
+    done: "Aviseringen har tagits bort eller fanns inte längre.",
+    invalid: "Länken är ogiltig. Öppna hela länken i ditt mejl.",
+  },
   alerts: {
     title: "Prisbevakningar",
     emptyTitle: "Inga bevakningar än",

@@ -176,6 +176,11 @@ const de: Dict = {
     savedBrowser: "In diesem Browser gespeichert.",
     oneEmail: "Du erhältst eine E-Mail, wenn der Preis das Ziel erreicht.",
   },
+  removeAlert: {
+    title: "Diesen Alarm entfernen",
+    done: "Dieser Alarm wurde entfernt oder war bereits gelöscht.",
+    invalid: "Dieser Alarm-Link ist ungültig. Öffne den vollständigen Link aus deiner E-Mail.",
+  },
   alerts: {
     title: "Preisalarme",
     emptyTitle: "Noch keine Alarme",

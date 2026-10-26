@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { alertEmail, dueAlerts } from '../src/alerts.js';
+import { alertEmail, dueAlerts, processAlerts } from '../src/alerts.js';
 
 const product = { id: 7, title: 'Bitcoin (BTC)', url: 'https://www.coingecko.com/en/coins/bitcoin', currency: 'USD', price: '61000.5' };
 
@@ -31,4 +31,59 @@ test('alertEmail links to the price history page when the site URL is known', ()
   assert.match(mail.subject, /Bitcoin \(BTC\) is now \$61,000\.5/);
   assert.match(mail.text, /https:\/\/example\.app\/products\/7/);
   assert.match(mail.text, /your target: \$62,000/);
+});
+
+
+test('removal link and unsubscribe header carry the alert token, not the product id', () => {
+  const mail = alertEmail({ id: 42, manage_token: 'test-token&encoded', product, target_price: 62000 }, 'https://example.app/');
+  const link = new URL(mail.headers['List-Unsubscribe'].slice(1, -1));
+  assert.equal(link.pathname, '/alerts/remove');
+  assert.equal(link.searchParams.get('id'), '42');
+  assert.equal(link.searchParams.get('token'), 'test-token&encoded');
+  assert.ok(mail.text.includes(`Remove this alert: ${link.href}`));
+  assert.ok(mail.text.includes('Set or change a target: https://example.app/products/7#alert'));
+});
+
+test('without SITE_URL, no management links or unsubscribe header are emitted', () => {
+  const mail = alertEmail({ id: 42, manage_token: 'test-token', product, target_price: 62000 }, '');
+  assert.equal(mail.headers, undefined);
+  assert.ok(mail.text.includes(product.url));
+  assert.doesNotMatch(mail.text, /Remove this alert|Set or change a target|test-token/);
+});
+
+test('legacy alerts without a token do not get a broken removal link', () => {
+  const mail = alertEmail({ id: 42, product, target_price: 62000 }, 'https://example.app');
+  assert.equal(mail.headers, undefined);
+  assert.doesNotMatch(mail.text, /Remove this alert/);
+});
+
+test('processAlerts selects manage_token and passes List-Unsubscribe to Resend', async (t) => {
+  const oldKey = process.env.RESEND_API_KEY;
+  process.env.RESEND_API_KEY = 'test-only';
+  t.after(() => {
+    if (oldKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = oldKey;
+  });
+  let payload;
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    assert.equal(url, 'https://api.resend.com/emails');
+    payload = JSON.parse(options.body);
+    return new Response('{}', { status: 200 });
+  });
+  let marked = false;
+  const db = { from(table) {
+    if (table === 'alerts') return {
+      select(fields) {
+        assert.ok(fields.split(', ').includes('manage_token'));
+        return { is: async () => ({ data: [{ id: 42, product_id: 7, email: 'test@example.com', target_price: 62000, manage_token: 'test-token' }] }) };
+      },
+      update() { return { eq: async () => { marked = true; return {}; } }; },
+    };
+    assert.equal(table, 'product_latest');
+    return { select: () => ({ in: async () => ({ data: [product] }) }) };
+  } };
+  assert.deepEqual(await processAlerts(db, { siteUrl: 'https://example.app' }), { checked: 1, sent: 1 });
+  assert.equal(payload.headers['List-Unsubscribe'], '<https://example.app/alerts/remove?id=42&token=test-token>');
+  assert.equal(payload.to, 'test@example.com');
+  assert.equal(marked, true);
 });

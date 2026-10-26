@@ -176,6 +176,11 @@ const ro: Dict = {
     savedBrowser: "Salvată în acest browser.",
     oneEmail: "Primești un singur e-mail când prețul atinge ținta.",
   },
+  removeAlert: {
+    title: "Șterge această alertă",
+    done: "Această alertă a fost ștearsă sau nu mai exista.",
+    invalid: "Acest link nu este valid. Deschide linkul complet din e-mail.",
+  },
   alerts: {
     title: "Alerte de preț",
     emptyTitle: "Nicio alertă încă",

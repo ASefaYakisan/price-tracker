@@ -176,6 +176,11 @@ const ko: Dict = {
     savedBrowser: "이 브라우저에 저장되었습니다.",
     oneEmail: "가격이 목표에 도달하면 이메일을 한 번 받습니다.",
   },
+  removeAlert: {
+    title: "이 알림 삭제",
+    done: "이 알림이 삭제되었거나 이미 존재하지 않습니다.",
+    invalid: "알림 링크가 올바르지 않습니다. 이메일의 전체 링크를 열어 주세요.",
+  },
   alerts: {
     title: "가격 알림",
     emptyTitle: "아직 알림이 없습니다",

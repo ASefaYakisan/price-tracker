@@ -12,11 +12,15 @@ export function dueAlerts(alerts, latestById) {
     );
 }
 
-export function alertEmail({ product, target_price }, siteUrl) {
+export function alertEmail({ id, manage_token, product, target_price }, siteUrl) {
   const fmt = (v) =>
     new Intl.NumberFormat('en-GB', { style: 'currency', currency: product.currency ?? 'USD', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 8 }).format(v);
   const link = siteUrl ? `${siteUrl.replace(/\/$/, '')}/products/${product.id}` : product.url;
+  const removeLink = siteUrl && id && manage_token
+    ? `${siteUrl.replace(/\/$/, '')}/alerts/remove?${new URLSearchParams({ id: String(id), token: manage_token })}`
+    : null;
   return {
+    ...(removeLink ? { headers: { 'List-Unsubscribe': `<${removeLink}>` } } : {}),
     subject: `Price alert: ${product.title} is now ${fmt(product.price)}`,
     text: [
       `${product.title} dropped to ${fmt(product.price)} (your target: ${fmt(target_price)}).`,
@@ -25,12 +29,14 @@ export function alertEmail({ product, target_price }, siteUrl) {
       `Source: ${product.url}`,
       '',
       'You get this email once per alert. Create a new alert on the product page to track it again.',
+      ...(siteUrl ? [`Set or change a target: ${link}#alert`] : []),
+      ...(removeLink ? [`Remove this alert: ${removeLink}`] : []),
     ].join('\n'),
   };
 }
 
 // Resend's HTTP API; without a key we only log, so local runs never send mail.
-async function sendEmail(to, { subject, text }) {
+async function sendEmail(to, { subject, text, headers }) {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
     console.log(`  [dry run] would email ${to}: ${subject}`);
@@ -39,14 +45,14 @@ async function sendEmail(to, { subject, text }) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ from: process.env.ALERT_FROM || 'Price Tracker <onboarding@resend.dev>', to, subject, text }),
+    body: JSON.stringify({ from: process.env.ALERT_FROM || 'Price Tracker <onboarding@resend.dev>', to, subject, text, ...(headers ? { headers } : {}) }),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
   return true;
 }
 
 export async function processAlerts(db, { siteUrl = process.env.SITE_URL } = {}) {
-  const { data: alerts, error } = await db.from('alerts').select('id, product_id, email, target_price').is('last_sent_at', null);
+  const { data: alerts, error } = await db.from('alerts').select('id, product_id, email, target_price, manage_token').is('last_sent_at', null);
   if (error) throw error;
   if (!alerts.length) return { checked: 0, sent: 0 };
 
