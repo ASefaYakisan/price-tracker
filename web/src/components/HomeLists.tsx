@@ -12,20 +12,18 @@ import { ProductTable } from "@/components/ProductTable";
 
 const TAB_LABEL: Record<ListKey, (t: Dict) => string> = {
   mine: (t) => t.home.tabMine,
-  explore: (t) => t.home.tabExplore,
   markets: (t) => t.home.tabMarkets,
   sample: (t) => t.home.tabSample,
 };
 
-// The lists under the link box: your own items, what everyone added, market feeds and the sample books.
+// The lists under the link box: your own items, market feeds and the sample books.
 export function HomeLists({ products, sparklines }: { products: ProductRow[]; sparklines: Record<number, number[]> }) {
   const { t, lang, fill } = useI18n();
-  const { user, ids: mine } = useMyProducts();
+  const { user, ids: mine, items: mineItems, sparklines: mineSparklines } = useMyProducts();
   const [picked, setPicked] = useState<ListKey | null>(null);
   const tabs = LISTS.filter((l) => l !== "mine" || user);
-  const fallback = defaultList(Boolean(user), itemsInList(products, "explore", null).length);
-  const list = picked && tabs.includes(picked) ? picked : fallback;
-  const items = itemsInList(products, list, mine);
+  const list = picked && tabs.includes(picked) ? picked : defaultList(Boolean(user));
+  const items = itemsInList(products, list, mine ? mineItems : null);
 
   const { drops, rises } = changeCounts(items);
   const outOfStock = items.filter((p) => p.in_stock === false).length;
@@ -96,10 +94,8 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
         <div className="h-40 animate-pulse rounded-lg bg-card" />
       ) : list === "mine" && items.length === 0 ? (
         <EmptyList title={t.home.mineEmptyTitle} text={t.home.mineEmptyText} cta={t.home.mineEmptyCta} />
-      ) : list === "explore" && items.length === 0 ? (
-        <EmptyList title={t.home.exploreEmptyTitle} text={t.home.exploreEmptyText} cta={t.home.mineEmptyCta} />
       ) : (
-        <ProductTable key={list} products={items} sparklines={sparklines} />
+        <ProductTable key={list} products={items} sparklines={list === "mine" ? mineSparklines : sparklines} />
       )}
     </>
   );

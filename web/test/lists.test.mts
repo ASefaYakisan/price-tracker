@@ -12,24 +12,22 @@ const items = [
 ];
 const ids = (list: { id: number }[]) => list.map((p) => p.id);
 
-test("each source belongs to one shared list; sample books stay out of the others", () => {
-  assert.equal(sharedListOf("custom"), "explore");
+test("only built-in sources are shared; pasted links are never in a shared list", () => {
+  assert.equal(sharedListOf("custom"), null);
   assert.equal(sharedListOf("coingecko"), "markets");
   assert.equal(sharedListOf("books-toscrape"), "sample");
-  assert.deepEqual(ids(itemsInList(items, "explore", null)), [1, 2]);
   assert.deepEqual(ids(itemsInList(items, "markets", null)), [3, 4, 5]);
   assert.deepEqual(ids(itemsInList(items, "sample", null)), [6]);
 });
 
-test("my list shows only my items, from any source", () => {
-  assert.deepEqual(ids(itemsInList(items, "mine", new Set([2, 3]))), [2, 3]);
+test("my list is exactly the items passed in, empty while unknown", () => {
+  assert.deepEqual(ids(itemsInList(items, "mine", [items[1], items[2]])), [2, 3]);
   assert.deepEqual(ids(itemsInList(items, "mine", null)), []);
 });
 
-test("signed-in visitors start on their list; others on links, or markets while there are none", () => {
-  assert.equal(defaultList(true, 0), "mine");
-  assert.equal(defaultList(false, 4), "explore");
-  assert.equal(defaultList(false, 0), "markets");
+test("signed-in visitors start on their list; others on the markets", () => {
+  assert.equal(defaultList(true), "mine");
+  assert.equal(defaultList(false), "markets");
 });
 
 test("a link is dropped only when nobody follows it and it has no alerts", () => {
