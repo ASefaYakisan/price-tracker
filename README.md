@@ -38,18 +38,43 @@ npm test   # runs the shared shop fixtures in scraper/test/fixtures/shops agains
 
 ## Daily schedule
 
-`.github/workflows/scrape.yml` runs the scraper every day at 06:00 UTC and can be started by hand from the Actions tab. It needs one repository secret, `SUPABASE_SERVICE_ROLE_KEY`, and these repository variables (Settings → Secrets and variables → Actions → **Variables**):
+`.github/workflows/scrape.yml` runs every day at 06:00 UTC and can also be started from Actions. Set the repository secrets and variables listed in [Configuration](#configuration).
 
-| Variable | Example | Used for |
-| --- | --- | --- |
-| `SUPABASE_URL` | `https://<project-ref>.supabase.co` | The database the scraper and the Pending links job write to (required) |
-| `SITE_URL` | `https://your-site.vercel.app` | Links in alert emails and the Telegram digest; without it they point to the shop page |
-| `ALERT_FROM` | `Price Tracker <alerts@your-domain>` | Sender of alert emails, a Resend-verified address; defaults to Resend's test sender |
-| `SCRAPER_USER_AGENT` | `PriceTrackerBot/0.1 (+https://your-site)` | Optional; the bot name shops see, defaults to `PriceTrackerBot/0.1` |
+## Configuration
+
+For local scraper runs, copy the root `.env.example` to `.env` and load it explicitly, for example `cd scraper && node --env-file=../.env src/index.js all 3`. The scraper does not automatically load dotenv files. For the dashboard, copy `web/.env.example` to `web/.env.local`; Next.js loads it automatically. Never commit populated local files or put server secrets in `NEXT_PUBLIC_*` variables.
+
+In the table, **Secret** and **Variable** mean GitHub repository Settings → Secrets and variables → Actions. Web values go in Vercel project environment settings (or `web/.env.local` locally); scraper values can also be supplied through the local root `.env`.
+
+| Variable | Consumer | Required? | Where to set | Purpose / default |
+| --- | --- | --- | --- | --- |
+| `SUPABASE_URL` | scraper | For database storage | Actions Variable / root `.env` | Project API URL; without both database values the collector writes local JSON. |
+| `SUPABASE_SERVICE_ROLE_KEY` | scraper, web server | For database writes and server alert operations | Actions Secret / root `.env`; Vercel / `web/.env.local` | Server-only database credential; no default. Never expose to the browser. |
+| `NEXT_PUBLIC_SUPABASE_URL` | web | For live data and accounts | Vercel / `web/.env.local` | Project API URL; missing URL or public key enables demo data. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | web | For live data and accounts | Vercel / `web/.env.local` | Public anon/publishable key, subject to database RLS; no default. |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | web | Optional | Vercel / `web/.env.local` | Public Cloudflare widget key; omitted means no widget. Configure its matching secret in Supabase Auth CAPTCHA settings, not in this repo. |
+| `SCRAPER_USER_AGENT` | scraper | Optional | Actions Variable / root `.env` | Request user agent; `PriceTrackerBot/0.1`. |
+| `COINGECKO_API_KEY` | scraper | Optional | Actions Secret / root `.env` | CoinGecko demo API key; omitted uses unauthenticated requests. |
+| `RESEND_API_KEY` | scraper | For email delivery | Actions Secret / root `.env` | Enables alert emails; otherwise due alerts are only logged. |
+| `ALERT_FROM` | scraper | Optional | Actions Variable / root `.env` | Verified email sender; `Price Tracker <onboarding@resend.dev>`. |
+| `SITE_URL` | scraper | Optional | Actions Variable / root `.env` | Dashboard origin for email/digest links; otherwise links use the shop URL. |
+| `TELEGRAM_BOT_TOKEN` | scraper | For Telegram | Actions Secret / root `.env` | Bot credential; missing token or chat ID skips Telegram. |
+| `TELEGRAM_CHAT_ID` | scraper | For Telegram | Actions Secret / root `.env` | Destination chat; no default. |
+| `TELEGRAM_MIN_DROP` | scraper | Optional | Local root `.env` / process environment | Minimum percentage drop; `2` when unset. Current workflows do not forward this setting, so scheduled runs use 2%. Do not set it to an empty string (that becomes zero). |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | scraper | For Sheets | Actions Secret / root `.env` | Service account JSON; missing credentials or sheet ID skips sync. |
+| `GOOGLE_SHEET_ID` | scraper | For Sheets | Actions Secret / root `.env` | Target spreadsheet ID; no default. |
+| `SCRAPER_API_KEY` | scraper | Optional | Actions Secret / root `.env` | Enables the paid fallback; see [Blocked shops](#blocked-shops-optional-scraping-api). Disabled without a key. |
+| `UNBLOCK_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts sent directly to the paid fallback; empty by default. |
+| `UNBLOCK_MONTHLY_LIMIT` | scraper | Optional | Actions Variable / root `.env` | Monthly credit ceiling; `900`; `0` disables paid reads. |
+| `UNBLOCK_COUNTRY` | scraper | Optional | Actions Variable / root `.env` | Country code; `tr`; `none` lets the API choose. |
+| `UNBLOCK_RENDER_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing JavaScript rendering; empty by default. |
+| `UNBLOCK_PREMIUM_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing premium requests; empty by default. |
+| `PROBE_API` | scraper probe | Optional | Local root `.env` / process environment | `0` disables the probe's paid fallback. Otherwise it uses the configured API key. Not forwarded by the current probe workflow. |
+| `GITHUB_STEP_SUMMARY` | scraper probe | Automatic in Actions | Provided by GitHub Actions | Output file for the probe report; do not configure as a secret or variable. No file is written when absent. |
 
 ## Track any product by link
 
-Paste a product page link on the dashboard. The server reads the price through a chain of layers, and the first one that finds a price wins: JSON-LD `Product`/`Offer` (including `AggregateOffer` and the variant that matches the link), schema.org microdata (attribute or visible text), `product:price` meta tags, the state JSON that shops embed for their own JavaScript (`__NEXT_DATA__`, `__INITIAL_STATE__` and similar), and finally small per-shop adapters (Trendyol, Hepsiburada, Amazon, n11). It saves the product, and the daily job re-checks every added link (`source = custom`). A link the shop turns away is kept as pending and retried from GitHub Actions every 15 minutes; when a plain request still fails, the scraper opens the page in a real Chromium (Playwright, `scraper/src/browser-fetch.js`) so prices drawn by scripts can be read too. Links that resolve to private network addresses are refused. Needs `SUPABASE_SERVICE_ROLE_KEY` as a server-side environment variable on Vercel.
+Paste a product page link on the dashboard. The server reads the price through a chain of layers, and the first one that finds a price wins: JSON-LD `Product`/`Offer` (including `AggregateOffer` and the variant that matches the link), schema.org microdata (attribute or visible text), `product:price` meta tags, the state JSON that shops embed for their own JavaScript (`__NEXT_DATA__`, `__INITIAL_STATE__` and similar), and finally small per-shop adapters (Trendyol, Hepsiburada, Amazon, n11). It saves the product, and the daily job re-checks every added link (`source = custom`). A link the shop turns away is kept as pending and retried from GitHub Actions every 15 minutes; when a plain request still fails, the scraper opens the page in a real Chromium (Playwright, `scraper/src/browser-fetch.js`) so prices drawn by scripts can be read too. Links that resolve to private network addresses are refused. See [Configuration](#configuration) for the required server-side database credential.
 
 Every read of a pasted link, when it is added and on each daily refresh, is logged to the `track_attempts` table with its outcome (`ok`, `http_error`, `no_price`, `timeout`, `network`), the HTTP status and which layer held the price (`json-ld`, `microdata`, `meta`, `embedded-state`, `shop-adapter`, or `browser/...` when the real browser read it). Visitors see a message that matches the reason, in their language.
 
@@ -80,10 +105,7 @@ Requests are counted from `track_attempts`: reads through the API are logged wit
 
 ## Telegram and Google Sheets
 
-Both are optional and switch on when their repository secrets exist:
-
-- **Telegram**: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (and optional `TELEGRAM_MIN_DROP`, default 2%). After each run the bot posts the day's price drops.
-- **Google Sheets**: `GOOGLE_SERVICE_ACCOUNT_JSON`, `GOOGLE_SHEET_ID`. After each run the `Latest` tab is replaced with current prices and a row per item is appended to `History`. Share the sheet with the service account's email as Editor.
+Both integrations are optional; see [Configuration](#configuration) for their settings. Telegram posts price drops after each run. Google Sheets replaces the `Latest` tab and appends to `History`; share the spreadsheet with the service account as Editor.
 
 ## Public API
 
@@ -97,7 +119,7 @@ Read-only JSON, no key needed, CORS open. Interactive docs (Swagger UI): [`/docs
 
 ## Price alerts
 
-Visitors leave an email and a target price on any product page. After every scrape the job emails each alert whose target is reached, once, then marks it sent. Emails go through [Resend](https://resend.com): add a `RESEND_API_KEY` repository secret to switch sending on; without it the job only logs which alerts are due. Alerts are write-only for the public (RLS insert policy, no read access).
+Visitors leave an email and a target price on any product page. After every scrape the job emails each alert whose target is reached, once, then marks it sent. Emails go through [Resend](https://resend.com): see [Configuration](#configuration) to enable sending; otherwise the job only logs which alerts are due. Alerts are write-only for the public (RLS insert policy, no read access).
 
 Guests manage their alerts from the browser that created them: each alert has a secret manage token that only that browser holds.
 
