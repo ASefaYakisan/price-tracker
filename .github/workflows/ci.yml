@@ -80,3 +80,7 @@ jobs:
       - run: npm test
       - run: npm run lint
       - run: npm run build
+        env:
+          # Empty values enable demo mode; nonempty placeholders trigger database requests.
+          NEXT_PUBLIC_SUPABASE_URL: ""
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ""
