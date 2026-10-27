@@ -124,7 +124,7 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
           {!h.stock && <div className="text-warn">{t.change.outOfStock}</div>}
         </div>
       )}
-      <details className="mt-4 text-sm">
+      <details className="mt-4 max-sm:overflow-x-auto text-sm">
         <summary className="cursor-pointer text-muted hover:text-ink">{t.product.showTable}</summary>
         <table className="mt-2 w-full">
           <thead className="text-start text-xs text-faint">

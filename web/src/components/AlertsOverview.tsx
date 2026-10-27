@@ -203,7 +203,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
         <ProductThumb product={{ image_url: l?.imageUrl ?? null, source: l?.source ?? "custom" }} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <div className="min-w-0">
+            <div className="min-w-0 max-w-full">
               <Link href={href(`/products/${saved.productId}`)} className="block truncate font-medium text-ink hover:text-accent">
                 {l?.title ?? saved.title}
               </Link>
@@ -222,7 +222,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
           </div>
 
           {!missing && (
-            <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
+            <div className="mt-4 grid grid-cols-3 gap-3 text-sm [&>div]:min-w-0">
               <div>
                 <div className="text-xs text-muted">{t.alerts.now}</div>
                 <div className="font-semibold tabular-nums">{l ? money(l.price, currency, lang) : "…"}</div>

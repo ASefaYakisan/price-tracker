@@ -301,3 +301,38 @@
     color: var(--ink);
   }
 }
+
+/* Keep the existing desktop layout; give phone controls a usable touch target. */
+@media (width < 640px) {
+  :where(button, select, summary, input:not([type="hidden"]), a[href]) {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+
+  a[href] {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  a.truncate {
+    display: block;
+    max-inline-size: 100%;
+    line-height: 44px;
+  }
+
+  /* Product-title links retain their two-line clamp and fill the text column. */
+  a.line-clamp-2 {
+    display: -webkit-box;
+  }
+
+  body > header > div {
+    block-size: auto;
+    min-block-size: 64px;
+    flex-wrap: wrap;
+    padding-block: 8px;
+  }
+
+  main {
+    overflow-wrap: anywhere;
+  }
+}
