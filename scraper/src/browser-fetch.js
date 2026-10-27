@@ -18,6 +18,7 @@ export function worthBrowserRetry(attempt) {
 // When Playwright or its browser is missing, retries are skipped and the plain-request result stands.
 export function createBrowserReader({ maxPages = 40, launch = launchChromium } = {}) {
   let browser;
+  let launching; // reads run side by side (refresh.js), so the first retries must share one launch
   let unavailable = false;
   let used = 0;
 
@@ -25,7 +26,7 @@ export function createBrowserReader({ maxPages = 40, launch = launchChromium } =
     if (!worthBrowserRetry(attempt) || unavailable || used >= maxPages) return attempt;
     if (!browser) {
       try {
-        browser = await launch();
+        browser = await (launching ??= launch());
       } catch (err) {
         unavailable = true;
         console.warn(`  browser unavailable, skipping browser retries: ${err.message ?? err}`);
@@ -47,6 +48,7 @@ export function createBrowserReader({ maxPages = 40, launch = launchChromium } =
   async function close() {
     await browser?.close().catch(() => {});
     browser = undefined;
+    launching = undefined;
   }
 
   return { retry, close };

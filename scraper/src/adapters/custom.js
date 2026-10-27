@@ -1,36 +1,44 @@
 // Products people added by pasting a link. Re-reads each saved page with the generic extractor.
 import { createBrowserReader } from '../browser-fetch.js';
 import { extractProduct } from '../extract-price.js';
-import { fetchText, sleep } from '../fetch.js';
+import { fetchText } from '../fetch.js';
 import { saveStatuses, statusChange } from '../link-status.js';
+import { budgetFromEnv, oldestFirst, refreshLinks, summary } from '../refresh.js';
 import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError } from '../track-outcome.js';
 import { createUnblocker, UNBLOCK_LAYER, UNBLOCK_PLUS_LAYER } from '../unblock-fetch.js';
 
 export const name = 'custom';
 
-export async function fetchAll({ db } = {}) {
+// `onBatch(products)` saves prices while the run goes on (see refresh.js); without it the products are returned for the caller to save.
+export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
   if (!db) return []; // nothing to refresh without the database that holds the links
-  const { data, error } = await db.from('products').select('id, url, external_id, added_by').eq('source', 'custom');
+  const { data, error } = await db
+    .from('products')
+    .select('id, url, external_id, added_by, last_checked_at')
+    .eq('source', 'custom');
   if (error) throw error;
   const products = [];
-  const attempts = [];
-  const statuses = [];
   const unblocker = createUnblocker({ db });
   const browser = createBrowserReader();
+  let result;
   try {
-    for (const { id, url, external_id: externalId, added_by: userId } of data) {
-      const attempt = await readThroughLayers(url, { externalId, browser, unblocker });
-      const { product } = attempt;
-      attempts.push(attemptRow({ url, stage: 'daily', userId, ...attempt }));
-      statuses.push({ id, ...statusChange(attempt) });
-      if (product) products.push(product);
-      await sleep(1500);
-    }
+    result = await refreshLinks(oldestFirst(data), {
+      budgetMs: budgetFromEnv() * 60_000,
+      ...refresh,
+      read: ({ url, external_id: externalId }) => readThroughLayers(url, { externalId, browser, unblocker }),
+      onBatch: async (batch) => {
+        const found = batch.map(({ result: { product } }) => product).filter(Boolean);
+        // Prices first: the attempt log and statuses are only notes about them.
+        if (found.length) await (onBatch ? onBatch(found) : products.push(...found));
+        await saveAttempts(db, batch.map(({ link, result: a }) => attemptRow({ url: link.url, stage: 'daily', userId: link.added_by, ...a })));
+        await saveStatuses(db, batch.map(({ link, result: a }) => ({ id: link.id, ...statusChange(a) })));
+      },
+    });
   } finally {
     await browser.close();
   }
-  await saveAttempts(db, attempts);
-  await saveStatuses(db, statuses);
+  console.log(`  ${summary(result)}`);
+  if (result.batchErrors.length) throw result.batchErrors[0];
   return products;
 }
 

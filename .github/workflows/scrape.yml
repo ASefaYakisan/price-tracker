@@ -46,6 +46,8 @@ jobs:
           UNBLOCK_RENDER_HOSTS: ${{ vars.UNBLOCK_RENDER_HOSTS }}
           UNBLOCK_COUNTRY: ${{ vars.UNBLOCK_COUNTRY }}
           UNBLOCK_PREMIUM_HOSTS: ${{ vars.UNBLOCK_PREMIUM_HOSTS }}
+          # Minutes after which no new link is started; skipped links are read first next time (src/refresh.js).
+          SCRAPE_BUDGET_MINUTES: ${{ vars.SCRAPE_BUDGET_MINUTES }}
           # Optional: without it, due alerts are only logged, not emailed.
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}
