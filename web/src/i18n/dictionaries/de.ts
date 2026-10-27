@@ -34,6 +34,13 @@ const de: Dict = {
     genericError: "Etwas ist schiefgelaufen. Bitte versuch es erneut.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Diese Seite wurde nicht gefunden",
+    notFoundText: "Der Link ist vielleicht falsch oder das Produkt wurde entfernt. Sieh dir stattdessen die ganze Liste an.",
+    errorTitle: "Etwas ist schiefgelaufen",
+    errorText: "Diese Seite konnte nicht geladen werden. Bitte versuche es gleich noch einmal.",
+    retry: "Erneut versuchen",
+  },
   sources: {
     "books-toscrape": "Bücher",
     coingecko: "Krypto",

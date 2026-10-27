@@ -34,6 +34,13 @@ const fr: Dict = {
     genericError: "Une erreur s'est produite. Veuillez réessayer.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Cette page est introuvable",
+    notFoundText: "Le lien est peut-être erroné ou le produit a été retiré. Consultez plutôt la liste complète.",
+    errorTitle: "Un problème est survenu",
+    errorText: "Cette page n'a pas pu être chargée. Réessayez dans un instant.",
+    retry: "Réessayer",
+  },
   sources: {
     "books-toscrape": "Livres",
     coingecko: "Crypto",

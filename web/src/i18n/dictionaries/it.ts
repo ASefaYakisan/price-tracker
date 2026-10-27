@@ -34,6 +34,13 @@ const it: Dict = {
     genericError: "Qualcosa è andato storto. Riprova.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Pagina non trovata",
+    notFoundText: "Il link potrebbe essere sbagliato o il prodotto è stato rimosso. Prova con l'elenco completo.",
+    errorTitle: "Qualcosa è andato storto",
+    errorText: "Non è stato possibile caricare questa pagina. Riprova tra un momento.",
+    retry: "Riprova",
+  },
   sources: {
     "books-toscrape": "Libri",
     coingecko: "Cripto",

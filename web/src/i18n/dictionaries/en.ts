@@ -34,6 +34,13 @@ const en = {
     genericError: "Something went wrong. Please try again.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "This page could not be found",
+    notFoundText: "The link may be wrong, or the product was removed. Try the full list instead.",
+    errorTitle: "Something went wrong",
+    errorText: "We could not load this page. Please try again in a moment.",
+    retry: "Try again",
+  },
   sources: {
     "books-toscrape": "Books",
     coingecko: "Crypto",

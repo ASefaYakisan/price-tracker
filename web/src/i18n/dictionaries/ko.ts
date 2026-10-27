@@ -34,6 +34,13 @@ const ko: Dict = {
     genericError: "문제가 발생했습니다. 다시 시도해 주세요.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "페이지를 찾을 수 없습니다",
+    notFoundText: "링크가 잘못되었거나 상품이 삭제되었을 수 있습니다. 전체 목록을 확인해 보세요.",
+    errorTitle: "문제가 발생했습니다",
+    errorText: "이 페이지를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
+    retry: "다시 시도",
+  },
   sources: {
     "books-toscrape": "도서",
     coingecko: "암호화폐",

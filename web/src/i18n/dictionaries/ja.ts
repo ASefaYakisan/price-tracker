@@ -34,6 +34,13 @@ const ja: Dict = {
     genericError: "問題が発生しました。もう一度お試しください。",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "ページが見つかりません",
+    notFoundText: "リンクが間違っているか、商品が削除された可能性があります。代わりに商品一覧をご覧ください。",
+    errorTitle: "問題が発生しました",
+    errorText: "このページを読み込めませんでした。しばらくしてからもう一度お試しください。",
+    retry: "もう一度試す",
+  },
   sources: {
     "books-toscrape": "書籍",
     coingecko: "暗号資産",

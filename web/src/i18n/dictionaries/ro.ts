@@ -34,6 +34,13 @@ const ro: Dict = {
     genericError: "Ceva n-a mers bine. Încearcă din nou.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Pagina nu a fost găsită",
+    notFoundText: "Linkul poate fi greșit sau produsul a fost eliminat. Încearcă lista completă.",
+    errorTitle: "Ceva nu a mers bine",
+    errorText: "Pagina nu a putut fi încărcată. Încearcă din nou într-un moment.",
+    retry: "Încearcă din nou",
+  },
   sources: {
     "books-toscrape": "Cărți",
     coingecko: "Cripto",

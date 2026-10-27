@@ -34,6 +34,13 @@ const ar: Dict = {
     genericError: "حدث خطأ ما. يُرجى المحاولة مرة أخرى.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "تعذّر العثور على هذه الصفحة",
+    notFoundText: "قد يكون الرابط خاطئًا أو تمت إزالة المنتج. جرّب القائمة الكاملة.",
+    errorTitle: "حدث خطأ ما",
+    errorText: "تعذّر تحميل هذه الصفحة. حاول مرة أخرى بعد قليل.",
+    retry: "إعادة المحاولة",
+  },
   sources: {
     "books-toscrape": "كتب",
     coingecko: "عملات مشفرة",

@@ -34,6 +34,13 @@ const cs: Dict = {
     genericError: "Něco se pokazilo. Zkuste to znovu.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Stránka nebyla nalezena",
+    notFoundText: "Odkaz může být chybný nebo byl produkt odstraněn. Zkus místo toho celý seznam.",
+    errorTitle: "Něco se pokazilo",
+    errorText: "Stránku se nepodařilo načíst. Zkus to za chvíli znovu.",
+    retry: "Zkusit znovu",
+  },
   sources: {
     "books-toscrape": "Knihy",
     coingecko: "Kryptoměny",

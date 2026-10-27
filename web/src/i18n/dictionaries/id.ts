@@ -34,6 +34,13 @@ const id: Dict = {
     genericError: "Terjadi kesalahan. Silakan coba lagi.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Halaman tidak ditemukan",
+    notFoundText: "Tautan mungkin salah atau produk sudah dihapus. Coba lihat daftar lengkap.",
+    errorTitle: "Terjadi kesalahan",
+    errorText: "Halaman ini tidak dapat dimuat. Coba lagi sebentar lagi.",
+    retry: "Coba lagi",
+  },
   sources: {
     "books-toscrape": "Buku",
     coingecko: "Kripto",

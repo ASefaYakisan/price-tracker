@@ -34,6 +34,13 @@ const pl: Dict = {
     genericError: "Coś poszło nie tak. Spróbuj ponownie.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Nie znaleziono tej strony",
+    notFoundText: "Link może być błędny albo produkt został usunięty. Zajrzyj do pełnej listy.",
+    errorTitle: "Coś poszło nie tak",
+    errorText: "Nie udało się wczytać tej strony. Spróbuj ponownie za chwilę.",
+    retry: "Spróbuj ponownie",
+  },
   sources: {
     "books-toscrape": "Książki",
     coingecko: "Kryptowaluty",

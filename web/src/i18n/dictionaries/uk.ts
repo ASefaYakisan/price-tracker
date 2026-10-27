@@ -34,6 +34,13 @@ const uk: Dict = {
     genericError: "Щось пішло не так. Спробуйте ще раз.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Сторінку не знайдено",
+    notFoundText: "Посилання може бути хибним, або товар видалено. Перегляньте повний список.",
+    errorTitle: "Щось пішло не так",
+    errorText: "Не вдалося завантажити сторінку. Спробуйте ще раз трохи згодом.",
+    retry: "Спробувати ще раз",
+  },
   sources: {
     "books-toscrape": "Книги",
     coingecko: "Криптовалюти",
