@@ -2,6 +2,12 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { alertEmail, dueAlerts, processAlerts } from '../src/alerts.js';
 
+// Fake price_history: rows newest first, as the query asks for them.
+function historyDb(prices) {
+  const q = { select: () => q, eq: () => q, not: () => q, order: () => q, limit: async () => ({ data: prices.map((price) => ({ price })), error: null }) };
+  return q;
+}
+
 const product = { id: 7, title: 'Bitcoin (BTC)', url: 'https://www.coingecko.com/en/coins/bitcoin', currency: 'USD', price: '61000.5' };
 
 test('dueAlerts keeps only alerts whose target is reached', () => {
@@ -79,6 +85,7 @@ test('processAlerts selects manage_token and passes List-Unsubscribe to Resend',
       },
       update() { return { eq: async () => { marked = true; return {}; } }; },
     };
+    if (table === 'price_history') return historyDb([61000, 61500]);
     assert.equal(table, 'product_latest');
     return { select: () => ({ in: async () => ({ data: [product] }) }) };
   } };
@@ -103,4 +110,54 @@ test('processAlerts retries without lang when the column does not exist yet', as
   assert.deepEqual(await processAlerts(db, {}), { checked: 0, sent: 0 });
   assert.equal(asked.length, 2);
   assert.ok(!asked[1].includes('lang'));
+});
+
+async function runHeldAlert(t, prices) {
+  const oldKey = process.env.RESEND_API_KEY;
+  process.env.RESEND_API_KEY = 'test-only';
+  t.after(() => {
+    if (oldKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = oldKey;
+  });
+  t.mock.method(console, 'warn', () => {});
+  let mails = 0;
+  let marked = false;
+  t.mock.method(globalThis, 'fetch', async () => { mails++; return new Response('{}', { status: 200 }); });
+  const latest = { ...product, price: String(prices[0]) };
+  const db = { from(table) {
+    if (table === 'price_history') return historyDb(prices);
+    if (table === 'alerts') return {
+      select: () => ({ is: async () => ({ data: [{ id: 1, product_id: 7, email: 'a@x.io', target_price: 150 }], error: null }) }),
+      update() { return { eq: async () => { marked = true; return {}; } }; },
+    };
+    return { select: () => ({ in: async () => ({ data: [latest] }) }) };
+  } };
+  const result = await processAlerts(db, { siteUrl: '' });
+  return { result, mails, marked };
+}
+
+test('a single 1000 -> 100 reading sends no alert and leaves the alert open', async (t) => {
+  const { result, mails, marked } = await runHeldAlert(t, [100, 1000]);
+  assert.deepEqual(result, { checked: 1, sent: 0 });
+  assert.equal(mails, 0);
+  assert.equal(marked, false);
+});
+
+test('the alert goes out once the low price is read a second time', async (t) => {
+  const { result, mails, marked } = await runHeldAlert(t, [100, 100.5]);
+  assert.deepEqual(result, { checked: 1, sent: 1 });
+  assert.equal(mails, 1);
+  assert.equal(marked, true);
+});
+
+test('a big drop is held, a normal drop under target is not', async (t) => {
+  const { result } = await runHeldAlert(t, [140, 1000]);
+  assert.equal(result.sent, 0);
+  const second = await runHeldAlert(t, [140, 200]);
+  assert.equal(second.result.sent, 1);
+});
+
+test('a product with no earlier reading alerts as before', async (t) => {
+  const { result } = await runHeldAlert(t, [100]);
+  assert.equal(result.sent, 1);
 });

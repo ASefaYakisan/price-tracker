@@ -126,6 +126,10 @@ Read-only JSON, no key needed, CORS open. Interactive docs (Swagger UI): [`/docs
 
 Visitors leave an email and a target price on any product page. After every scrape the job emails each alert whose target is reached, once, then marks it sent. Emails go through [Resend](https://resend.com): see [Configuration](#configuration) to enable sending; otherwise the job only logs which alerts are due. Alerts are write-only for the public (RLS insert policy, no read access).
 
+### Alert verification
+
+A price reader can occasionally catch the wrong number (an instalment amount, a shipping fee, kuruş read as lira). If the latest reading is below half or above five times the reading before it, the alert is held and logged as a suspicious jump; it is sent only when the next scrape reads the same price again. Ordinary drops alert immediately, and products with no earlier reading behave as before.
+
 Guests manage their alerts from the browser that created them: each alert has a secret manage token that only that browser holds.
 
 ## Accounts
