@@ -1,3 +1,5 @@
+import { isSuspiciousJump } from './price-sanity.js';
+
 // After each scrape: email everyone whose target price has been reached, once.
 
 // Pure part, easy to test: which open alerts are due given the latest prices.
@@ -10,6 +12,23 @@ export function dueAlerts(alerts, latestById) {
       (a) =>
         a.product?.price != null && a.product.in_stock !== false && Number(a.product.price) <= Number(a.target_price),
     );
+}
+
+// The latest reading is already in price_history when alerts run. If it jumped far from the reading before it, it
+// is held: the next run compares the new reading with this one, and only a repeated price passes.
+async function isHeldBySanity(db, alert) {
+  const { data, error } = await db
+    .from('price_history')
+    .select('price')
+    .eq('product_id', alert.product_id)
+    .not('price', 'is', null)
+    .order('scraped_at', { ascending: false })
+    .limit(2);
+  if (error || !data || data.length < 2) return false;
+  const [latest, previous] = data;
+  if (!isSuspiciousJump(previous.price, latest.price)) return false;
+  console.warn(`  suspicious price jump: ${alert.product.url} ${previous.price} → ${latest.price}, alert ${alert.id} waits for a second reading`);
+  return true;
 }
 
 // lang: the alert's saved site language (alert.lang). English is the only text so far; the languages are added with
@@ -71,6 +90,7 @@ export async function processAlerts(db, { siteUrl = process.env.SITE_URL } = {})
   let sent = 0;
   for (const alert of dueAlerts(alerts, new Map(latest.map((p) => [p.id, p])))) {
     try {
+      if (await isHeldBySanity(db, alert)) continue;
       if (!(await sendEmail(alert.email, alertEmail(alert, siteUrl, alert.lang ?? 'en')))) continue;
       const { error: markError } = await db.from('alerts').update({ last_sent_at: new Date().toISOString() }).eq('id', alert.id);
       if (markError) throw markError;
