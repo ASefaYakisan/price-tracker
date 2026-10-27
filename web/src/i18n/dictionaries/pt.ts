@@ -206,6 +206,7 @@ const pt: Dict = {
     footerRule: "Cada alerta envia um único e-mail quando o preço está igual ou abaixo da meta; edite-o para acompanhar de novo.",
     notActive: "Inativo",
     emailSent: "E-mail enviado em {date}",
+    readFailed: "Na última verificação não foi possível ler o preço desta página: {reason}. O seu alerta aguarda até o preço voltar a ser lido.",
     watching: "Acompanhando",
     setOn: "criado em {date}",
     now: "Agora",

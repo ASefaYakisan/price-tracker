@@ -206,6 +206,7 @@ const ja: Dict = {
     footerRule: "各アラートは価格が目標以下になったときにメールを 1 通送信します。再度監視するには編集してください。",
     notActive: "停止中",
     emailSent: "{date} にメール送信済み",
+    readFailed: "前回の確認でこのページの価格を読み取れませんでした：{reason}。価格が再び読み取れるまで、アラートは待機します。",
     watching: "監視中",
     setOn: "{date} に設定",
     now: "現在",

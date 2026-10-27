@@ -206,6 +206,7 @@ const cs: Dict = {
     footerRule: "Každé upozornění pošle jeden e-mail, když je cena na cíli nebo pod ním; úpravou ho znovu aktivujete.",
     notActive: "Neaktivní",
     emailSent: "E-mail odeslán {date}",
+    readFailed: "Při poslední kontrole se nepodařilo přečíst cenu této stránky: {reason}. Vaše upozornění počká, dokud půjde cenu znovu přečíst.",
     watching: "Sleduje se",
     setOn: "nastaveno {date}",
     now: "Nyní",

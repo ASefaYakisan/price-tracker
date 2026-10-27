@@ -206,6 +206,7 @@ const zh: Dict = {
     footerRule: "每个提醒会在价格低于或等于目标时发送一封邮件；编辑后可重新关注。",
     notActive: "未启用",
     emailSent: "邮件已于 {date} 发送",
+    readFailed: "上次检查时无法读取此页面的价格：{reason}。在能再次读取价格之前，你的提醒会一直等待。",
     watching: "关注中",
     setOn: "设置于 {date}",
     now: "当前",

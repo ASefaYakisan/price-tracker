@@ -206,6 +206,7 @@ const tr: Dict = {
     footerRule: "Her alarm, fiyat hedefe veya altına indiğinde tek bir e-posta gönderir; tekrar izlemek için düzenle.",
     notActive: "Aktif değil",
     emailSent: "E-posta gönderildi {date}",
+    readFailed: "Son kontrolde bu sayfanın fiyatı okunamadı: {reason}. Alarmın, fiyat yeniden okunabilene kadar bekler.",
     watching: "İzleniyor",
     setOn: "{date} tarihinde kuruldu",
     now: "Şimdi",

@@ -206,6 +206,7 @@ const it: Dict = {
     footerRule: "Ogni avviso invia una sola email quando il prezzo è pari o inferiore all'obiettivo; modificalo per monitorare di nuovo.",
     notActive: "Non attivo",
     emailSent: "Email inviata il {date}",
+    readFailed: "All'ultimo controllo non è stato possibile leggere il prezzo di questa pagina: {reason}. Il tuo avviso resta in attesa finché il prezzo non sarà di nuovo leggibile.",
     watching: "In monitoraggio",
     setOn: "creato il {date}",
     now: "Ora",
