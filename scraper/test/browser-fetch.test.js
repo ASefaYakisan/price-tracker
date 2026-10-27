@@ -90,7 +90,7 @@ test('productFromDom reads the amount and currency from the price text', () => {
 });
 
 test('structured data written by scripts is read from the rendered page', needsBrowser, async () => {
-  const reader = createBrowserReader();
+  const reader = createBrowserReader({ guard: async () => {} }); // the test server is on 127.0.0.1
   try {
     const attempt = await reader.retry(`${base}/ld`, { outcome: 'no_price', httpStatus: 200, html: '<html></html>', product: null });
     assert.equal(attempt.outcome, 'ok');
@@ -104,7 +104,7 @@ test('structured data written by scripts is read from the rendered page', needsB
 });
 
 test('a price drawn into the page is read, skipping the crossed-out old price', needsBrowser, async () => {
-  const reader = createBrowserReader();
+  const reader = createBrowserReader({ guard: async () => {} }); // the test server is on 127.0.0.1
   try {
     const attempt = await reader.retry(`${base}/dom`, { outcome: 'http_error', httpStatus: 403, html: null, product: null });
     assert.equal(attempt.outcome, 'ok');
@@ -118,6 +118,24 @@ test('a price drawn into the page is read, skipping the crossed-out old price', 
     const gone = await reader.retry(`${base}/gone`, { outcome: 'timeout', html: null, product: null });
     assert.equal(gone.outcome, 'http_error');
     assert.equal(gone.httpStatus, 404);
+  } finally {
+    await reader.close();
+  }
+});
+
+test('requests to addresses the guard refuses are aborted in the browser', needsBrowser, async () => {
+  const hit = [];
+  const guard = async (url) => {
+    if (url.includes('/secret')) {
+      hit.push(url);
+      throw new Error('private address');
+    }
+  };
+  const reader = createBrowserReader({ guard });
+  try {
+    const attempt = await reader.retry(`${base}/secret`, { outcome: 'no_price', httpStatus: 200, html: '<html></html>', product: null });
+    assert.notEqual(attempt.outcome, 'ok');
+    assert.equal(hit.length, 1);
   } finally {
     await reader.close();
   }
