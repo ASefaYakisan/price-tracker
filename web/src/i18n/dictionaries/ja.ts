@@ -34,6 +34,13 @@ const ja: Dict = {
     genericError: "問題が発生しました。もう一度お試しください。",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "ページが見つかりません",
+    notFoundText: "リンクが間違っているか、商品が削除された可能性があります。代わりに商品一覧をご覧ください。",
+    errorTitle: "問題が発生しました",
+    errorText: "このページを読み込めませんでした。しばらくしてからもう一度お試しください。",
+    retry: "もう一度試す",
+  },
   sources: {
     "books-toscrape": "書籍",
     coingecko: "暗号資産",
@@ -82,6 +89,8 @@ const ja: Dict = {
     found: "{title} が見つかりました：{price}（デモモード：保存されません）",
     hint: "ほとんどのショップに対応。すぐに価格を読み取れない場合は「保留中」として保存し、自動で再試行します。",
     signIn: "ログインすると、リンクから任意の商品を追加できます。",
+    matches: "このサイトで追跡中",
+    noMatch: "その名前の商品はまだ追跡されていません。商品のリンクを貼り付けて追加してください。",
   },
   table: {
     search: "検索…",

@@ -34,6 +34,13 @@ const sv: Dict = {
     genericError: "Något gick fel. Försök igen.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Sidan hittades inte",
+    notFoundText: "Länken kan vara fel eller så har produkten tagits bort. Titta på hela listan i stället.",
+    errorTitle: "Något gick fel",
+    errorText: "Sidan kunde inte laddas. Försök igen om en stund.",
+    retry: "Försök igen",
+  },
   sources: {
     "books-toscrape": "Böcker",
     coingecko: "Krypto",
@@ -82,6 +89,8 @@ const sv: Dict = {
     found: "Hittade {title} för {price}. (Demoläge: sparas inte.)",
     hint: "Fungerar med de flesta butiker. Om priset inte kan läsas direkt sparas länken som väntande och försöks igen automatiskt.",
     signIn: "Logga in för att lägga till valfri produkt via dess länk.",
+    matches: "Redan bevakade på den här sidan",
+    noMatch: "Inget bevakas under det namnet ännu. Klistra in produktens länk för att lägga till den.",
   },
   table: {
     search: "Sök…",

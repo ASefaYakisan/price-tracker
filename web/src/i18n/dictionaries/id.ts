@@ -34,6 +34,13 @@ const id: Dict = {
     genericError: "Terjadi kesalahan. Silakan coba lagi.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Halaman tidak ditemukan",
+    notFoundText: "Tautan mungkin salah atau produk sudah dihapus. Coba lihat daftar lengkap.",
+    errorTitle: "Terjadi kesalahan",
+    errorText: "Halaman ini tidak dapat dimuat. Coba lagi sebentar lagi.",
+    retry: "Coba lagi",
+  },
   sources: {
     "books-toscrape": "Buku",
     coingecko: "Kripto",
@@ -82,6 +89,8 @@ const id: Dict = {
     found: "Ditemukan {title} seharga {price}. (Mode demo: tidak disimpan.)",
     hint: "Berfungsi di sebagian besar toko. Jika harga belum bisa dibaca, tautan disimpan sebagai tertunda dan dicoba lagi secara otomatis.",
     signIn: "Masuk untuk menambahkan produk apa pun lewat tautannya.",
+    matches: "Sudah dilacak di situs ini",
+    noMatch: "Belum ada yang dilacak dengan nama itu. Tempel tautan produk untuk menambahkannya.",
   },
   table: {
     search: "Cari…",

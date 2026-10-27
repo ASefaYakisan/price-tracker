@@ -6,7 +6,9 @@ export const MAX_PENDING_TRIES = 3;
 const MAX_COUNTED_FAILS = 1000;
 
 // 'http_error:403', 'no_price', 'timeout', 'network'
-export function errorCode({ outcome, httpStatus = null }) {
+// A read that was turned down for a reason of its own (currency_changed) says so.
+export function errorCode({ outcome, httpStatus = null, reason = null }) {
+  if (reason) return reason;
   return outcome === 'http_error' && httpStatus ? `${outcome}:${httpStatus}` : outcome;
 }
 

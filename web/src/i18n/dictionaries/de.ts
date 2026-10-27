@@ -34,6 +34,13 @@ const de: Dict = {
     genericError: "Etwas ist schiefgelaufen. Bitte versuch es erneut.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Diese Seite wurde nicht gefunden",
+    notFoundText: "Der Link ist vielleicht falsch oder das Produkt wurde entfernt. Sieh dir stattdessen die ganze Liste an.",
+    errorTitle: "Etwas ist schiefgelaufen",
+    errorText: "Diese Seite konnte nicht geladen werden. Bitte versuche es gleich noch einmal.",
+    retry: "Erneut versuchen",
+  },
   sources: {
     "books-toscrape": "Bücher",
     coingecko: "Krypto",
@@ -82,6 +89,8 @@ const de: Dict = {
     found: "{title} für {price} gefunden. (Demomodus: nicht gespeichert.)",
     hint: "Funktioniert mit den meisten Shops. Kann der Preis nicht sofort gelesen werden, wird der Link als ausstehend gespeichert und automatisch erneut versucht.",
     signIn: "Melde dich an, um beliebige Produkte per Link hinzuzufügen.",
+    matches: "Auf dieser Seite bereits verfolgt",
+    noMatch: "Unter diesem Namen wird noch nichts verfolgt. Füge den Link des Produkts ein, um es hinzuzufügen.",
   },
   table: {
     search: "Suchen…",

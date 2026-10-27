@@ -34,6 +34,13 @@ const nl: Dict = {
     genericError: "Er ging iets mis. Probeer het opnieuw.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Deze pagina is niet gevonden",
+    notFoundText: "De link klopt misschien niet of het product is verwijderd. Bekijk in plaats daarvan de volledige lijst.",
+    errorTitle: "Er is iets misgegaan",
+    errorText: "Deze pagina kon niet worden geladen. Probeer het zo opnieuw.",
+    retry: "Opnieuw proberen",
+  },
   sources: {
     "books-toscrape": "Boeken",
     coingecko: "Crypto",
@@ -82,6 +89,8 @@ const nl: Dict = {
     found: "{title} gevonden voor {price}. (Demomodus: niet opgeslagen.)",
     hint: "Werkt met de meeste winkels. Kan de prijs niet meteen worden gelezen, dan wordt de link als in behandeling opgeslagen en automatisch opnieuw geprobeerd.",
     signIn: "Log in om elk product via de link toe te voegen.",
+    matches: "Al gevolgd op deze site",
+    noMatch: "Nog niets gevolgd onder die naam. Plak de link van het product om het toe te voegen.",
   },
   table: {
     search: "Zoeken…",

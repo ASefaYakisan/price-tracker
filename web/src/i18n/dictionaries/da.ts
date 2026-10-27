@@ -34,6 +34,13 @@ const da: Dict = {
     genericError: "Noget gik galt. Prøv igen.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Siden blev ikke fundet",
+    notFoundText: "Linket kan være forkert, eller produktet er fjernet. Se hele listen i stedet.",
+    errorTitle: "Noget gik galt",
+    errorText: "Siden kunne ikke indlæses. Prøv igen om lidt.",
+    retry: "Prøv igen",
+  },
   sources: {
     "books-toscrape": "Bøger",
     coingecko: "Krypto",
@@ -82,6 +89,8 @@ const da: Dict = {
     found: "Fandt {title} til {price}. (Demotilstand: ikke gemt.)",
     hint: "Virker med de fleste butikker. Kan prisen ikke læses med det samme, gemmes linket som afventende og prøves automatisk igen.",
     signIn: "Log ind for at tilføje et hvilket som helst produkt via dets link.",
+    matches: "Allerede fulgt på dette site",
+    noMatch: "Intet følges under det navn endnu. Indsæt produktets link for at tilføje det.",
   },
   table: {
     search: "Søg…",

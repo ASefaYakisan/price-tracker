@@ -34,6 +34,13 @@ const tr: Dict = {
     genericError: "Bir şeyler ters gitti. Lütfen tekrar dene.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Bu sayfa bulunamadı",
+    notFoundText: "Bağlantı yanlış olabilir ya da ürün kaldırılmış olabilir. Tüm ürün listesine göz at.",
+    errorTitle: "Bir şeyler ters gitti",
+    errorText: "Bu sayfa yüklenemedi. Lütfen biraz sonra tekrar dene.",
+    retry: "Tekrar dene",
+  },
   sources: {
     "books-toscrape": "Kitaplar",
     coingecko: "Kripto",
@@ -82,6 +89,8 @@ const tr: Dict = {
     found: "{title} bulundu: {price}. (Demo modu: kaydedilmedi.)",
     hint: "Çoğu mağazada çalışır. Fiyat hemen okunamazsa link \"bekliyor\" olarak eklenir ve otomatik olarak tekrar denenir.",
     signIn: "Herhangi bir ürünü bağlantısıyla eklemek için giriş yap.",
+    matches: "Sitede zaten takip edilenler",
+    noMatch: "Bu adla takip edilen bir ürün yok. Eklemek için ürünün linkini yapıştır.",
   },
   table: {
     search: "Ara…",

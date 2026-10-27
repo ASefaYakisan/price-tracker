@@ -34,6 +34,13 @@ const ko: Dict = {
     genericError: "문제가 발생했습니다. 다시 시도해 주세요.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "페이지를 찾을 수 없습니다",
+    notFoundText: "링크가 잘못되었거나 상품이 삭제되었을 수 있습니다. 전체 목록을 확인해 보세요.",
+    errorTitle: "문제가 발생했습니다",
+    errorText: "이 페이지를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
+    retry: "다시 시도",
+  },
   sources: {
     "books-toscrape": "도서",
     coingecko: "암호화폐",
@@ -82,6 +89,8 @@ const ko: Dict = {
     found: "{title}을(를) {price}에 찾았습니다. (데모 모드: 저장되지 않음)",
     hint: "대부분의 쇼핑몰에서 작동합니다. 가격을 바로 읽지 못하면 링크가 대기 중으로 저장되고 자동으로 다시 시도합니다.",
     signIn: "로그인하면 링크로 어떤 상품이든 추가할 수 있습니다.",
+    matches: "이 사이트에서 이미 추적 중",
+    noMatch: "그 이름으로 추적 중인 상품이 아직 없습니다. 상품 링크를 붙여넣어 추가하세요.",
   },
   table: {
     search: "검색…",
