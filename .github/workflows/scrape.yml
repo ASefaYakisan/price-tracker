@@ -56,6 +56,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_MIN_DROP: ${{ inputs.telegram_min_drop || '2' }}
+          TELEGRAM_LANG: ${{ vars.TELEGRAM_LANG }}
           # Optional: copy prices to a Google Sheet (service account JSON + sheet id).
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
