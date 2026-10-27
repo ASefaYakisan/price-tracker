@@ -197,6 +197,7 @@ const en = {
     footerRule: "Each alert sends one email when the price is at or below the target; edit it to watch again.",
     notActive: "Not active",
     emailSent: "Email sent {date}",
+    readFailed: "We could not read this page's price at the last check: {reason}. Your alert waits until it can be read again.",
     watching: "Watching",
     setOn: "set {date}",
     now: "Now",

@@ -197,6 +197,7 @@ const nl: Dict = {
     footerRule: "Elke alert stuurt één e-mail wanneer de prijs op of onder het doel staat; bewerk hem om opnieuw te volgen.",
     notActive: "Niet actief",
     emailSent: "E-mail verstuurd {date}",
+    readFailed: "Bij de laatste controle kon de prijs van deze pagina niet worden gelezen: {reason}. Je alert wacht tot de prijs weer te lezen is.",
     watching: "Actief",
     setOn: "ingesteld {date}",
     now: "Nu",

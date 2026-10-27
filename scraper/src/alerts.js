@@ -14,6 +14,54 @@ export function dueAlerts(alerts, latestById) {
     );
 }
 
+// Days of daily reads in a row that failed before the owner of an open alert is told (products.failed_checks counts them).
+export const DEAD_LINK_AFTER_CHECKS = 7;
+
+// Open alerts on products whose page has not been readable for DEAD_LINK_AFTER_CHECKS reads in a row.
+// Only the run that reaches the count exactly returns them, so each alert is told once without a column to remember it;
+// a read that works again resets the count (link-status.js).
+export function deadLinkAlerts(alerts, productsById, { afterChecks = DEAD_LINK_AFTER_CHECKS } = {}) {
+  return alerts
+    .map((a) => ({ ...a, product: productsById.get(a.product_id) }))
+    .filter((a) => a.product && a.product.failed_checks === afterChecks && a.product.last_error);
+}
+
+const READ_FAILURE = {
+  no_price: 'no price could be found on the page any more',
+  timeout: 'the shop did not answer in time',
+  network: 'the page could not be opened',
+};
+
+// 'http_error:404' -> "the shop no longer has the page (HTTP 404)"
+export function failureReason(code) {
+  const [outcome, rawStatus] = String(code).split(':');
+  if (outcome !== 'http_error') return READ_FAILURE[outcome] ?? 'the page could not be read';
+  const status = Number(rawStatus) || null;
+  const text = status === 404 || status === 410 ? 'the shop no longer has the page' : 'the shop blocks or rejects our visits';
+  return status ? `${text} (HTTP ${status})` : text;
+}
+
+export function deadLinkEmail({ id, manage_token, product, target_price }, siteUrl) {
+  const base = siteUrl?.replace(/\/$/, '');
+  const removeLink = base && id && manage_token
+    ? `${base}/alerts/remove?${new URLSearchParams({ id: String(id), token: manage_token })}`
+    : null;
+  return {
+    ...(removeLink ? { headers: { 'List-Unsubscribe': `<${removeLink}>` } } : {}),
+    subject: `We can no longer read the price of ${product.title}`,
+    text: [
+      `For ${DEAD_LINK_AFTER_CHECKS} days in a row we could not read a price for ${product.title}: ${failureReason(product.last_error)}.`,
+      `Your alert (target: ${target_price}) is still open, but it cannot fire until the price can be read again.`,
+      '',
+      `Check that the link still works: ${product.url}`,
+      'If the shop moved the product, add the new link and remove this alert.',
+      ...(removeLink ? [`Remove this alert: ${removeLink}`] : []),
+      '',
+      'You get this email once per alert.',
+    ].join('\n'),
+  };
+}
+
 // The latest reading is already in price_history when alerts run. If it jumped far from the reading before it, it
 // is held: the next run compares the new reading with this one, and only a repeated price passes.
 async function isHeldBySanity(db, alert) {
@@ -99,5 +147,26 @@ export async function processAlerts(db, { siteUrl = process.env.SITE_URL } = {})
       console.error(`  alert ${alert.id} failed: ${err.message ?? err}`);
     }
   }
+  const notified = await notifyDeadLinks(db, alerts, ids, siteUrl);
+  if (notified) console.log(`  ${notified} dead-link notices sent`);
   return { checked: alerts.length, sent };
+}
+
+// A failure here never undoes the price-drop emails that were already sent.
+async function notifyDeadLinks(db, alerts, productIds, siteUrl) {
+  let notified = 0;
+  try {
+    const { data, error } = await db.from('products').select('id, url, title, failed_checks, last_error').in('id', productIds);
+    if (error) throw error;
+    for (const alert of deadLinkAlerts(alerts, new Map(data.map((p) => [p.id, p])))) {
+      try {
+        if (await sendEmail(alert.email, deadLinkEmail(alert, siteUrl))) notified++;
+      } catch (err) {
+        console.error(`  dead-link notice for alert ${alert.id} failed: ${err.message ?? err}`);
+      }
+    }
+  } catch (err) {
+    console.error(`  dead-link check failed: ${err.message ?? err}`);
+  }
+  return notified;
 }

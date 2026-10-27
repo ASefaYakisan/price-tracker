@@ -197,6 +197,7 @@ const id: Dict = {
     footerRule: "Setiap peringatan mengirim satu email saat harga mencapai target atau lebih rendah; ubah untuk memantau lagi.",
     notActive: "Tidak aktif",
     emailSent: "Email terkirim {date}",
+    readFailed: "Pada pengecekan terakhir harga halaman ini tidak bisa dibaca: {reason}. Alarm Anda menunggu sampai harga bisa dibaca lagi.",
     watching: "Dipantau",
     setOn: "dibuat {date}",
     now: "Sekarang",

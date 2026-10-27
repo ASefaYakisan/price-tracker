@@ -197,6 +197,7 @@ const sv: Dict = {
     footerRule: "Varje bevakning skickar ett mejl när priset är vid eller under målet; redigera den för att bevaka igen.",
     notActive: "Inte aktiv",
     emailSent: "Mejl skickat {date}",
+    readFailed: "Vid senaste kontrollen kunde vi inte läsa priset på den här sidan: {reason}. Ditt larm väntar tills priset går att läsa igen.",
     watching: "Bevakar",
     setOn: "skapad {date}",
     now: "Nu",

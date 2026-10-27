@@ -197,6 +197,7 @@ const vi: Dict = {
     footerRule: "Mỗi cảnh báo gửi một email khi giá bằng hoặc thấp hơn mục tiêu; hãy sửa cảnh báo để theo dõi lại.",
     notActive: "Không hoạt động",
     emailSent: "Đã gửi email {date}",
+    readFailed: "Lần kiểm tra gần nhất không đọc được giá của trang này: {reason}. Cảnh báo của bạn sẽ chờ cho đến khi đọc lại được giá.",
     watching: "Đang theo dõi",
     setOn: "đặt ngày {date}",
     now: "Hiện tại",

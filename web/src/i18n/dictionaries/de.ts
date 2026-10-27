@@ -197,6 +197,7 @@ const de: Dict = {
     footerRule: "Jeder Alarm sendet eine E-Mail, wenn der Preis bei oder unter dem Ziel liegt; bearbeite ihn, um erneut zu beobachten.",
     notActive: "Nicht aktiv",
     emailSent: "E-Mail gesendet {date}",
+    readFailed: "Beim letzten Check konnte der Preis dieser Seite nicht gelesen werden: {reason}. Dein Alarm wartet, bis der Preis wieder gelesen werden kann.",
     watching: "Wird beobachtet",
     setOn: "erstellt {date}",
     now: "Jetzt",

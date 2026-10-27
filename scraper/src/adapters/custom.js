@@ -15,7 +15,7 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
   if (!db) return []; // nothing to refresh without the database that holds the links
   const { data, error } = await db
     .from('products')
-    .select('id, url, external_id, added_by, last_checked_at')
+    .select('id, url, external_id, added_by, last_checked_at, failed_checks')
     .eq('source', 'custom');
   if (error) throw error;
   const products = [];
@@ -32,7 +32,7 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
         // Prices first: the attempt log and statuses are only notes about them.
         if (found.length) await (onBatch ? onBatch(found) : products.push(...found));
         await saveAttempts(db, batch.map(({ link, result: a }) => attemptRow({ url: link.url, stage: 'daily', userId: link.added_by, ...a })));
-        await saveStatuses(db, batch.map(({ link, result: a }) => ({ id: link.id, ...statusChange(a) })));
+        await saveStatuses(db, batch.map(({ link, result: a }) => ({ id: link.id, ...statusChange(a, { failedChecks: link.failed_checks ?? 0 }) })));
       },
     });
   } finally {

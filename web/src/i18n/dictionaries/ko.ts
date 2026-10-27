@@ -197,6 +197,7 @@ const ko: Dict = {
     footerRule: "각 알림은 가격이 목표 이하가 되면 이메일을 한 번 보냅니다. 다시 지켜보려면 수정하세요.",
     notActive: "비활성",
     emailSent: "{date} 이메일 발송",
+    readFailed: "마지막 확인에서 이 페이지의 가격을 읽지 못했습니다: {reason}. 가격을 다시 읽을 수 있을 때까지 알림은 대기합니다.",
     watching: "지켜보는 중",
     setOn: "{date} 설정",
     now: "현재",

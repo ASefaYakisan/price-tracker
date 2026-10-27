@@ -197,6 +197,7 @@ const ro: Dict = {
     footerRule: "Fiecare alertă trimite un singur e-mail când prețul este la sau sub țintă; editeaz-o pentru a urmări din nou.",
     notActive: "Inactivă",
     emailSent: "E-mail trimis {date}",
+    readFailed: "La ultima verificare nu am putut citi prețul acestei pagini: {reason}. Alerta ta așteaptă până când prețul poate fi citit din nou.",
     watching: "Activă",
     setOn: "setată {date}",
     now: "Acum",
