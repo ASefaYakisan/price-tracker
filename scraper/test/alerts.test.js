@@ -234,3 +234,9 @@ test('mails are spaced apart, the first one goes out at once', async (t) => {
   const { waits } = await runWithResend(t, [], 3);
   assert.deepEqual(waits, [600, 600]);
 });
+
+test('alertEmail writes no currency symbol when the currency is unknown', () => {
+  const mail = alertEmail({ product: { ...product, currency: null, price: '1299' }, target_price: '1500' }, 'https://example.app/');
+  assert.match(mail.subject, /is now 1,299$/);
+  assert.doesNotMatch(mail.text, /\$/);
+});

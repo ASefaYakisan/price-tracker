@@ -1,5 +1,6 @@
 // Products people added by pasting a link. Re-reads each saved page with the generic extractor.
 import { createBrowserReader } from '../browser-fetch.js';
+import { guardRead } from '../currency-guard.js';
 import { extractProduct } from '../extract-price.js';
 import { fetchText } from '../fetch.js';
 import { assertPublicUrl } from '../safe-url.js';
@@ -15,7 +16,7 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
   if (!db) return []; // nothing to refresh without the database that holds the links
   const { data, error } = await db
     .from('products')
-    .select('id, url, external_id, added_by, last_checked_at')
+    .select('id, url, external_id, added_by, last_checked_at, currency')
     .eq('source', 'custom');
   if (error) throw error;
   const products = [];
@@ -27,7 +28,8 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
       budgetMs: budgetFromEnv() * 60_000,
       ...refresh,
       read: ({ url, external_id: externalId }) => readThroughLayers(url, { externalId, browser, unblocker }),
-      onBatch: async (batch) => {
+      onBatch: async (raw) => {
+        const batch = raw.map(({ link, result }) => ({ link, result: guardRead(result, link.currency) }));
         const found = batch.map(({ result: { product } }) => product).filter(Boolean);
         // Prices first: the attempt log and statuses are only notes about them.
         if (found.length) await (onBatch ? onBatch(found) : products.push(...found));

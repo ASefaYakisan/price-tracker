@@ -34,8 +34,12 @@ async function isHeldBySanity(db, alert) {
 // lang: the alert's saved site language (alert.lang). English is the only text so far; the languages are added with
 // the alert-i18n texts, and an unknown language falls back to English.
 export function alertEmail({ id, manage_token, product, target_price }, siteUrl, lang = 'en') {
+  // Without a known currency only the number is written; guessing a currency would put the wrong symbol on a price.
   const fmt = (v) =>
-    new Intl.NumberFormat('en-GB', { style: 'currency', currency: product.currency ?? 'USD', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 8 }).format(v);
+    new Intl.NumberFormat('en-GB', {
+      ...(product.currency ? { style: 'currency', currency: product.currency, currencyDisplay: 'narrowSymbol' } : {}),
+      maximumFractionDigits: 8,
+    }).format(v);
   const link = siteUrl ? `${siteUrl.replace(/\/$/, '')}/products/${product.id}` : product.url;
   const removeLink = siteUrl && id && manage_token
     ? `${siteUrl.replace(/\/$/, '')}/alerts/remove?${new URLSearchParams({ id: String(id), token: manage_token })}`
