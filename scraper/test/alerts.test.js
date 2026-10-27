@@ -89,7 +89,7 @@ test('processAlerts selects manage_token and passes List-Unsubscribe to Resend',
     assert.equal(table, 'product_latest');
     return { select: () => ({ in: async () => ({ data: [product] }) }) };
   } };
-  assert.deepEqual(await processAlerts(db, { siteUrl: 'https://example.app' }), { checked: 1, sent: 1 });
+  assert.deepEqual(await processAlerts(db, { siteUrl: 'https://example.app' }), { checked: 1, sent: 1, failed: 0 });
   assert.equal(payload.headers['List-Unsubscribe'], '<https://example.app/alerts/remove?id=42&token=test-token>');
   assert.equal(payload.to, 'test@example.com');
   assert.equal(marked, true);
@@ -107,7 +107,7 @@ test('processAlerts retries without lang when the column does not exist yet', as
     asked.push(fields);
     return { is: async () => (fields.includes('lang') ? { data: null, error: { code: '42703' } } : { data: [], error: null }) };
   } }; } };
-  assert.deepEqual(await processAlerts(db, {}), { checked: 0, sent: 0 });
+  assert.deepEqual(await processAlerts(db, {}), { checked: 0, sent: 0, failed: 0 });
   assert.equal(asked.length, 2);
   assert.ok(!asked[1].includes('lang'));
 });
@@ -138,14 +138,14 @@ async function runHeldAlert(t, prices) {
 
 test('a single 1000 -> 100 reading sends no alert and leaves the alert open', async (t) => {
   const { result, mails, marked } = await runHeldAlert(t, [100, 1000]);
-  assert.deepEqual(result, { checked: 1, sent: 0 });
+  assert.deepEqual(result, { checked: 1, sent: 0, failed: 0 });
   assert.equal(mails, 0);
   assert.equal(marked, false);
 });
 
 test('the alert goes out once the low price is read a second time', async (t) => {
   const { result, mails, marked } = await runHeldAlert(t, [100, 100.5]);
-  assert.deepEqual(result, { checked: 1, sent: 1 });
+  assert.deepEqual(result, { checked: 1, sent: 1, failed: 0 });
   assert.equal(mails, 1);
   assert.equal(marked, true);
 });
@@ -160,4 +160,77 @@ test('a big drop is held, a normal drop under target is not', async (t) => {
 test('a product with no earlier reading alerts as before', async (t) => {
   const { result } = await runHeldAlert(t, [100]);
   assert.equal(result.sent, 1);
+});
+
+// Retry behaviour: fake Resend answers in order, a fake sleep records the waits.
+async function runWithResend(t, answers, alertCount = 1) {
+  const oldKey = process.env.RESEND_API_KEY;
+  process.env.RESEND_API_KEY = 'test-only';
+  t.after(() => {
+    if (oldKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = oldKey;
+  });
+  t.mock.method(console, 'error', () => {});
+  const calls = [];
+  const marked = [];
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push(JSON.parse(options.body).to);
+    const next = answers.shift() ?? new Response('{}', { status: 200 });
+    if (next instanceof Error) throw next;
+    return next;
+  });
+  const rows = Array.from({ length: alertCount }, (_, i) => ({ id: i + 1, product_id: 7, email: `u${i + 1}@x.io`, target_price: 62000 }));
+  const db = { from(table) {
+    if (table === 'price_history') return historyDb([61000, 61500]);
+    if (table === 'alerts') return {
+      select: () => ({ is: async () => ({ data: rows, error: null }) }),
+      update() { return { eq: async (_c, id) => { marked.push(id); return {}; } }; },
+    };
+    return { select: () => ({ in: async () => ({ data: [product] }) }) };
+  } };
+  const waits = [];
+  const result = await processAlerts(db, { siteUrl: '', sleep: async (ms) => { waits.push(ms); } });
+  return { result, calls, marked, waits };
+}
+
+test('a 429 from Resend is retried and the alert is marked sent once', async (t) => {
+  const { result, calls, marked, waits } = await runWithResend(t, [new Response('slow down', { status: 429 })]);
+  assert.deepEqual(result, { checked: 1, sent: 1, failed: 0 });
+  assert.equal(calls.length, 2);
+  assert.deepEqual(marked, [1]);
+  assert.deepEqual(waits, [1000]);
+});
+
+test('Retry-After from Resend decides the wait', async (t) => {
+  const limited = new Response('slow down', { status: 429, headers: { 'retry-after': '2' } });
+  const { waits } = await runWithResend(t, [limited]);
+  assert.deepEqual(waits, [2000]);
+});
+
+test('three 503 answers leave the alert open and the next alert is still processed', async (t) => {
+  const down = () => new Response('down', { status: 503 });
+  const { result, calls, marked } = await runWithResend(t, [down(), down(), down()], 2);
+  assert.deepEqual(result, { checked: 2, sent: 1, failed: 1 });
+  assert.deepEqual(calls, ['u1@x.io', 'u1@x.io', 'u1@x.io', 'u2@x.io']);
+  assert.deepEqual(marked, [2]);
+});
+
+test('a network error is retried like a 5xx', async (t) => {
+  const { result, calls } = await runWithResend(t, [new TypeError('fetch failed')]);
+  assert.equal(result.sent, 1);
+  assert.equal(calls.length, 2);
+});
+
+test('400 and 401 answers are not retried', async (t) => {
+  for (const status of [400, 401]) {
+    const { result, calls, marked } = await runWithResend(t, [new Response('bad', { status })]);
+    assert.deepEqual(result, { checked: 1, sent: 0, failed: 1 });
+    assert.equal(calls.length, 1);
+    assert.deepEqual(marked, []);
+  }
+});
+
+test('mails are spaced apart, the first one goes out at once', async (t) => {
+  const { waits } = await runWithResend(t, [], 3);
+  assert.deepEqual(waits, [600, 600]);
 });
