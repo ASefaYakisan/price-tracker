@@ -34,6 +34,13 @@ const zh: Dict = {
     genericError: "出了点问题，请重试。",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "找不到此页面",
+    notFoundText: "链接可能有误，或该商品已被移除。请查看完整列表。",
+    errorTitle: "出了点问题",
+    errorText: "无法加载此页面，请稍后再试。",
+    retry: "重试",
+  },
   sources: {
     "books-toscrape": "图书",
     coingecko: "加密货币",

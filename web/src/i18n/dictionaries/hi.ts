@@ -34,6 +34,13 @@ const hi: Dict = {
     genericError: "कुछ गलत हो गया। कृपया फिर से कोशिश करें।",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "यह पेज नहीं मिला",
+    notFoundText: "लिंक गलत हो सकता है या प्रोडक्ट हटा दिया गया हो सकता है। इसके बजाय पूरी सूची देखें।",
+    errorTitle: "कुछ गड़बड़ हो गई",
+    errorText: "यह पेज लोड नहीं हो सका। कृपया थोड़ी देर बाद फिर कोशिश करें।",
+    retry: "फिर कोशिश करें",
+  },
   sources: {
     "books-toscrape": "किताबें",
     coingecko: "क्रिप्टो",

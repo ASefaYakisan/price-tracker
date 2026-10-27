@@ -34,6 +34,13 @@ const th: Dict = {
     genericError: "เกิดข้อผิดพลาด โปรดลองอีกครั้ง",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "ไม่พบหน้านี้",
+    notFoundText: "ลิงก์อาจไม่ถูกต้องหรือสินค้าถูกนำออกแล้ว ลองดูรายการทั้งหมดแทน",
+    errorTitle: "เกิดข้อผิดพลาด",
+    errorText: "ไม่สามารถโหลดหน้านี้ได้ โปรดลองอีกครั้งในอีกสักครู่",
+    retry: "ลองอีกครั้ง",
+  },
   sources: {
     "books-toscrape": "หนังสือ",
     coingecko: "คริปโต",

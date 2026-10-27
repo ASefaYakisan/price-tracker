@@ -34,6 +34,13 @@ const el: Dict = {
     genericError: "Κάτι πήγε στραβά. Δοκιμάστε ξανά.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Η σελίδα δεν βρέθηκε",
+    notFoundText: "Ο σύνδεσμος μπορεί να είναι λάθος ή το προϊόν να αφαιρέθηκε. Δες τη συνολική λίστα.",
+    errorTitle: "Κάτι πήγε στραβά",
+    errorText: "Δεν ήταν δυνατή η φόρτωση της σελίδας. Δοκίμασε ξανά σε λίγο.",
+    retry: "Δοκίμασε ξανά",
+  },
   sources: {
     "books-toscrape": "Βιβλία",
     coingecko: "Κρυπτονομίσματα",

@@ -34,6 +34,13 @@ const pt: Dict = {
     genericError: "Algo deu errado. Tente novamente.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Esta página não foi encontrada",
+    notFoundText: "O link pode estar errado ou o produto foi removido. Veja a lista completa.",
+    errorTitle: "Algo deu errado",
+    errorText: "Não foi possível carregar esta página. Tente novamente em instantes.",
+    retry: "Tentar de novo",
+  },
   sources: {
     "books-toscrape": "Livros",
     coingecko: "Cripto",

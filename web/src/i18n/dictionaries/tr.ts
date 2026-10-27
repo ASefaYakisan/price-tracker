@@ -34,6 +34,13 @@ const tr: Dict = {
     genericError: "Bir şeyler ters gitti. Lütfen tekrar dene.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Bu sayfa bulunamadı",
+    notFoundText: "Bağlantı yanlış olabilir ya da ürün kaldırılmış olabilir. Tüm ürün listesine göz at.",
+    errorTitle: "Bir şeyler ters gitti",
+    errorText: "Bu sayfa yüklenemedi. Lütfen biraz sonra tekrar dene.",
+    retry: "Tekrar dene",
+  },
   sources: {
     "books-toscrape": "Kitaplar",
     coingecko: "Kripto",

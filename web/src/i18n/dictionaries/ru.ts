@@ -34,6 +34,13 @@ const ru: Dict = {
     genericError: "Что-то пошло не так. Попробуйте ещё раз.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Страница не найдена",
+    notFoundText: "Ссылка может быть неверной, или товар удалён. Посмотрите полный список.",
+    errorTitle: "Что-то пошло не так",
+    errorText: "Не удалось загрузить страницу. Попробуйте ещё раз чуть позже.",
+    retry: "Повторить",
+  },
   sources: {
     "books-toscrape": "Книги",
     coingecko: "Криптовалюты",

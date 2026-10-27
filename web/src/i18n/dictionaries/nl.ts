@@ -34,6 +34,13 @@ const nl: Dict = {
     genericError: "Er ging iets mis. Probeer het opnieuw.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Deze pagina is niet gevonden",
+    notFoundText: "De link klopt misschien niet of het product is verwijderd. Bekijk in plaats daarvan de volledige lijst.",
+    errorTitle: "Er is iets misgegaan",
+    errorText: "Deze pagina kon niet worden geladen. Probeer het zo opnieuw.",
+    retry: "Opnieuw proberen",
+  },
   sources: {
     "books-toscrape": "Boeken",
     coingecko: "Crypto",

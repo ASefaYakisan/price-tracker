@@ -34,6 +34,13 @@ const da: Dict = {
     genericError: "Noget gik galt. Prøv igen.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Siden blev ikke fundet",
+    notFoundText: "Linket kan være forkert, eller produktet er fjernet. Se hele listen i stedet.",
+    errorTitle: "Noget gik galt",
+    errorText: "Siden kunne ikke indlæses. Prøv igen om lidt.",
+    retry: "Prøv igen",
+  },
   sources: {
     "books-toscrape": "Bøger",
     coingecko: "Krypto",

@@ -34,6 +34,13 @@ const vi: Dict = {
     genericError: "Đã xảy ra lỗi. Vui lòng thử lại.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Không tìm thấy trang này",
+    notFoundText: "Liên kết có thể sai hoặc sản phẩm đã bị gỡ. Hãy xem danh sách đầy đủ.",
+    errorTitle: "Đã xảy ra lỗi",
+    errorText: "Không thể tải trang này. Vui lòng thử lại sau ít phút.",
+    retry: "Thử lại",
+  },
   sources: {
     "books-toscrape": "Sách",
     coingecko: "Tiền mã hóa",

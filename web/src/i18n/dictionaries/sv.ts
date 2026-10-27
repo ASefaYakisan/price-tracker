@@ -34,6 +34,13 @@ const sv: Dict = {
     genericError: "Något gick fel. Försök igen.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Sidan hittades inte",
+    notFoundText: "Länken kan vara fel eller så har produkten tagits bort. Titta på hela listan i stället.",
+    errorTitle: "Något gick fel",
+    errorText: "Sidan kunde inte laddas. Försök igen om en stund.",
+    retry: "Försök igen",
+  },
   sources: {
     "books-toscrape": "Böcker",
     coingecko: "Krypto",
