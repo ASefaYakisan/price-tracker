@@ -28,6 +28,18 @@ async function collect(adapter, maxPages, context) {
   return adapter.fetchAll ? adapter.fetchAll(context) : crawl(adapter, { maxPages });
 }
 
+// Counts what was saved on the way, so a source that saves in batches (custom links) still reports a total.
+function batchSaver(store, name, scrapedAt) {
+  let saved = 0;
+  return {
+    get saved() { return saved; },
+    onBatch: async (products) => {
+      await store.save(name, products, scrapedAt);
+      saved += products.length;
+    },
+  };
+}
+
 async function main() {
   const [sourceArg = 'all', pages = '3'] = process.argv.slice(2);
   const names = sourceArg === 'all' ? Object.keys(ADAPTERS) : [sourceArg];
@@ -41,9 +53,10 @@ async function main() {
   for (const name of names) {
     console.log(`${name}:`);
     try {
-      const products = await collect(ADAPTERS[name], Number(pages), { db: store.db });
-      if (!products.length && name === 'custom') {
-        console.log('  no links added yet');
+      const batches = batchSaver(store, name, scrapedAt);
+      const products = await collect(ADAPTERS[name], Number(pages), { db: store.db, onBatch: batches.onBatch });
+      if (name === 'custom') {
+        console.log(batches.saved ? `  saved ${batches.saved} products to ${store.kind}` : '  no links added yet');
         continue;
       }
       if (!products.length) throw new Error('no products found');
