@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { defaultList, itemsInList, sharedListOf, shouldDropProduct } from "../src/lib/lists.ts";
+import { defaultList, itemsInList, sharedListOf } from "../src/lib/lists.ts";
 
 const items = [
   { id: 1, source: "custom" },
@@ -28,14 +28,4 @@ test("my list is exactly the items passed in, empty while unknown", () => {
 test("signed-in visitors start on their list; others on the markets", () => {
   assert.equal(defaultList(true), "mine");
   assert.equal(defaultList(false), "markets");
-});
-
-test("a link is dropped only when nobody follows it and it has no alerts", () => {
-  assert.equal(shouldDropProduct({ source: "custom", followers: 0, alerts: 0 }), true);
-  assert.equal(shouldDropProduct({ source: "custom", followers: 1, alerts: 0 }), false);
-  assert.equal(shouldDropProduct({ source: "custom", followers: 0, alerts: 2 }), false);
-  assert.equal(shouldDropProduct({ source: "coingecko", followers: 0, alerts: 0 }), false);
-  // A count that failed never deletes anything.
-  assert.equal(shouldDropProduct({ source: "custom", followers: null, alerts: 0 }), false);
-  assert.equal(shouldDropProduct({ source: "custom", followers: 0, alerts: null }), false);
 });

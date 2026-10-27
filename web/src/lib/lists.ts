@@ -27,8 +27,3 @@ export function itemsInList<T extends { source: string }>(shared: T[], list: Lis
 export function defaultList(signedIn: boolean): ListKey {
   return signedIn ? "mine" : "markets";
 }
-
-// A link nobody follows and nobody watches with an alert stops being checked; the built-in feeds always stay.
-export function shouldDropProduct(product: { source: string; followers: number | null; alerts: number | null }) {
-  return product.source === "custom" && product.followers === 0 && product.alerts === 0;
-}
