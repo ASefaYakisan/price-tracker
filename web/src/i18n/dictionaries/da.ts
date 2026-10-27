@@ -89,6 +89,8 @@ const da: Dict = {
     found: "Fandt {title} til {price}. (Demotilstand: ikke gemt.)",
     hint: "Virker med de fleste butikker. Kan prisen ikke læses med det samme, gemmes linket som afventende og prøves automatisk igen.",
     signIn: "Log ind for at tilføje et hvilket som helst produkt via dets link.",
+    matches: "Allerede fulgt på dette site",
+    noMatch: "Intet følges under det navn endnu. Indsæt produktets link for at tilføje det.",
   },
   table: {
     search: "Søg…",

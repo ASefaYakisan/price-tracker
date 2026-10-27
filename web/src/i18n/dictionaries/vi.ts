@@ -89,6 +89,8 @@ const vi: Dict = {
     found: "Đã tìm thấy {title} với giá {price}. (Chế độ demo: không được lưu.)",
     hint: "Hoạt động với hầu hết cửa hàng. Nếu chưa đọc được giá ngay, liên kết sẽ được lưu ở trạng thái chờ và tự động thử lại.",
     signIn: "Đăng nhập để thêm bất kỳ sản phẩm nào bằng liên kết của nó.",
+    matches: "Đã được theo dõi trên trang này",
+    noMatch: "Chưa có sản phẩm nào theo dõi với tên đó. Hãy dán liên kết sản phẩm để thêm.",
   },
   table: {
     search: "Tìm kiếm…",

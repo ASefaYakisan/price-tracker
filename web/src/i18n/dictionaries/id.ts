@@ -89,6 +89,8 @@ const id: Dict = {
     found: "Ditemukan {title} seharga {price}. (Mode demo: tidak disimpan.)",
     hint: "Berfungsi di sebagian besar toko. Jika harga belum bisa dibaca, tautan disimpan sebagai tertunda dan dicoba lagi secara otomatis.",
     signIn: "Masuk untuk menambahkan produk apa pun lewat tautannya.",
+    matches: "Sudah dilacak di situs ini",
+    noMatch: "Belum ada yang dilacak dengan nama itu. Tempel tautan produk untuk menambahkannya.",
   },
   table: {
     search: "Cari…",

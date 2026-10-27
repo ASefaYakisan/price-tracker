@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@/i18n/client";
 import { money } from "@/lib/format";
 import { useUser } from "@/lib/auth";
+import { findUrl } from "@/lib/find-url";
+import { TrackSearch } from "@/components/TrackSearch";
 import { refreshMyProducts } from "@/lib/my-products";
 import { authEnabled } from "@/lib/supabase/client";
 
@@ -49,9 +51,13 @@ export function TrackForm() {
     setShared(link);
   }, []);
 
+  // Text without a link is a product name: it is searched, not sent.
+  const name = url.trim();
+  const searching = name.length >= 2 && !findUrl(name);
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    send(url);
+    if (!searching) send(url);
   }
 
   async function send(link: string) {
@@ -137,6 +143,7 @@ export function TrackForm() {
           </button>
         </div>
       </form>
+      {searching && <TrackSearch query={name} />}
       {state.kind === "error" && (
         <p role="alert" className="mt-3 text-sm text-bad">
           {state.message}

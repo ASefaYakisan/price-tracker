@@ -89,6 +89,8 @@ const en = {
     found: "Found {title} at {price}. (Demo mode: not saved.)",
     hint: "Works with most shops. If the price can't be read right away, the link is saved as pending and retried automatically.",
     signIn: "Sign in to add any product by its link.",
+    matches: "Already tracked on this site",
+    noMatch: "Nothing tracked under that name yet. Paste the product's link to add it.",
   },
   table: {
     search: "Search…",
