@@ -31,22 +31,32 @@ export function priceDrops(rows, minPct = 2) {
 
 const escapeHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-export function telegramDigest(drops, { siteUrl, limit = 15 } = {}) {
+// Digest wording per language (TELEGRAM_LANG); an unknown language falls back to English.
+const DIGEST_TEXT = {
+  en: { one: (n) => `${n} price drop today`, many: (n) => `${n} price drops today`, more: (n) => `…and ${n} more`, locale: 'en-GB' },
+  tr: { one: (n) => `Bugün ${n} fiyat düşüşü`, many: (n) => `Bugün ${n} fiyat düşüşü`, more: (n) => `…ve ${n} tane daha`, locale: 'tr-TR' },
+  de: { one: (n) => `${n} Preissenkung heute`, many: (n) => `${n} Preissenkungen heute`, more: (n) => `…und ${n} weitere`, locale: 'de-DE' },
+  fr: { one: (n) => `${n} baisse de prix aujourd’hui`, many: (n) => `${n} baisses de prix aujourd’hui`, more: (n) => `…et ${n} de plus`, locale: 'fr-FR' },
+  es: { one: (n) => `${n} bajada de precio hoy`, many: (n) => `${n} bajadas de precio hoy`, more: (n) => `…y ${n} más`, locale: 'es-ES' },
+};
+
+export function telegramDigest(drops, { siteUrl, limit = 15, lang = 'en' } = {}) {
   if (!drops.length) return null;
+  const t = DIGEST_TEXT[String(lang).toLowerCase().split('-')[0]] ?? DIGEST_TEXT.en;
   const fmt = (v, c) =>
-    new Intl.NumberFormat('en-GB', { style: 'currency', currency: c ?? 'USD', currencyDisplay: 'narrowSymbol', maximumFractionDigits: v < 1 ? 6 : 2 }).format(v);
+    new Intl.NumberFormat(t.locale, { style: 'currency', currency: c ?? 'USD', currencyDisplay: 'narrowSymbol', maximumFractionDigits: v < 1 ? 6 : 2 }).format(v);
   const lines = drops.slice(0, limit).map((d) => {
     const link = siteUrl ? `${siteUrl.replace(/\/$/, '')}/products/${d.id}` : d.url;
     return `▼ ${d.pct.toFixed(1)}%  <a href="${escapeHtml(link)}">${escapeHtml(d.title)}</a>\n     ${fmt(d.previous_price, d.currency)} → <b>${fmt(d.price, d.currency)}</b>`;
   });
-  const more = drops.length > limit ? `\n…and ${drops.length - limit} more` : '';
-  return `<b>📉 ${drops.length} price drop${drops.length === 1 ? '' : 's'} today</b>\n\n${lines.join('\n')}${more}`;
+  const more = drops.length > limit ? `\n${t.more(drops.length - limit)}` : '';
+  return `<b>📉 ${(drops.length === 1 ? t.one : t.many)(drops.length)}</b>\n\n${lines.join('\n')}${more}`;
 }
 
 export async function sendTelegram(rows, env = process.env) {
   const { TELEGRAM_BOT_TOKEN: token, TELEGRAM_CHAT_ID: chatId } = env;
   if (!token || !chatId) return 'skipped (no TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID)';
-  const text = telegramDigest(priceDrops(rows, Number(env.TELEGRAM_MIN_DROP ?? 2)), { siteUrl: env.SITE_URL });
+  const text = telegramDigest(priceDrops(rows, Number(env.TELEGRAM_MIN_DROP ?? 2)), { siteUrl: env.SITE_URL, lang: env.TELEGRAM_LANG || 'en' });
   if (!text) return 'no drops to report';
   const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',

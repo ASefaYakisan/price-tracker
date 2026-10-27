@@ -21,6 +21,14 @@ test('telegramDigest escapes titles and links to the site', () => {
   assert.equal(telegramDigest([]), null);
 });
 
+test('telegramDigest speaks the configured language and falls back to English', () => {
+  const drops = priceDrops(rows);
+  assert.match(telegramDigest(drops, { lang: 'tr' }), /Bugün 1 fiyat düşüşü/);
+  assert.match(telegramDigest(drops, { lang: 'de-AT' }), /1 Preissenkung heute/);
+  assert.match(telegramDigest(drops, { lang: 'xx' }), /1 price drop today/);
+  assert.match(telegramDigest([...drops, ...drops], { lang: 'es' }), /2 bajadas de precio hoy/);
+});
+
 test('sheetRows builds a header plus one row per item', () => {
   const { latest, history } = sheetRows(rows, '2026-10-07T06:00:00Z');
   assert.equal(latest.length, 4);

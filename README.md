@@ -62,6 +62,7 @@ In the table, **Secret** and **Variable** mean GitHub repository Settings → Se
 | `SITE_URL` | scraper | Optional | Actions Variable / root `.env` | Dashboard origin for email/digest links; otherwise links use the shop URL. |
 | `TELEGRAM_BOT_TOKEN` | scraper | For Telegram | Actions Secret / root `.env` | Bot credential; missing token or chat ID skips Telegram. |
 | `TELEGRAM_CHAT_ID` | scraper | For Telegram | Actions Secret / root `.env` | Destination chat; no default. |
+| `TELEGRAM_LANG` | scraper | Optional | Local root `.env` / process environment | Digest language: `en` (default), `tr`, `de`, `fr`, `es`; unknown values fall back to English. |
 | `TELEGRAM_MIN_DROP` | scraper | Optional | Local root `.env` / process environment | Minimum percentage drop; `2` when unset. Current workflows do not forward this setting, so scheduled runs use 2%. Do not set it to an empty string (that becomes zero). |
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | scraper | For Sheets | Actions Secret / root `.env` | Service account JSON; missing credentials or sheet ID skips sync. |
 | `GOOGLE_SHEET_ID` | scraper | For Sheets | Actions Secret / root `.env` | Target spreadsheet ID; no default. |
