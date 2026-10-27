@@ -19,6 +19,7 @@ const ar: Dict = {
     myAlerts: "تنبيهاتي",
     signOut: "تسجيل الخروج",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "مبني باستخدام Node.js وSupabase وNext.js. البيانات: books.toscrape.com (بيئة تجريبية عامة لجمع البيانات)، وCoinGecko، والبنك المركزي لجمهورية تركيا، وfawazahmed0/exchange-api. يُحدَّث يوميًا.",
   common: {

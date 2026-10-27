@@ -19,6 +19,7 @@ const cs: Dict = {
     myAlerts: "Moje upozornění",
     signOut: "Odhlásit se",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Vytvořeno pomocí Node.js, Supabase a Next.js. Data: books.toscrape.com (veřejné testovací prostředí pro scraping), CoinGecko, Centrální banka Turecké republiky a fawazahmed0/exchange-api. Aktualizováno denně.",
   common: {

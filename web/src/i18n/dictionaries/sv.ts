@@ -19,6 +19,7 @@ const sv: Dict = {
     myAlerts: "Mina bevakningar",
     signOut: "Logga ut",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Byggd med Node.js, Supabase och Next.js. Data: books.toscrape.com (en öppen sandlåda för skrapning), CoinGecko, Republiken Turkiets centralbank och fawazahmed0/exchange-api. Uppdateras dagligen.",
   common: {

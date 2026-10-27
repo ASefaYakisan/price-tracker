@@ -19,6 +19,7 @@ const it: Dict = {
     myAlerts: "I miei avvisi",
     signOut: "Esci",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Realizzato con Node.js, Supabase e Next.js. Dati: books.toscrape.com (una sandbox pubblica per lo scraping), CoinGecko, Banca centrale della Repubblica di Turchia e fawazahmed0/exchange-api. Aggiornato ogni giorno.",
   common: {

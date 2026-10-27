@@ -19,6 +19,7 @@ const zh: Dict = {
     myAlerts: "我的提醒",
     signOut: "退出登录",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "使用 Node.js、Supabase 和 Next.js 构建。数据来源：books.toscrape.com（公开的爬虫练习网站）、CoinGecko、土耳其共和国中央银行和 fawazahmed0/exchange-api。每日更新。",
   common: {

@@ -19,6 +19,7 @@ const ro: Dict = {
     myAlerts: "Alertele mele",
     signOut: "Deconectare",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Construit cu Node.js, Supabase și Next.js. Date: books.toscrape.com (un sandbox public pentru scraping), CoinGecko, Banca Centrală a Republicii Turcia și fawazahmed0/exchange-api. Actualizat zilnic.",
   common: {
