@@ -70,6 +70,7 @@ In the table, **Secret** and **Variable** mean GitHub repository Settings → Se
 | `SCRAPER_API_KEY` | scraper | Optional | Actions Secret / root `.env` | Enables the paid fallback; see [Blocked shops](#blocked-shops-optional-scraping-api). Disabled without a key. |
 | `UNBLOCK_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts sent directly to the paid fallback; empty by default. |
 | `UNBLOCK_MONTHLY_LIMIT` | scraper | Optional | Actions Variable / root `.env` | Monthly credit ceiling; `900`; `0` disables paid reads. |
+| `SCRAPE_BUDGET_MINUTES` | scraper | Optional | Actions Variable | Minutes after which the daily refresh starts no new link (default `30`); skipped links are read first next run. |
 | `UNBLOCK_COUNTRY` | scraper | Optional | Actions Variable / root `.env` | Country code; `tr`; `none` lets the API choose. |
 | `UNBLOCK_RENDER_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing JavaScript rendering; empty by default. |
 | `UNBLOCK_PREMIUM_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing premium requests; empty by default. |
