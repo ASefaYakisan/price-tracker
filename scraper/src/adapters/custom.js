@@ -2,6 +2,7 @@
 import { createBrowserReader } from '../browser-fetch.js';
 import { extractProduct } from '../extract-price.js';
 import { fetchText } from '../fetch.js';
+import { assertPublicUrl } from '../safe-url.js';
 import { saveStatuses, statusChange } from '../link-status.js';
 import { budgetFromEnv, oldestFirst, refreshLinks, summary } from '../refresh.js';
 import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError } from '../track-outcome.js';
@@ -45,18 +46,31 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
 // Reads a link through the layers, cheapest first: a plain request, then a real browser (free, see browser-fetch.js),
 // then the paid scraping API (see unblock-fetch.js) only when both were turned away. Listed shops go straight to the API.
 // Whichever layer reads it, a saved externalId is kept (see readLink).
-export async function readThroughLayers(url, { retries = 3, externalId = null, browser = null, unblocker = null } = {}) {
-  const attempt = await readCheapestFirst(url, { retries, externalId, browser, unblocker });
+export async function readThroughLayers(url, { retries = 3, externalId = null, browser = null, unblocker = null, guard = assertPublicUrl } = {}) {
+  const attempt = await readCheapestFirst(url, { retries, externalId, browser, unblocker, guard });
   return { ...attempt, product: keepExternalId(attempt.product, externalId) };
 }
 
-async function readCheapestFirst(url, { retries, externalId, browser, unblocker }) {
+async function readCheapestFirst(url, { retries, externalId, browser, unblocker, guard }) {
+  const blocked = await refuseAddress(url, guard);
+  if (blocked) return blocked;
   if (unblocker?.listed(url) && (await unblocker.hasCredit())) return readViaApi(url, unblocker);
-  const plain = await readLink(url, { retries, externalId });
+  const plain = await readLink(url, { retries, externalId, guard });
   const attempt = browser ? await browser.retry(url, plain) : plain;
   if (!refused(plain) || !turnedAway(attempt) || !unblocker || !(await unblocker.hasCredit())) return attempt;
   console.warn(`  ${url}: still blocked, trying the scraping API`);
   return readViaApi(url, unblocker);
+}
+
+// A saved link that points at a private address is not opened by any layer, the scraping API included.
+async function refuseAddress(url, guard) {
+  try {
+    await guard(url);
+    return null;
+  } catch (err) {
+    console.warn(`  ${url}: ${err.message ?? err}`);
+    return { outcome: 'network', httpStatus: null, layer: null, html: null, product: null };
+  }
 }
 
 // The shop answered with a status that means it blocks automated visits, or with a robot-check page.
@@ -72,10 +86,10 @@ function turnedAway(attempt) {
 
 // One read of a product page, with why it failed when it did.
 // A saved externalId is kept, so a change in how links are shortened never splits one product into two rows.
-export async function readLink(url, { retries = 3, externalId = null } = {}) {
+export async function readLink(url, { retries = 3, externalId = null, guard = assertPublicUrl } = {}) {
   let html;
   try {
-    html = await fetchText(url, { headers: BROWSER_HEADERS, timeoutMs: 20_000, retries });
+    html = await fetchText(url, { headers: BROWSER_HEADERS, timeoutMs: 20_000, retries, guard });
   } catch (err) {
     console.warn(`  ${url}: ${err.message ?? err}`);
     return { outcome: outcomeForError(err), httpStatus: err.status ?? null, layer: null, html: null, product: null };

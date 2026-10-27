@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { afterEach, test } from 'node:test';
-import { readThroughLayers as readLink } from '../src/adapters/custom.js';
+import { readThroughLayers } from '../src/adapters/custom.js';
 import { apiUrl, createUnblocker, isListed, unblockConfig } from '../src/unblock-fetch.js';
 
 const PAGE = `<html><head><script type="application/ld+json">
@@ -8,6 +8,9 @@ const PAGE = `<html><head><script type="application/ld+json">
 </script></head></html>`;
 const LINK = 'https://www.shop.example/kulaklik-p-1';
 const KEY = 'secret-key';
+
+// The shop host in these tests does not exist, so the address check is stubbed out (see safe-url.test.js).
+const readLink = (url, options) => readThroughLayers(url, { guard: async () => {}, ...options });
 
 const realFetch = globalThis.fetch;
 afterEach(() => {
