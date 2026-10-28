@@ -19,6 +19,7 @@ const el: Dict = {
     myAlerts: "Οι ειδοποιήσεις μου",
     signOut: "Αποσύνδεση",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Δημιουργήθηκε με Node.js, Supabase και Next.js. Δεδομένα: books.toscrape.com (δημόσιο περιβάλλον δοκιμών scraping), CoinGecko, Κεντρική Τράπεζα της Δημοκρατίας της Τουρκίας και fawazahmed0/exchange-api. Ενημερώνεται καθημερινά.",
   common: {
@@ -132,6 +133,7 @@ const el: Dict = {
     history: "Ιστορικό τιμών",
     chartLabel: "Ιστορικό τιμών από {from} έως {to}, μεταξύ {min} και {max}",
     notEnough: "Δεν υπάρχει ακόμη αρκετό ιστορικό. Το γράφημα εμφανίζεται μετά από δύο συλλογές.",
+    trackingStarted: "Η παρακολούθηση ξεκίνησε στις {date}. Το γράφημα συμπληρώνεται σε κάθε έλεγχο.",
     showTable: "Εμφάνιση δεδομένων ως πίνακα",
     date: "Ημερομηνία",
     price: "Τιμή",

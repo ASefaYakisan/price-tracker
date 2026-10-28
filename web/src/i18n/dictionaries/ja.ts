@@ -19,6 +19,7 @@ const ja: Dict = {
     myAlerts: "マイアラート",
     signOut: "ログアウト",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Node.js、Supabase、Next.js で構築。データ：books.toscrape.com（公開スクレイピング練習サイト）、CoinGecko、トルコ共和国中央銀行、fawazahmed0/exchange-api。毎日更新。",
   common: {
@@ -132,6 +133,7 @@ const ja: Dict = {
     history: "価格履歴",
     chartLabel: "{from} から {to} までの価格履歴（{min}〜{max}）",
     notEnough: "履歴がまだ足りません。2 回取得するとグラフが表示されます。",
+    trackingStarted: "{date} に追跡を開始しました。確認のたびにグラフが増えていきます。",
     showTable: "データを表で表示",
     date: "日付",
     price: "価格",

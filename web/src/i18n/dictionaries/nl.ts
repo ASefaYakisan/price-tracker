@@ -19,6 +19,7 @@ const nl: Dict = {
     myAlerts: "Mijn alerts",
     signOut: "Uitloggen",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Gebouwd met Node.js, Supabase en Next.js. Data: books.toscrape.com (een openbare scraping-sandbox), CoinGecko, de Centrale Bank van de Republiek Turkije en fawazahmed0/exchange-api. Dagelijks bijgewerkt.",
   common: {
@@ -132,6 +133,7 @@ const nl: Dict = {
     history: "Prijsgeschiedenis",
     chartLabel: "Prijsgeschiedenis van {from} tot {to}, tussen {min} en {max}",
     notEnough: "Nog niet genoeg geschiedenis. De grafiek verschijnt na twee scrapes.",
+    trackingStarted: "Volgen gestart op {date}. De grafiek vult zich bij elke controle.",
     showTable: "Data als tabel tonen",
     date: "Datum",
     price: "Prijs",

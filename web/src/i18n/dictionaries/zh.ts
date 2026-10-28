@@ -19,6 +19,7 @@ const zh: Dict = {
     myAlerts: "我的提醒",
     signOut: "退出登录",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "使用 Node.js、Supabase 和 Next.js 构建。数据来源：books.toscrape.com（公开的爬虫练习网站）、CoinGecko、土耳其共和国中央银行和 fawazahmed0/exchange-api。每日更新。",
   common: {
@@ -132,6 +133,7 @@ const zh: Dict = {
     history: "价格历史",
     chartLabel: "{from} 至 {to} 的价格历史，介于 {min} 和 {max} 之间",
     notEnough: "历史数据不足。抓取两次后将显示图表。",
+    trackingStarted: "已于 {date} 开始跟踪。图表会随每次检查逐步补充。",
     showTable: "以表格显示数据",
     date: "日期",
     price: "价格",

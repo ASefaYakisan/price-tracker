@@ -19,6 +19,7 @@ const hi: Dict = {
     myAlerts: "मेरे अलर्ट",
     signOut: "साइन आउट",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Node.js, Supabase और Next.js से बना। डेटा: books.toscrape.com (एक सार्वजनिक स्क्रेपिंग सैंडबॉक्स), CoinGecko, तुर्की गणराज्य का केंद्रीय बैंक और fawazahmed0/exchange-api। रोज़ अपडेट होता है।",
   common: {
@@ -132,6 +133,7 @@ const hi: Dict = {
     history: "कीमत का इतिहास",
     chartLabel: "{from} से {to} तक कीमत का इतिहास, {min} और {max} के बीच",
     notEnough: "अभी पर्याप्त इतिहास नहीं है। दो स्क्रेप के बाद चार्ट दिखेगा।",
+    trackingStarted: "ट्रैकिंग {date} को शुरू हुई। हर जाँच के साथ चार्ट भरता जाएगा।",
     showTable: "डेटा तालिका के रूप में दिखाएँ",
     date: "तारीख",
     price: "कीमत",

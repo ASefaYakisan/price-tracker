@@ -19,6 +19,7 @@ const it: Dict = {
     myAlerts: "I miei avvisi",
     signOut: "Esci",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Realizzato con Node.js, Supabase e Next.js. Dati: books.toscrape.com (una sandbox pubblica per lo scraping), CoinGecko, Banca centrale della Repubblica di Turchia e fawazahmed0/exchange-api. Aggiornato ogni giorno.",
   common: {
@@ -132,6 +133,7 @@ const it: Dict = {
     history: "Storico prezzi",
     chartLabel: "Storico prezzi dal {from} al {to}, tra {min} e {max}",
     notEnough: "Storico ancora insufficiente. Il grafico compare dopo due rilevazioni.",
+    trackingStarted: "Monitoraggio iniziato il {date}. Il grafico si riempie a ogni controllo.",
     showTable: "Mostra i dati in tabella",
     date: "Data",
     price: "Prezzo",

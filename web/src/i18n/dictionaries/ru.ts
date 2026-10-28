@@ -19,6 +19,7 @@ const ru: Dict = {
     myAlerts: "Мои оповещения",
     signOut: "Выйти",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Сделано на Node.js, Supabase и Next.js. Данные: books.toscrape.com (публичная песочница для скрапинга), CoinGecko, Центральный банк Турецкой Республики и fawazahmed0/exchange-api. Обновляется ежедневно.",
   common: {
@@ -132,6 +133,7 @@ const ru: Dict = {
     history: "История цен",
     chartLabel: "История цен с {from} по {to}, от {min} до {max}",
     notEnough: "Пока недостаточно истории. График появится после двух сборов.",
+    trackingStarted: "Отслеживание началось {date}. График пополняется с каждой проверкой.",
     showTable: "Показать данные таблицей",
     date: "Дата",
     price: "Цена",

@@ -19,6 +19,7 @@ const th: Dict = {
     myAlerts: "การแจ้งเตือนของฉัน",
     signOut: "ออกจากระบบ",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "สร้างด้วย Node.js, Supabase และ Next.js ข้อมูล: books.toscrape.com (เว็บไซต์สาธารณะสำหรับฝึกดึงข้อมูล), CoinGecko, ธนาคารกลางแห่งสาธารณรัฐตุรกี และ fawazahmed0/exchange-api อัปเดตทุกวัน",
   common: {
@@ -132,6 +133,7 @@ const th: Dict = {
     history: "ประวัติราคา",
     chartLabel: "ประวัติราคาตั้งแต่ {from} ถึง {to} อยู่ระหว่าง {min} ถึง {max}",
     notEnough: "ยังมีประวัติไม่พอ กราฟจะแสดงหลังดึงข้อมูลสองครั้ง",
+    trackingStarted: "เริ่มติดตามเมื่อ {date} กราฟจะเติมข้อมูลทุกครั้งที่ตรวจสอบ",
     showTable: "แสดงข้อมูลเป็นตาราง",
     date: "วันที่",
     price: "ราคา",

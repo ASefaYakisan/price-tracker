@@ -32,6 +32,15 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
   const [hover, setHover] = useState<number | null>(null);
   const { t, lang, fill } = useI18n();
   const data = points.filter((p): p is PricePoint & { price: number } => p.price != null);
+  if (data.length === 1) {
+    // One real reading: show it instead of an empty chart, and say plainly when the history starts.
+    return (
+      <div className="rounded-xl border border-line px-4 py-8 text-center">
+        <p className="text-2xl font-bold tabular-nums">{money(data[0].price, currency, lang)}</p>
+        <p className="mt-2 text-sm text-muted">{fill(t.product.trackingStarted, { date: shortDate(Date.parse(data[0].scraped_at), lang) })}</p>
+      </div>
+    );
+  }
   if (data.length < 2) {
     return <p className="py-10 text-center text-sm text-muted">{t.product.notEnough}</p>;
   }

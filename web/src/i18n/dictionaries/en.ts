@@ -19,6 +19,7 @@ const en = {
     myAlerts: "My alerts",
     signOut: "Sign out",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Built with Node.js, Supabase and Next.js. Data: books.toscrape.com (a public scraping sandbox), CoinGecko, Central Bank of the Republic of Türkiye and fawazahmed0/exchange-api. Updated daily.",
   common: {
@@ -132,6 +133,7 @@ const en = {
     history: "Price history",
     chartLabel: "Price history from {from} to {to}, between {min} and {max}",
     notEnough: "Not enough history yet. The chart appears after two scrapes.",
+    trackingStarted: "Tracking started {date}. The chart fills in with every check.",
     showTable: "Show data as table",
     date: "Date",
     price: "Price",

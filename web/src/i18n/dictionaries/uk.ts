@@ -19,6 +19,7 @@ const uk: Dict = {
     myAlerts: "Мої сповіщення",
     signOut: "Вийти",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Створено на Node.js, Supabase і Next.js. Дані: books.toscrape.com (публічна пісочниця для скрапінгу), CoinGecko, Центральний банк Турецької Республіки та fawazahmed0/exchange-api. Оновлюється щодня.",
   common: {
@@ -132,6 +133,7 @@ const uk: Dict = {
     history: "Історія цін",
     chartLabel: "Історія цін з {from} по {to}, від {min} до {max}",
     notEnough: "Поки що замало історії. Графік з'явиться після двох зборів.",
+    trackingStarted: "Відстеження почалося {date}. Графік наповнюється з кожною перевіркою.",
     showTable: "Показати дані таблицею",
     date: "Дата",
     price: "Ціна",

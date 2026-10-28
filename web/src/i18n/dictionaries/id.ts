@@ -19,6 +19,7 @@ const id: Dict = {
     myAlerts: "Peringatan saya",
     signOut: "Keluar",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Dibuat dengan Node.js, Supabase, dan Next.js. Data: books.toscrape.com (sandbox scraping publik), CoinGecko, Bank Sentral Republik Turki, dan fawazahmed0/exchange-api. Diperbarui setiap hari.",
   common: {
@@ -132,6 +133,7 @@ const id: Dict = {
     history: "Riwayat harga",
     chartLabel: "Riwayat harga dari {from} hingga {to}, antara {min} dan {max}",
     notEnough: "Riwayat belum cukup. Grafik muncul setelah dua kali pengambilan data.",
+    trackingStarted: "Pelacakan dimulai {date}. Grafik terisi pada setiap pemeriksaan.",
     showTable: "Tampilkan data sebagai tabel",
     date: "Tanggal",
     price: "Harga",

@@ -19,6 +19,7 @@ const ko: Dict = {
     myAlerts: "내 알림",
     signOut: "로그아웃",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Node.js, Supabase, Next.js로 제작. 데이터: books.toscrape.com(공개 스크레이핑 연습 사이트), CoinGecko, 튀르키예 공화국 중앙은행, fawazahmed0/exchange-api. 매일 업데이트.",
   common: {
@@ -132,6 +133,7 @@ const ko: Dict = {
     history: "가격 기록",
     chartLabel: "{from}부터 {to}까지의 가격 기록, {min}~{max} 범위",
     notEnough: "아직 기록이 부족합니다. 두 번 수집한 후 차트가 표시됩니다.",
+    trackingStarted: "{date}에 추적을 시작했습니다. 확인할 때마다 차트가 채워집니다.",
     showTable: "데이터를 표로 보기",
     date: "날짜",
     price: "가격",

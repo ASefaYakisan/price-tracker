@@ -19,6 +19,7 @@ const tr: Dict = {
     myAlerts: "Alarmlarım",
     signOut: "Çıkış yap",
   },
+  legal: {"privacy": "Gizlilik ve veri silme", "terms": "Kullanım şartları"},
   footer:
     "Node.js, Supabase ve Next.js ile geliştirildi. Veri: books.toscrape.com (herkese açık bir tarama test sitesi), CoinGecko, Türkiye Cumhuriyet Merkez Bankası ve fawazahmed0/exchange-api. Her gün güncellenir.",
   common: {
@@ -132,6 +133,7 @@ const tr: Dict = {
     history: "Fiyat geçmişi",
     chartLabel: "{from} ile {to} arasındaki fiyat geçmişi, {min} ile {max} aralığında",
     notEnough: "Henüz yeterli geçmiş yok. Grafik iki taramadan sonra görünür.",
+    trackingStarted: "Takip {date} tarihinde başladı. Grafik her kontrolde dolar.",
     showTable: "Veriyi tablo olarak göster",
     date: "Tarih",
     price: "Fiyat",

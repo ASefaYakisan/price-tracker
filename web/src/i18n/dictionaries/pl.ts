@@ -19,6 +19,7 @@ const pl: Dict = {
     myAlerts: "Moje alerty",
     signOut: "Wyloguj się",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Zbudowano z użyciem Node.js, Supabase i Next.js. Dane: books.toscrape.com (publiczna piaskownica do scrapingu), CoinGecko, Bank Centralny Republiki Turcji oraz fawazahmed0/exchange-api. Aktualizowane codziennie.",
   common: {
@@ -132,6 +133,7 @@ const pl: Dict = {
     history: "Historia cen",
     chartLabel: "Historia cen od {from} do {to}, w przedziale od {min} do {max}",
     notEnough: "Za mało historii. Wykres pojawi się po dwóch pobraniach.",
+    trackingStarted: "Śledzenie rozpoczęte {date}. Wykres uzupełnia się przy każdym sprawdzeniu.",
     showTable: "Pokaż dane jako tabelę",
     date: "Data",
     price: "Cena",

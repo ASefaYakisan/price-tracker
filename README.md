@@ -2,6 +2,16 @@
 
 [![CI](https://github.com/ASefaYakisan/price-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/ASefaYakisan/price-tracker/actions/workflows/ci.yml)
 
+## Product overview
+
+Price Tracker helps shoppers keep a watchlist instead of revisiting product pages manually. Paste a product link, inspect the observed price history and set a target-price email alert. It is also a starting point for an owner who wants to operate a price-monitoring service with their own infrastructure accounts.
+
+The dashboard includes search and filters, personal lists, alerts, price charts, CSV/Excel exports, 24 interface languages and light/dark themes. Scheduled collection also supports market data. Store coverage varies: blocked pages may remain unreadable, and newly tracked shop products do not come with invented historical prices. The screenshots below show the dashboard and product history; they are examples, not a guarantee of current store coverage or business revenue.
+
+The system combines a Next.js/TypeScript web app on Vercel, a Node.js collector running through GitHub Actions, Supabase data storage and accounts, Resend alert email, and optional ScraperAPI fallback reads. These services have separate accounts, limits and running costs.
+
+For handover, the buyer supplies their own service accounts and configuration, applies all database migrations in order to a new database, and validates collection and notifications. See [Configuration](#configuration) and the [handover guide](docs/devir-rehberi.md). Existing user data, account credentials, domain ownership and software licensing require an explicit handover agreement; a code transfer alone does not settle them. The privacy and terms pages are drafts that the operator must complete before launch.
+
 **Live demo:** https://price-tracker-shop.vercel.app
 
 A Node.js scraper collects prices from four sources on a schedule (an e-commerce catalogue, crypto, exchange rates and gold) and stores every run in Supabase (Postgres). A Next.js dashboard shows current prices, the change since the last run and stock status.
