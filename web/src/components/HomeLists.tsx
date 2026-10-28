@@ -55,37 +55,26 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
         })}
       </div>
 
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-t border-line pt-4">
-        <p className="text-sm text-muted">
-          {fill(t.home.summary, { items: items.length, sources: new Set(items.map((p) => p.source)).size })} ·{" "}
-          {lastRun ? fill(t.home.lastScrape, { date: dateTime(lastRun, lang) }) : t.home.noScrapes}
-        </p>
-        <dl className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-          {drops + rises === 0 ? (
-            <div>
-              <dd className="text-muted">{t.home.noChanges}</dd>
-            </div>
-          ) : (
-            <>
-              <Figure label={t.home.priceDrops} value={drops} tone="text-ink" hint={t.home.sinceLastScrape} />
-              <Figure label={t.home.priceRises} value={rises} tone="text-ink" hint={t.home.sinceLastScrape} />
-            </>
-          )}
-          <Figure label={t.home.outOfStock} value={outOfStock} tone={outOfStock ? "text-warn" : "text-ink"} />
-          {items.length > 0 && (
-            <div className="hidden items-baseline gap-2 sm:flex">
-              <dt className="text-muted">{t.home.download}</dt>
-              <dd className="flex gap-3 font-medium">
-                <a href={`/api/export?format=xlsx&lang=${lang}&list=${list}`} className="text-accent underline-offset-4 hover:underline">
-                  Excel
-                </a>
-                <a href={`/api/export?format=csv&lang=${lang}&list=${list}`} className="text-accent underline-offset-4 hover:underline">
-                  CSV
-                </a>
-              </dd>
-            </div>
-          )}
-        </dl>
+      <dl className="my-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatCard label={t.home.trackedItems} value={items.length} note={fill(t.home.summary, { items: items.length, sources: new Set(items.map((p) => p.source)).size })} />
+        <StatCard label={t.home.priceDrops} value={drops} tone={drops ? "text-good" : "text-ink"} note={t.home.sinceLastScrape} />
+        <StatCard label={t.home.priceRises} value={rises} tone={rises ? "text-bad" : "text-ink"} note={t.home.sinceLastScrape} />
+        <StatCard label={t.home.outOfStock} value={outOfStock} tone={outOfStock ? "text-warn" : "text-ink"} />
+      </dl>
+
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-8 gap-y-2 text-sm text-muted">
+        <p>{lastRun ? fill(t.home.lastScrape, { date: dateTime(lastRun, lang) }) : t.home.noScrapes}</p>
+        {items.length > 0 && (
+          <p className="hidden items-baseline gap-3 sm:flex">
+            <span>{t.home.download}</span>
+            <a href={`/api/export?format=xlsx&lang=${lang}&list=${list}`} className="font-medium text-accent underline-offset-4 hover:underline">
+              Excel
+            </a>
+            <a href={`/api/export?format=csv&lang=${lang}&list=${list}`} className="font-medium text-accent underline-offset-4 hover:underline">
+              CSV
+            </a>
+          </p>
+        )}
       </div>
 
       {list === "sample" && <p className="mb-4 text-sm text-muted">{t.home.sampleNote}</p>}
@@ -123,12 +112,13 @@ function EmptyList({ title, text, cta }: { title: string; text: string; cta: str
   );
 }
 
-// One plain figure in the summary line: no cards, no icons.
-function Figure({ label, value, tone, hint }: { label: string; value: number; tone: string; hint?: string }) {
+// One figure card in the summary row above the list.
+function StatCard({ label, value, tone = "text-ink", note }: { label: string; value: number; tone?: string; note?: string }) {
   return (
-    <div className="flex items-baseline gap-1.5" title={hint}>
-      <dt className="text-muted">{label}</dt>
-      <dd className={`font-semibold tabular-nums ${tone}`}>{value}</dd>
+    <div className="rounded-xl border border-line bg-card px-4 py-3 transition-colors hover:bg-hover">
+      <dt className="text-xs font-medium text-muted">{label}</dt>
+      <dd className={`mt-1 text-2xl font-semibold tabular-nums ${tone}`}>{value}</dd>
+      {note && <p className="mt-0.5 truncate text-xs text-faint">{note}</p>}
     </div>
   );
 }
