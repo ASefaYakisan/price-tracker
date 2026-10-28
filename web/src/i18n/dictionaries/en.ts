@@ -113,6 +113,8 @@ const en = {
     showMore: "Show more ({count} left)",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "No change",
     downBy: "Down {amount} since last scrape",
     upBy: "Up {amount} since last scrape",

@@ -160,7 +160,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
                   <LinkStatusPill product={p} t={t} />
                 </div>
               </div>
-              <Sparkline points={sparklines[p.id]} source={p.source} className="hidden md:block" />
+              <Sparkline points={sparklines[p.id]} source={p.source} label={t.change.trend30} className="hidden md:block" />
               <div className="min-w-0 max-w-[40%] shrink-0 text-end sm:max-w-none">
                 {p.price == null && linkState(p) ? (
                   <div className="text-sm text-muted">{linkState(p) === "failed" ? t.linkStatus.failed : t.home.readingPrice}</div>

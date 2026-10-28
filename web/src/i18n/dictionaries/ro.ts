@@ -113,6 +113,8 @@ const ro: Dict = {
     showMore: "Arată mai multe (au rămas {count})",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Nicio modificare",
     downBy: "Scădere de {amount} de la ultima colectare",
     upBy: "Creștere de {amount} de la ultima colectare",

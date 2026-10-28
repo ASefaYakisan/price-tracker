@@ -113,6 +113,8 @@ const ar: Dict = {
     showMore: "عرض المزيد (متبقٍ {count})",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "لا تغيير",
     downBy: "انخفض بمقدار {amount} منذ آخر جمع",
     upBy: "ارتفع بمقدار {amount} منذ آخر جمع",

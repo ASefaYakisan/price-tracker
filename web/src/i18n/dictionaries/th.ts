@@ -113,6 +113,8 @@ const th: Dict = {
     showMore: "แสดงเพิ่มเติม (เหลือ {count})",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "ไม่เปลี่ยนแปลง",
     downBy: "ลดลง {amount} นับจากการดึงข้อมูลครั้งก่อน",
     upBy: "เพิ่มขึ้น {amount} นับจากการดึงข้อมูลครั้งก่อน",

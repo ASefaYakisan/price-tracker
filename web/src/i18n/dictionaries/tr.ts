@@ -113,6 +113,8 @@ const tr: Dict = {
     showMore: "Daha fazla göster ({count} kaldı)",
   },
   change: {
+    trend30: "Son 30 gün",
+    sinceLast: "Son okumaya göre",
     none: "Değişiklik yok",
     downBy: "Son taramadan beri {amount} düştü",
     upBy: "Son taramadan beri {amount} arttı",

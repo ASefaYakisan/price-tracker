@@ -113,6 +113,8 @@ const el: Dict = {
     showMore: "Εμφάνιση περισσότερων (απομένουν {count})",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Καμία μεταβολή",
     downBy: "Μείωση {amount} από την τελευταία συλλογή",
     upBy: "Αύξηση {amount} από την τελευταία συλλογή",

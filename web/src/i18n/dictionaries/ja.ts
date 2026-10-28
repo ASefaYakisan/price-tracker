@@ -113,6 +113,8 @@ const ja: Dict = {
     showMore: "さらに表示（残り {count} 件）",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "変動なし",
     downBy: "前回の取得から {amount} 値下がり",
     upBy: "前回の取得から {amount} 値上がり",

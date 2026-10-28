@@ -113,6 +113,8 @@ const da: Dict = {
     showMore: "Vis flere ({count} tilbage)",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Ingen ændring",
     downBy: "Faldet {amount} siden seneste hentning",
     upBy: "Steget {amount} siden seneste hentning",

@@ -113,6 +113,8 @@ const cs: Dict = {
     showMore: "Zobrazit další (zbývá {count})",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Beze změny",
     downBy: "Pokles o {amount} od posledního stažení",
     upBy: "Nárůst o {amount} od posledního stažení",
