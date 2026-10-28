@@ -34,6 +34,13 @@ const en = {
     genericError: "Something went wrong. Please try again.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "This page could not be found",
+    notFoundText: "The link may be wrong, or the product was removed. Try the full list instead.",
+    errorTitle: "Something went wrong",
+    errorText: "We could not load this page. Please try again in a moment.",
+    retry: "Try again",
+  },
   sources: {
     "books-toscrape": "Books",
     coingecko: "Crypto",
@@ -79,6 +86,8 @@ const en = {
     found: "Found {title} at {price}. (Demo mode: not saved.)",
     hint: "Works with most shops. If the price can't be read right away, the link is saved as pending and retried automatically.",
     signIn: "Sign in to add any product by its link.",
+    matches: "Already tracked on this site",
+    noMatch: "Nothing tracked under that name yet. Paste the product's link to add it.",
   },
   table: {
     search: "Search…",
@@ -194,6 +203,7 @@ const en = {
     footerRule: "Each alert sends one email when the price is at or below the target; edit it to watch again.",
     notActive: "Not active",
     emailSent: "Email sent {date}",
+    readFailed: "We could not read this page's price at the last check: {reason}. Your alert waits until it can be read again.",
     watching: "Watching",
     setOn: "set {date}",
     now: "Now",

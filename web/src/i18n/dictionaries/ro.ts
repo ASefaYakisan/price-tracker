@@ -34,6 +34,13 @@ const ro: Dict = {
     genericError: "Ceva n-a mers bine. Încearcă din nou.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Pagina nu a fost găsită",
+    notFoundText: "Linkul poate fi greșit sau produsul a fost eliminat. Încearcă lista completă.",
+    errorTitle: "Ceva nu a mers bine",
+    errorText: "Pagina nu a putut fi încărcată. Încearcă din nou într-un moment.",
+    retry: "Încearcă din nou",
+  },
   sources: {
     "books-toscrape": "Cărți",
     coingecko: "Cripto",
@@ -79,6 +86,8 @@ const ro: Dict = {
     found: "Am găsit {title} la {price}. (Mod demo: nesalvat.)",
     hint: "Funcționează cu majoritatea magazinelor. Dacă prețul nu poate fi citit imediat, linkul este salvat ca în așteptare și reîncercat automat.",
     signIn: "Conectează-te pentru a adăuga orice produs prin linkul său.",
+    matches: "Deja urmărite pe acest site",
+    noMatch: "Nimic nu e urmărit sub acest nume încă. Lipește linkul produsului pentru a-l adăuga.",
   },
   table: {
     search: "Caută…",
@@ -194,6 +203,7 @@ const ro: Dict = {
     footerRule: "Fiecare alertă trimite un singur e-mail când prețul este la sau sub țintă; editeaz-o pentru a urmări din nou.",
     notActive: "Inactivă",
     emailSent: "E-mail trimis {date}",
+    readFailed: "La ultima verificare nu am putut citi prețul acestei pagini: {reason}. Alerta ta așteaptă până când prețul poate fi citit din nou.",
     watching: "Activă",
     setOn: "setată {date}",
     now: "Acum",

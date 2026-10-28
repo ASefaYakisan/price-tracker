@@ -34,6 +34,13 @@ const it: Dict = {
     genericError: "Qualcosa è andato storto. Riprova.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Pagina non trovata",
+    notFoundText: "Il link potrebbe essere sbagliato o il prodotto è stato rimosso. Prova con l'elenco completo.",
+    errorTitle: "Qualcosa è andato storto",
+    errorText: "Non è stato possibile caricare questa pagina. Riprova tra un momento.",
+    retry: "Riprova",
+  },
   sources: {
     "books-toscrape": "Libri",
     coingecko: "Cripto",
@@ -79,6 +86,8 @@ const it: Dict = {
     found: "Trovato {title} a {price}. (Modalità demo: non salvato.)",
     hint: "Funziona con la maggior parte dei negozi. Se il prezzo non si riesce a leggere subito, il link viene salvato in attesa e riprovato automaticamente.",
     signIn: "Accedi per aggiungere qualsiasi prodotto tramite il suo link.",
+    matches: "Già monitorati su questo sito",
+    noMatch: "Nessun prodotto monitorato con questo nome. Incolla il link del prodotto per aggiungerlo.",
   },
   table: {
     search: "Cerca…",
@@ -194,6 +203,7 @@ const it: Dict = {
     footerRule: "Ogni avviso invia una sola email quando il prezzo è pari o inferiore all'obiettivo; modificalo per monitorare di nuovo.",
     notActive: "Non attivo",
     emailSent: "Email inviata il {date}",
+    readFailed: "All'ultimo controllo non è stato possibile leggere il prezzo di questa pagina: {reason}. Il tuo avviso resta in attesa finché il prezzo non sarà di nuovo leggibile.",
     watching: "In monitoraggio",
     setOn: "creato il {date}",
     now: "Ora",

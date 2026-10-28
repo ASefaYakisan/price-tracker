@@ -34,6 +34,13 @@ const pl: Dict = {
     genericError: "Coś poszło nie tak. Spróbuj ponownie.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Nie znaleziono tej strony",
+    notFoundText: "Link może być błędny albo produkt został usunięty. Zajrzyj do pełnej listy.",
+    errorTitle: "Coś poszło nie tak",
+    errorText: "Nie udało się wczytać tej strony. Spróbuj ponownie za chwilę.",
+    retry: "Spróbuj ponownie",
+  },
   sources: {
     "books-toscrape": "Książki",
     coingecko: "Kryptowaluty",
@@ -79,6 +86,8 @@ const pl: Dict = {
     found: "Znaleziono {title} za {price}. (Tryb demo: nie zapisano.)",
     hint: "Działa z większością sklepów. Jeśli ceny nie da się od razu odczytać, link zostaje zapisany jako oczekujący i automatycznie ponowiony.",
     signIn: "Zaloguj się, aby dodać dowolny produkt przez link.",
+    matches: "Już śledzone w tym serwisie",
+    noMatch: "Nic o tej nazwie nie jest jeszcze śledzone. Wklej link do produktu, aby go dodać.",
   },
   table: {
     search: "Szukaj…",
@@ -194,6 +203,7 @@ const pl: Dict = {
     footerRule: "Każdy alert wysyła jeden e-mail, gdy cena jest równa lub niższa od celu; edytuj go, aby obserwować ponownie.",
     notActive: "Nieaktywny",
     emailSent: "E-mail wysłany {date}",
+    readFailed: "Podczas ostatniego sprawdzenia nie udało się odczytać ceny z tej strony: {reason}. Twój alert poczeka, aż cenę znów będzie można odczytać.",
     watching: "Obserwowany",
     setOn: "ustawiony {date}",
     now: "Teraz",

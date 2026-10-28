@@ -22,7 +22,13 @@ export async function assertPublicUrl(raw: string): Promise<URL> {
 function isPrivate(ip: string) {
   if (ip.includes(":")) {
     const v = ip.toLowerCase();
-    if (v.startsWith("::ffff:")) return isPrivate(v.slice(7));
+    if (v.startsWith("::ffff:")) {
+      // new URL() writes the mapped IPv4 address in hex ([::ffff:7f00:1]), so both spellings are read.
+      const hex = v.slice(7).match(/^([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+      if (!hex) return isPrivate(v.slice(7));
+      const [hi, lo] = [parseInt(hex[1], 16), parseInt(hex[2], 16)];
+      return isPrivate(`${hi >> 8}.${hi & 255}.${lo >> 8}.${lo & 255}`);
+    }
     return v === "::1" || v === "::" || v.startsWith("fc") || v.startsWith("fd") || v.startsWith("fe80");
   }
   const [a, b] = ip.split(".").map(Number);

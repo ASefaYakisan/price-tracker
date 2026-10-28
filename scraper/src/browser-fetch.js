@@ -2,6 +2,7 @@
 // let its scripts run, then read the price from the rendered page.
 // Used by the pending-links run and the daily refresh; the site itself never launches a browser.
 import { cleanTitle, pickImage } from './clean-product.js';
+import { assertPublicUrl } from './safe-url.js';
 import { canonicalUrl, extractProduct, parseAmount } from './extract-price.js';
 
 const PAGE_TIMEOUT_MS = 30_000;
@@ -16,8 +17,9 @@ export function worthBrowserRetry(attempt) {
 
 // Opens Chromium on the first retry and keeps it for the run; `maxPages` caps how long one run can take.
 // When Playwright or its browser is missing, retries are skipped and the plain-request result stands.
-export function createBrowserReader({ maxPages = 40, launch = launchChromium } = {}) {
+export function createBrowserReader({ maxPages = 40, launch = launchChromium, guard = assertPublicUrl } = {}) {
   let browser;
+  let launching; // reads run side by side (refresh.js), so the first retries must share one launch
   let unavailable = false;
   let used = 0;
 
@@ -25,7 +27,7 @@ export function createBrowserReader({ maxPages = 40, launch = launchChromium } =
     if (!worthBrowserRetry(attempt) || unavailable || used >= maxPages) return attempt;
     if (!browser) {
       try {
-        browser = await launch();
+        browser = await (launching ??= launch());
       } catch (err) {
         unavailable = true;
         console.warn(`  browser unavailable, skipping browser retries: ${err.message ?? err}`);
@@ -35,7 +37,7 @@ export function createBrowserReader({ maxPages = 40, launch = launchChromium } =
     used++;
     let second;
     try {
-      second = await readInBrowser(browser, url);
+      second = await readInBrowser(browser, url, guard);
     } catch (err) {
       console.warn(`  browser failed on ${url}: ${err.message ?? err}`);
       return attempt;
@@ -47,6 +49,7 @@ export function createBrowserReader({ maxPages = 40, launch = launchChromium } =
   async function close() {
     await browser?.close().catch(() => {});
     browser = undefined;
+    launching = undefined;
   }
 
   return { retry, close };
@@ -57,13 +60,20 @@ async function launchChromium() {
   return chromium.launch({ headless: true });
 }
 
-export async function readInBrowser(browser, url) {
+export async function readInBrowser(browser, url, guard = assertPublicUrl) {
   const context = await browser.newContext({ locale: 'tr-TR', viewport: { width: 1366, height: 900 } });
   try {
     const page = await context.newPage();
-    await page.route('**/*', (route) =>
-      BLOCKED_RESOURCES.has(route.request().resourceType()) ? route.abort() : route.continue(),
-    );
+    // Redirects and sub-requests go through the same address check as the first request.
+    await page.route('**/*', async (route) => {
+      if (BLOCKED_RESOURCES.has(route.request().resourceType())) return route.abort();
+      try {
+        await guard(route.request().url());
+      } catch {
+        return route.abort('blockedbyclient');
+      }
+      return route.continue();
+    });
     let response;
     try {
       response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: PAGE_TIMEOUT_MS });

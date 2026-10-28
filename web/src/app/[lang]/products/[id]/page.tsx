@@ -11,7 +11,7 @@ import { fill } from "@/i18n/config";
 import { BackLink } from "@/components/BackLink";
 import { ListButton } from "@/components/ListButton";
 import { getDictionary, resolveLang } from "@/i18n/server";
-import { getPriceHistory, getProduct } from "@/lib/data";
+import { getPriceHistory, getProduct, getProducts } from "@/lib/data";
 import { changeTone, dateTime, money, percent, percentChange, storeName } from "@/lib/format";
 
 // Tab, bookmark and link-preview title: the product's own name and price. getProduct is
@@ -35,7 +35,16 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
   };
 }
 
-export default function ProductPage({ params }: PageProps<"/[lang]/products/[id]">) {
+// One known id lets the build check the page; every other id is rendered on demand.
+export async function generateStaticParams() {
+  const [first] = await getProducts();
+  return first ? [{ id: String(first.id) }] : [];
+}
+
+export default async function ProductPage({ params }: PageProps<"/[lang]/products/[id]">) {
+  // Checked before anything streams, so an unknown or removed product answers with a real 404 status.
+  const id = Number((await params).id);
+  if (!Number.isInteger(id) || !(await getProduct(id))) notFound();
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-8">
       <BackLink />

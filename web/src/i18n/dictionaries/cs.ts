@@ -34,6 +34,13 @@ const cs: Dict = {
     genericError: "Něco se pokazilo. Zkuste to znovu.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Stránka nebyla nalezena",
+    notFoundText: "Odkaz může být chybný nebo byl produkt odstraněn. Zkus místo toho celý seznam.",
+    errorTitle: "Něco se pokazilo",
+    errorText: "Stránku se nepodařilo načíst. Zkus to za chvíli znovu.",
+    retry: "Zkusit znovu",
+  },
   sources: {
     "books-toscrape": "Knihy",
     coingecko: "Kryptoměny",
@@ -79,6 +86,8 @@ const cs: Dict = {
     found: "Nalezeno: {title} za {price}. (Ukázkový režim: neuloženo.)",
     hint: "Funguje s většinou obchodů. Pokud cenu nelze hned přečíst, odkaz se uloží jako čekající a automaticky se zkusí znovu.",
     signIn: "Přihlaste se a přidávejte libovolné produkty odkazem.",
+    matches: "Už sledováno na tomto webu",
+    noMatch: "Pod tímto názvem se zatím nic nesleduje. Vlož odkaz na produkt a přidej ho.",
   },
   table: {
     search: "Hledat…",
@@ -194,6 +203,7 @@ const cs: Dict = {
     footerRule: "Každé upozornění pošle jeden e-mail, když je cena na cíli nebo pod ním; úpravou ho znovu aktivujete.",
     notActive: "Neaktivní",
     emailSent: "E-mail odeslán {date}",
+    readFailed: "Při poslední kontrole se nepodařilo přečíst cenu této stránky: {reason}. Vaše upozornění počká, dokud půjde cenu znovu přečíst.",
     watching: "Sleduje se",
     setOn: "nastaveno {date}",
     now: "Nyní",

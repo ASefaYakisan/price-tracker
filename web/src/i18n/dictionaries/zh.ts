@@ -34,6 +34,13 @@ const zh: Dict = {
     genericError: "出了点问题，请重试。",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "找不到此页面",
+    notFoundText: "链接可能有误，或该商品已被移除。请查看完整列表。",
+    errorTitle: "出了点问题",
+    errorText: "无法加载此页面，请稍后再试。",
+    retry: "重试",
+  },
   sources: {
     "books-toscrape": "图书",
     coingecko: "加密货币",
@@ -79,6 +86,8 @@ const zh: Dict = {
     found: "找到 {title}，价格 {price}。（演示模式：未保存。）",
     hint: "适用于大多数商店。如果暂时读不到价格，链接会保存为待处理，并自动重试。",
     signIn: "登录后即可通过链接添加任意商品。",
+    matches: "本站已在追踪",
+    noMatch: "暂无该名称的追踪商品。粘贴商品链接即可添加。",
   },
   table: {
     search: "搜索…",
@@ -194,6 +203,7 @@ const zh: Dict = {
     footerRule: "每个提醒会在价格低于或等于目标时发送一封邮件；编辑后可重新关注。",
     notActive: "未启用",
     emailSent: "邮件已于 {date} 发送",
+    readFailed: "上次检查时无法读取此页面的价格：{reason}。在能再次读取价格之前，你的提醒会一直等待。",
     watching: "关注中",
     setOn: "设置于 {date}",
     now: "当前",

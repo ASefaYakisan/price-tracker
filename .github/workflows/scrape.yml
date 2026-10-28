@@ -46,6 +46,8 @@ jobs:
           UNBLOCK_RENDER_HOSTS: ${{ vars.UNBLOCK_RENDER_HOSTS }}
           UNBLOCK_COUNTRY: ${{ vars.UNBLOCK_COUNTRY }}
           UNBLOCK_PREMIUM_HOSTS: ${{ vars.UNBLOCK_PREMIUM_HOSTS }}
+          # Minutes after which no new link is started; skipped links are read first next time (src/refresh.js).
+          SCRAPE_BUDGET_MINUTES: ${{ vars.SCRAPE_BUDGET_MINUTES }}
           # Optional: without it, due alerts are only logged, not emailed.
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}
@@ -54,6 +56,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_MIN_DROP: ${{ inputs.telegram_min_drop || '2' }}
+          TELEGRAM_LANG: ${{ vars.TELEGRAM_LANG }}
           # Optional: copy prices to a Google Sheet (service account JSON + sheet id).
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}

@@ -44,7 +44,7 @@ export function AlertForm({
     const res = await fetch("/api/alerts", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ productId, email, targetPrice: Number(target) }),
+      body: JSON.stringify({ productId, email, targetPrice: Number(target), lang }),
     }).catch(() => null);
     const json = await res?.json().catch(() => null);
     if (res?.ok && json?.ok) {

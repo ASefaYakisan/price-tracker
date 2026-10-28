@@ -62,6 +62,7 @@ In the table, **Secret** and **Variable** mean GitHub repository Settings → Se
 | `SITE_URL` | scraper | Optional | Actions Variable / root `.env` | Dashboard origin for email/digest links; otherwise links use the shop URL. |
 | `TELEGRAM_BOT_TOKEN` | scraper | For Telegram | Actions Secret / root `.env` | Bot credential; missing token or chat ID skips Telegram. |
 | `TELEGRAM_CHAT_ID` | scraper | For Telegram | Actions Secret / root `.env` | Destination chat; no default. |
+| `TELEGRAM_LANG` | scraper | Optional | Local root `.env` / process environment | Digest language: `en` (default), `tr`, `de`, `fr`, `es`; unknown values fall back to English. |
 | `TELEGRAM_MIN_DROP` | scraper | Optional | Local root `.env` / process environment | Minimum percentage drop; `2` when unset. Current workflows do not forward this setting, so scheduled runs use 2%. Do not set it to an empty string (that becomes zero). |
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | scraper | For Sheets | Actions Secret / root `.env` | Service account JSON; missing credentials or sheet ID skips sync. |
 | `GOOGLE_SHEET_ID` | scraper | For Sheets | Actions Secret / root `.env` | Target spreadsheet ID; no default. |
@@ -70,6 +71,7 @@ In the table, **Secret** and **Variable** mean GitHub repository Settings → Se
 | `SCRAPER_API_KEY` | scraper | Optional | Actions Secret / root `.env` | Enables the paid fallback; see [Blocked shops](#blocked-shops-optional-scraping-api). Disabled without a key. |
 | `UNBLOCK_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts sent directly to the paid fallback; empty by default. |
 | `UNBLOCK_MONTHLY_LIMIT` | scraper | Optional | Actions Variable / root `.env` | Monthly credit ceiling; `900`; `0` disables paid reads. |
+| `SCRAPE_BUDGET_MINUTES` | scraper | Optional | Actions Variable | Minutes after which the daily refresh starts no new link (default `30`); skipped links are read first next run. |
 | `UNBLOCK_COUNTRY` | scraper | Optional | Actions Variable / root `.env` | Country code; `tr`; `none` lets the API choose. |
 | `UNBLOCK_RENDER_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing JavaScript rendering; empty by default. |
 | `UNBLOCK_PREMIUM_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing premium requests; empty by default. |
@@ -124,6 +126,10 @@ Read-only JSON, no key needed, CORS open. Interactive docs (Swagger UI): [`/docs
 ## Price alerts
 
 Visitors leave an email and a target price on any product page. After every scrape the job emails each alert whose target is reached, once, then marks it sent. Emails go through [Resend](https://resend.com): see [Configuration](#configuration) to enable sending; otherwise the job only logs which alerts are due. Alerts are write-only for the public (RLS insert policy, no read access).
+
+### Alert verification
+
+A price reader can occasionally catch the wrong number (an instalment amount, a shipping fee, kuruş read as lira). If the latest reading is below half or above five times the reading before it, the alert is held and logged as a suspicious jump; it is sent only when the next scrape reads the same price again. Ordinary drops alert immediately, and products with no earlier reading behave as before.
 
 Guests manage their alerts from the browser that created them: each alert has a secret manage token that only that browser holds.
 

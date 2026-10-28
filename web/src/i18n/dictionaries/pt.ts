@@ -34,6 +34,13 @@ const pt: Dict = {
     genericError: "Algo deu errado. Tente novamente.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Esta página não foi encontrada",
+    notFoundText: "O link pode estar errado ou o produto foi removido. Veja a lista completa.",
+    errorTitle: "Algo deu errado",
+    errorText: "Não foi possível carregar esta página. Tente novamente em instantes.",
+    retry: "Tentar de novo",
+  },
   sources: {
     "books-toscrape": "Livros",
     coingecko: "Cripto",
@@ -79,6 +86,8 @@ const pt: Dict = {
     found: "{title} encontrado por {price}. (Modo demo: não foi salvo.)",
     hint: "Funciona com a maioria das lojas. Se o preço não puder ser lido logo, o link fica salvo como pendente e é tentado de novo automaticamente.",
     signIn: "Entre para adicionar qualquer produto pelo link.",
+    matches: "Já acompanhados neste site",
+    noMatch: "Ainda não há nada com esse nome. Cole o link do produto para adicioná-lo.",
   },
   table: {
     search: "Buscar…",
@@ -194,6 +203,7 @@ const pt: Dict = {
     footerRule: "Cada alerta envia um único e-mail quando o preço está igual ou abaixo da meta; edite-o para acompanhar de novo.",
     notActive: "Inativo",
     emailSent: "E-mail enviado em {date}",
+    readFailed: "Na última verificação não foi possível ler o preço desta página: {reason}. O seu alerta aguarda até o preço voltar a ser lido.",
     watching: "Acompanhando",
     setOn: "criado em {date}",
     now: "Agora",

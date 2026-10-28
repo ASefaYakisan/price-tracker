@@ -1,6 +1,7 @@
 import { isDemo } from "@/lib/data";
 import { alertError as error, EMAIL, escapeLike } from "@/lib/alerts-server";
 import { currentUser } from "@/lib/supabase/server";
+import { LOCALES } from "@/i18n/config";
 
 // Price-drop signup for the signed-in account. Returns the alert's id and manage token.
 export async function POST(request: Request) {
@@ -8,6 +9,8 @@ export async function POST(request: Request) {
   const productId = Number(body?.productId);
   const email = String(body?.email ?? "").trim();
   const target = Number(body?.targetPrice);
+  // Language of the page the alert was created on; anything unknown is stored as null (English email).
+  const lang = typeof body?.lang === "string" && body.lang in LOCALES ? body.lang : null;
 
   if (!Number.isInteger(productId) || productId <= 0) return error("Unknown item.");
   if (!EMAIL.test(email) || email.length > 254) return error("Enter a valid email address.");
@@ -18,11 +21,11 @@ export async function POST(request: Request) {
   const user = await currentUser();
   if (user) {
     // Signed in: the alert belongs to the account. Runs as the user, so row level security checks ownership.
-    const { data, error: dbError } = await user.db
-      .from("alerts")
-      .insert({ product_id: productId, email, target_price: target, user_id: user.id })
-      .select("id, manage_token")
-      .single();
+    const row = { product_id: productId, email, target_price: target, user_id: user.id };
+    let { data, error: dbError } = await user.db.from("alerts").insert({ ...row, lang }).select("id, manage_token").single();
+    // Column missing (migration 0012 not applied yet): save the alert without the language.
+    if (dbError?.code === "42703" || dbError?.code === "PGRST204")
+      ({ data, error: dbError } = await user.db.from("alerts").insert(row).select("id, manage_token").single());
     if (dbError?.code === "23505") {
       const { data: updated } = await user.db
         .from("alerts")
@@ -39,7 +42,7 @@ export async function POST(request: Request) {
     if (dbError?.message === "alert_limit_hourly")
       return error("You created many alerts in the last hour. Try again later.", 429);
     if (dbError) return error("Could not save the alert. Please try again.", 500);
-    return Response.json({ ok: true, account: true, id: data.id, token: data.manage_token });
+    return Response.json({ ok: true, account: true, id: data!.id, token: data!.manage_token });
   }
 
   // Alerts belong to accounts: guests are asked to sign in first.

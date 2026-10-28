@@ -34,6 +34,13 @@ const fr: Dict = {
     genericError: "Une erreur s'est produite. Veuillez réessayer.",
     emailPlaceholder: "you@example.com",
   },
+  errors: {
+    notFoundTitle: "Cette page est introuvable",
+    notFoundText: "Le lien est peut-être erroné ou le produit a été retiré. Consultez plutôt la liste complète.",
+    errorTitle: "Un problème est survenu",
+    errorText: "Cette page n'a pas pu être chargée. Réessayez dans un instant.",
+    retry: "Réessayer",
+  },
   sources: {
     "books-toscrape": "Livres",
     coingecko: "Crypto",
@@ -79,6 +86,8 @@ const fr: Dict = {
     found: "{title} trouvé à {price}. (Mode démo : non enregistré.)",
     hint: "Fonctionne avec la plupart des boutiques. Si le prix ne peut pas être lu tout de suite, le lien est enregistré en attente et réessayé automatiquement.",
     signIn: "Connectez-vous pour ajouter n'importe quel produit par son lien.",
+    matches: "Déjà suivis sur ce site",
+    noMatch: "Aucun produit suivi sous ce nom pour l'instant. Colle le lien du produit pour l'ajouter.",
   },
   table: {
     search: "Rechercher…",
@@ -194,6 +203,7 @@ const fr: Dict = {
     footerRule: "Chaque alerte envoie un seul e-mail lorsque le prix est inférieur ou égal à l'objectif ; modifiez-la pour la réactiver.",
     notActive: "Inactive",
     emailSent: "E-mail envoyé le {date}",
+    readFailed: "Lors de la dernière vérification, le prix de cette page n'a pas pu être lu : {reason}. Votre alerte attend qu'il soit de nouveau lisible.",
     watching: "En surveillance",
     setOn: "créée le {date}",
     now: "Actuel",
