@@ -134,6 +134,7 @@ const th: Dict = {
     chartLabel: "ประวัติราคาตั้งแต่ {from} ถึง {to} อยู่ระหว่าง {min} ถึง {max}",
     notEnough: "ยังมีประวัติไม่พอ กราฟจะแสดงหลังดึงข้อมูลสองครั้ง",
     trackingStarted: "เริ่มติดตามเมื่อ {date} กราฟจะเติมข้อมูลทุกครั้งที่ตรวจสอบ",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "แสดงข้อมูลเป็นตาราง",
     date: "วันที่",
     price: "ราคา",

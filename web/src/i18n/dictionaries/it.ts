@@ -134,6 +134,7 @@ const it: Dict = {
     chartLabel: "Storico prezzi dal {from} al {to}, tra {min} e {max}",
     notEnough: "Storico ancora insufficiente. Il grafico compare dopo due rilevazioni.",
     trackingStarted: "Monitoraggio iniziato il {date}. Il grafico si riempie a ogni controllo.",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "Mostra i dati in tabella",
     date: "Data",
     price: "Prezzo",

@@ -134,6 +134,7 @@ const de: Dict = {
     chartLabel: "Preisverlauf von {from} bis {to}, zwischen {min} und {max}",
     notEnough: "Noch nicht genug Verlauf. Das Diagramm erscheint nach zwei Abrufen.",
     trackingStarted: "Beobachtung seit {date}. Das Diagramm füllt sich mit jeder Prüfung.",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "Daten als Tabelle anzeigen",
     date: "Datum",
     price: "Preis",

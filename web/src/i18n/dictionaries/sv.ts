@@ -134,6 +134,7 @@ const sv: Dict = {
     chartLabel: "Prishistorik från {from} till {to}, mellan {min} och {max}",
     notEnough: "Inte tillräckligt med historik än. Diagrammet visas efter två hämtningar.",
     trackingStarted: "Bevakningen startade {date}. Diagrammet fylls på vid varje kontroll.",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "Visa data som tabell",
     date: "Datum",
     price: "Pris",

@@ -134,6 +134,7 @@ const uk: Dict = {
     chartLabel: "Історія цін з {from} по {to}, від {min} до {max}",
     notEnough: "Поки що замало історії. Графік з'явиться після двох зборів.",
     trackingStarted: "Відстеження почалося {date}. Графік наповнюється з кожною перевіркою.",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "Показати дані таблицею",
     date: "Дата",
     price: "Ціна",

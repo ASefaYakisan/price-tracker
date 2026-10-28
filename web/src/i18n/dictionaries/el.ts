@@ -134,6 +134,7 @@ const el: Dict = {
     chartLabel: "Ιστορικό τιμών από {from} έως {to}, μεταξύ {min} και {max}",
     notEnough: "Δεν υπάρχει ακόμη αρκετό ιστορικό. Το γράφημα εμφανίζεται μετά από δύο συλλογές.",
     trackingStarted: "Η παρακολούθηση ξεκίνησε στις {date}. Το γράφημα συμπληρώνεται σε κάθε έλεγχο.",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "Εμφάνιση δεδομένων ως πίνακα",
     date: "Ημερομηνία",
     price: "Τιμή",
