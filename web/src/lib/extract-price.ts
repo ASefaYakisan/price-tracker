@@ -146,10 +146,20 @@ function ldOffers(node: Json, variant: Json = null): Offer[] {
   return out.filter((o) => o.price != null);
 }
 
+// priceSpecification may be one object or a list (ListPrice + SalePrice); list/strikethrough prices are not what the shopper pays.
+function specOf(o: Json): Json {
+  const specs = ([] as Json[]).concat(o.priceSpecification ?? []).filter((s) => s && typeof s === "object");
+  const paid = specs.filter((s) => !/listprice|strikethrough|msrp/i.test(String(s.priceType ?? "")));
+  const priced = (paid.length ? paid : specs).filter((s) => (parseAmount(s.price) ?? 0) > 0);
+  return priced.reduce((a: Json, b: Json) => (a && parseAmount(a.price)! <= parseAmount(b.price)! ? a : b), null);
+}
+
 function toOffer(o: Json, variant: Json, parentCurrency: string | null = null): Offer {
+  const spec = specOf(o);
+  const own = parseAmount(o.price);
   return {
-    price: parseAmount(o.price ?? o.priceSpecification?.price ?? o.lowPrice),
-    currency: o.priceCurrency ?? o.priceSpecification?.priceCurrency ?? parentCurrency ?? null,
+    price: (own ?? 0) > 0 ? own : (parseAmount(spec?.price) ?? parseAmount(o.lowPrice) ?? own),
+    currency: o.priceCurrency ?? spec?.priceCurrency ?? parentCurrency ?? null,
     availability: String(o.availability ?? ""),
     url: o.url ?? variant?.url ?? null,
     sku: o.sku ?? variant?.sku ?? null,
@@ -157,7 +167,9 @@ function toOffer(o: Json, variant: Json, parentCurrency: string | null = null): 
   };
 }
 
-// The offer for the variant in the link if one matches, otherwise the lowest price.
+const outOfStock = (o: Offer) => /outofstock|soldout|discontinued/i.test(o.availability);
+
+// The offer for the variant in the link if one matches, otherwise the lowest price among those in stock (all of them if none is).
 function pickOffer(offers: Offer[], url: URL): Offer | null {
   if (!offers.length) return null;
   const here = canonicalUrl(url.href);
@@ -170,7 +182,8 @@ function pickOffer(offers: Offer[], url: URL): Offer | null {
     }
     return o.sku != null && params.has(String(o.sku));
   });
-  return match ?? offers.reduce((a, b) => ((b.price as number) < (a.price as number) ? b : a));
+  const buyable = offers.filter((o) => !outOfStock(o));
+  return match ?? (buyable.length ? buyable : offers).reduce((a, b) => ((b.price as number) < (a.price as number) ? b : a));
 }
 
 function firstImage(image: Json): string | null {

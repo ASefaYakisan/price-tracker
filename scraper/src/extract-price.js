@@ -111,10 +111,20 @@ function ldOffers(node, variant = null) {
   return out.filter((o) => o.price != null);
 }
 
+// priceSpecification may be one object or a list (ListPrice + SalePrice); list/strikethrough prices are not what the shopper pays.
+function specOf(o) {
+  const specs = [].concat(o.priceSpecification ?? []).filter((s) => s && typeof s === 'object');
+  const paid = specs.filter((s) => !/listprice|strikethrough|msrp/i.test(String(s.priceType ?? '')));
+  const priced = (paid.length ? paid : specs).filter((s) => parseAmount(s.price) > 0);
+  return priced.reduce((a, b) => (a && parseAmount(a.price) <= parseAmount(b.price) ? a : b), null);
+}
+
 function toOffer(o, variant, parentCurrency = null) {
+  const spec = specOf(o);
+  const own = parseAmount(o.price);
   return {
-    price: parseAmount(o.price ?? o.priceSpecification?.price ?? o.lowPrice),
-    currency: o.priceCurrency ?? o.priceSpecification?.priceCurrency ?? parentCurrency ?? null,
+    price: own > 0 ? own : parseAmount(spec?.price) ?? parseAmount(o.lowPrice) ?? own,
+    currency: o.priceCurrency ?? spec?.priceCurrency ?? parentCurrency ?? null,
     availability: String(o.availability ?? ''),
     url: o.url ?? variant?.url ?? null,
     sku: o.sku ?? variant?.sku ?? null,
@@ -122,7 +132,9 @@ function toOffer(o, variant, parentCurrency = null) {
   };
 }
 
-// The offer for the variant in the link if one matches, otherwise the lowest price.
+const outOfStock = (o) => /outofstock|soldout|discontinued/i.test(o.availability);
+
+// The offer for the variant in the link if one matches, otherwise the lowest price among those in stock (all of them if none is).
 function pickOffer(offers, url) {
   if (!offers.length) return null;
   const here = canonicalUrl(url.href);
@@ -135,7 +147,8 @@ function pickOffer(offers, url) {
     }
     return o.sku != null && params.has(String(o.sku));
   });
-  return match ?? offers.reduce((a, b) => (b.price < a.price ? b : a));
+  const buyable = offers.filter((o) => !outOfStock(o));
+  return match ?? (buyable.length ? buyable : offers).reduce((a, b) => (b.price < a.price ? b : a));
 }
 
 function firstImage(image) {
