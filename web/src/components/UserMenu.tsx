@@ -54,7 +54,7 @@ export function UserMenu() {
         {initial}
       </button>
       {open && (
-        <div className="absolute end-0 z-30 mt-2 w-56 rounded-xl border border-line bg-card p-1 text-sm shadow-lg">
+        <div className="fixed inset-x-4 top-16 z-30 rounded-xl border border-line bg-card p-1 text-sm shadow-lg sm:absolute sm:inset-x-auto sm:end-0 sm:top-auto sm:mt-2 sm:w-56">
           <div className="truncate px-3 py-2 text-xs text-muted">{user.email}</div>
           <Link href={href("/alerts")} onClick={() => setOpen(false)} className="block rounded-lg px-3 py-2 text-ink hover:bg-hover">
             {t.nav.myAlerts}

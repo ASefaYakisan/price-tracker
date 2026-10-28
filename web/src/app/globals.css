@@ -325,11 +325,14 @@
     display: -webkit-box;
   }
 
+  /* The header stays on one row at phone width; the controls shrink instead of wrapping. */
   body > header > div {
-    block-size: auto;
-    min-block-size: 64px;
-    flex-wrap: wrap;
-    padding-block: 8px;
+    gap: 4px;
+    padding-inline: 12px;
+  }
+
+  body > header > div > nav {
+    min-inline-size: 0;
   }
 
   main {
