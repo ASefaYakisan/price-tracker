@@ -5,6 +5,7 @@ import { dispatchPendingRun } from "@/lib/dispatch-pending";
 import { isDemo } from "@/lib/data";
 import { canonicalUrl, extractProduct } from "@/lib/extract-price";
 import { findUrl } from "@/lib/find-url";
+import { isPageType, readCapped } from "@/lib/read-body";
 import { assertPublicUrl } from "@/lib/safe-url";
 import { trackLimitMessage } from "@/lib/track-limits";
 import { attemptRow, botWall, messageFor, outcomeForError, retryLater, type TrackOutcome } from "@/lib/track-outcome";
@@ -64,12 +65,14 @@ export async function POST(request: Request) {
     const res = await fetchPublic(url);
     status = res.status;
     if (!res.ok) throw new ReadError("http_error", status);
-    html = await res.text().then(
-      (text) => text.slice(0, 3_000_000),
-      (err) => {
-        throw new ReadError(outcomeForError(err));
-      },
-    );
+    // A PDF, video or download is not a product page; it is not opened, so a big file cannot fill the server's memory.
+    if (!isPageType(res.headers.get("content-type"))) {
+      await res.body?.cancel().catch(() => {});
+      throw new ReadError("no_price", status);
+    }
+    html = await readCapped(res).catch((err) => {
+      throw new ReadError(outcomeForError(err));
+    });
     url = new URL(res.url || url.href);
   } catch (err) {
     const e = err instanceof ReadError ? err : new ReadError("network");

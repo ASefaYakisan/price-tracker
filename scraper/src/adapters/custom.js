@@ -108,7 +108,9 @@ export async function readLink(url, { retries = 3, externalId = null, guard = as
     html = await fetchText(url, { headers: BROWSER_HEADERS, timeoutMs: 20_000, retries, guard });
   } catch (err) {
     console.warn(`  ${url}: ${err.message ?? err}`);
-    return { outcome: outcomeForError(err), httpStatus: err.status ?? null, layer: null, html: null, product: null };
+    // A PDF, video or download is not a product page: no price to find, and no point trying the next layer.
+    const outcome = err.notPage ? 'no_price' : outcomeForError(err);
+    return { outcome, httpStatus: err.status ?? null, layer: null, html: null, product: null };
   }
   const product = keepExternalId(extractProduct(html, url), externalId);
   if (!product) console.warn(`  no price found on ${url}`);
