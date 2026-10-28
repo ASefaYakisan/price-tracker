@@ -96,11 +96,47 @@ test('processAlerts selects manage_token and passes List-Unsubscribe to Resend',
   assert.equal(marked, true);
 });
 
-test('alertEmail accepts a language and falls back to the English text for any of them', () => {
-  const en = alertEmail({ product, target_price: '62000' }, 'https://example.app/');
-  assert.deepEqual(alertEmail({ product, target_price: '62000' }, 'https://example.app/', 'tr'), en);
-  assert.deepEqual(alertEmail({ product, target_price: '62000' }, 'https://example.app/', 'zz'), en);
+test('omitted language preserves the full original English email', () => {
+  assert.deepEqual(alertEmail({ id: 42, manage_token: 'test-token', product, target_price: 62000 }, 'https://example.app/'), {
+    headers: { 'List-Unsubscribe': '<https://example.app/alerts/remove?id=42&token=test-token>' },
+    subject: 'Price alert: Bitcoin (BTC) is now $61,000.50',
+    text: 'Bitcoin (BTC) dropped to $61,000.50 (your target: $62,000.00).\n\nPrice history: https://example.app/products/7\nSource: https://www.coingecko.com/en/coins/bitcoin\n\nYou get this email once per alert. Create a new alert on the product page to track it again.\nSet or change a target: https://example.app/products/7#alert\nRemove this alert: https://example.app/alerts/remove?id=42&token=test-token',
+  });
 });
+
+test('unknown languages fall back to English, including object prototype names', () => {
+  const alert = { product, target_price: 62000 };
+  const en = alertEmail(alert, 'https://example.app/', 'en');
+  for (const lang of ['zz', '', null, 'constructor', '__proto__']) {
+    assert.deepEqual(alertEmail(alert, 'https://example.app/', lang), en);
+  }
+});
+
+for (const [lang, prefix] of Object.entries({
+  en: 'Price alert:', tr: 'Fiyat alarmı:', de: 'Preisalarm:', fr: 'Alerte de prix :',
+  es: 'Alerta de precio:', it: 'Avviso di prezzo:', pt: 'Alerta de preço:',
+  nl: 'Prijsalert:', ru: 'Уведомление о цене:', ar: 'تنبيه السعر:',
+})) {
+  test(`alertEmail translates ${lang} and preserves prices, product and management links`, () => {
+    const alert = { id: 42, manage_token: 'test-token&encoded', product, target_price: 62000 };
+    const mail = alertEmail(alert, 'https://example.app/', lang);
+    assert.ok(mail.subject.startsWith(prefix));
+    for (const text of [mail.subject, mail.text]) {
+      assert.ok(text.includes(product.title));
+      assert.ok(text.includes('$61,000.5'));
+      assert.doesNotMatch(text, /\{(?:title|price|target)\}/);
+    }
+    assert.ok(mail.text.includes('$62,000'));
+    assert.ok(mail.text.includes(product.url));
+    assert.ok(mail.text.includes('https://example.app/products/7#alert'));
+    assert.equal(mail.headers['List-Unsubscribe'], '<https://example.app/alerts/remove?id=42&token=test-token%26encoded>');
+    assert.ok(mail.text.includes(mail.headers['List-Unsubscribe'].slice(1, -1)));
+    if (lang !== 'en') assert.notEqual(mail.text, alertEmail(alert, 'https://example.app/').text);
+    const noSite = alertEmail(alert, '', lang);
+    assert.equal(noSite.headers, undefined);
+    assert.doesNotMatch(noSite.text, /test-token|#alert|alerts\/remove/);
+  });
+}
 
 test('processAlerts retries without lang when the column does not exist yet', async () => {
   const asked = [];

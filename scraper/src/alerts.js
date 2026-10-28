@@ -1,3 +1,4 @@
+import { alertText } from './alert-i18n.js';
 import { isSuspiciousJump } from './price-sanity.js';
 
 // After each scrape: email everyone whose target price has been reached, once.
@@ -79,8 +80,7 @@ async function isHeldBySanity(db, alert) {
   return true;
 }
 
-// lang: the alert's saved site language (alert.lang). English is the only text so far; the languages are added with
-// the alert-i18n texts, and an unknown language falls back to English.
+// Unknown or omitted languages use the original English email.
 export function alertEmail({ id, manage_token, product, target_price }, siteUrl, lang = 'en') {
   // Without a known currency only the number is written; guessing a currency would put the wrong symbol on a price.
   const fmt = (v) =>
@@ -88,22 +88,25 @@ export function alertEmail({ id, manage_token, product, target_price }, siteUrl,
       ...(product.currency ? { style: 'currency', currency: product.currency, currencyDisplay: 'narrowSymbol' } : {}),
       maximumFractionDigits: 8,
     }).format(v);
+  const t = alertText(lang);
+  const values = { title: product.title, price: fmt(product.price), target: fmt(target_price) };
+  const fill = (text) => text.replace(/\{(title|price|target)\}/g, (_, key) => values[key]);
   const link = siteUrl ? `${siteUrl.replace(/\/$/, '')}/products/${product.id}` : product.url;
   const removeLink = siteUrl && id && manage_token
     ? `${siteUrl.replace(/\/$/, '')}/alerts/remove?${new URLSearchParams({ id: String(id), token: manage_token })}`
     : null;
   return {
     ...(removeLink ? { headers: { 'List-Unsubscribe': `<${removeLink}>` } } : {}),
-    subject: `Price alert: ${product.title} is now ${fmt(product.price)}`,
+    subject: fill(t.subject),
     text: [
-      `${product.title} dropped to ${fmt(product.price)} (your target: ${fmt(target_price)}).`,
+      fill(t.body),
       '',
-      `Price history: ${link}`,
-      `Source: ${product.url}`,
+      `${t.history}: ${link}`,
+      `${t.source}: ${product.url}`,
       '',
-      'You get this email once per alert. Create a new alert on the product page to track it again.',
-      ...(siteUrl ? [`Set or change a target: ${link}#alert`] : []),
-      ...(removeLink ? [`Remove this alert: ${removeLink}`] : []),
+      t.once,
+      ...(siteUrl ? [`${t.target}: ${link}#alert`] : []),
+      ...(removeLink ? [`${t.remove}: ${removeLink}`] : []),
     ].join('\n'),
   };
 }
