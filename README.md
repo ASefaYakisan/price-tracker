@@ -6,7 +6,7 @@
 
 Price Tracker helps shoppers keep a watchlist instead of revisiting product pages manually. Paste a product link, inspect the observed price history and set a target-price email alert. It is also a starting point for an owner who wants to operate a price-monitoring service with their own infrastructure accounts.
 
-The dashboard includes search and filters, personal lists, alerts, price charts, CSV/Excel exports, 24 interface languages and light/dark themes. Scheduled collection also supports market data. Store coverage varies: blocked pages may remain unreadable, and newly tracked shop products do not come with invented historical prices. The screenshots below show the dashboard and product history; they are examples, not a guarantee of current store coverage or business revenue.
+The dashboard includes search and filters, personal lists, alerts, price charts, CSV/Excel exports, 24 interface languages and light/dark themes. Scheduled collection also supports market data. Store coverage varies: blocked pages may remain unreadable, and newly tracked shop products do not come with invented historical prices. The screenshots below show the dashboard and a product page; they are examples, not a guarantee of current store coverage or business revenue.
 
 The system combines a Next.js/TypeScript web app on Vercel, a Node.js collector running through GitHub Actions, Supabase data storage and accounts, Resend alert email, and optional ScraperAPI fallback reads. These services have separate accounts, limits and running costs.
 
@@ -14,17 +14,42 @@ For handover, the buyer supplies their own service accounts and configuration, a
 
 **Live demo:** https://price-tracker-shop.vercel.app
 
-A Node.js scraper collects prices from four sources on a schedule (an e-commerce catalogue, crypto, exchange rates and gold) and stores every run in Supabase (Postgres). A Next.js dashboard shows current prices, the change since the last run and stock status.
+## Features
 
-![Dashboard](panel-onizleme.png)
+- **Track by link.** Paste a product page link (or share text that contains one). Prices are read through layers, cheapest first: structured data on the page, per-shop adapters, a real headless browser and an optional scraping API. Links a shop turns away are saved as pending and retried automatically. See [Track any product by link](#track-any-product-by-link).
+- **Market data.** Scheduled collection of crypto, exchange rates and gold prices next to the shop links.
+- **Price history.** A chart per product with lowest, highest and period change; new products show a "history is building" hint instead of invented history.
+- **Price alerts.** Email (Resend) and Telegram when a target price is reached, with a verification step that holds suspicious jumps. See [Price alerts](#price-alerts).
+- **Accounts and lists.** Email and password sign in (Supabase Auth), a personal list per user, guest alerts that move into the account on first sign in. See [Accounts](#accounts).
+- **24 interface languages**, including right-to-left Arabic, with localised number formats and exports. See [Languages](#languages).
+- **Public API and exports.** Read-only JSON API with OpenAPI docs, plus CSV and Excel downloads. See [Public API](#public-api).
+- **Mobile layout** with light and dark themes.
 
-![Price history](urun-grafik.png)
+## Screenshots
 
-<details><summary>Dark mode</summary>
+Captured in demo mode (sample data, no database connected), so the numbers are examples only.
 
-![Dark mode](panel-koyu.png)
+| Dashboard | Product page |
+| --- | --- |
+| ![Dashboard on desktop](screenshots/readme/home-desktop.png) | ![Product page with price history](screenshots/readme/product-desktop.png) |
 
-</details>
+<img src="screenshots/readme/home-phone.png" alt="Dashboard on a phone" width="280">
+
+## Architecture
+
+```
+ Browser --> Next.js app (web/, Vercel) --> Supabase: Postgres + Auth + RLS
+                  |  /api/track, /api/alerts              ^
+                  v                                       |
+       saves unread links as pending                      |
+                                                          |
+ GitHub Actions (scraper/, Node.js) ----------------------+
+   daily refresh, pending-links retry every 15 min, shop probe
+     |  read layers: plain request > markup > Chromium > scraping API
+     +--> Resend email, Telegram, Google Sheets (all optional)
+```
+
+The web app does not scrape on a schedule; the Node.js collector runs from GitHub Actions and writes every reading to Supabase. Each piece has its own account, limits and running costs.
 
 ## Structure
 
@@ -171,3 +196,7 @@ Create `scraper/src/adapters/<site>.js` exporting `name` and either `startUrl` +
 - [x] Telegram price-drop digest
 - [x] Price-drop email alerts (sign up on the product page, sent after each scrape via Resend)
 - [x] Daily schedule (GitHub Actions cron)
+
+## License
+
+Released under the [MIT License](LICENSE). The license covers this source code only; it does not transfer domain names, user data or third-party service accounts (see the handover note above).
