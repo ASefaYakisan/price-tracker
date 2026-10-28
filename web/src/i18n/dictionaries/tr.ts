@@ -21,7 +21,7 @@ const tr: Dict = {
   },
   legal: {"privacy": "Gizlilik ve veri silme", "terms": "Kullanım şartları"},
   footer:
-    "Node.js, Supabase ve Next.js ile geliştirildi. Veri: books.toscrape.com (herkese açık bir tarama test sitesi), CoinGecko, Türkiye Cumhuriyet Merkez Bankası ve fawazahmed0/exchange-api. Her gün güncellenir.",
+    "Fiyatlar her gün mağaza sayfalarından, CoinGecko'dan, Türkiye Cumhuriyet Merkez Bankası'ndan ve exchange-api'den kontrol edilir.",
   common: {
     allItems: "Tüm ürünler",
     browseItems: "Ürünlere göz at",

@@ -21,7 +21,7 @@ const id: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Dibuat dengan Node.js, Supabase, dan Next.js. Data: books.toscrape.com (sandbox scraping publik), CoinGecko, Bank Sentral Republik Turki, dan fawazahmed0/exchange-api. Diperbarui setiap hari.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "Semua item",
     browseItems: "Jelajahi item",

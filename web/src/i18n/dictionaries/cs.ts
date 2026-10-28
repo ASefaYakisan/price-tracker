@@ -21,7 +21,7 @@ const cs: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Vytvořeno pomocí Node.js, Supabase a Next.js. Data: books.toscrape.com (veřejné testovací prostředí pro scraping), CoinGecko, Centrální banka Turecké republiky a fawazahmed0/exchange-api. Aktualizováno denně.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "Všechny položky",
     browseItems: "Procházet položky",

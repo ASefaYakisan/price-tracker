@@ -21,7 +21,7 @@ const en = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Built with Node.js, Supabase and Next.js. Data: books.toscrape.com (a public scraping sandbox), CoinGecko, Central Bank of the Republic of Türkiye and fawazahmed0/exchange-api. Updated daily.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "All items",
     browseItems: "Browse items",

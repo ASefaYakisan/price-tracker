@@ -21,7 +21,7 @@ const hi: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Node.js, Supabase और Next.js से बना। डेटा: books.toscrape.com (एक सार्वजनिक स्क्रेपिंग सैंडबॉक्स), CoinGecko, तुर्की गणराज्य का केंद्रीय बैंक और fawazahmed0/exchange-api। रोज़ अपडेट होता है।",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "सभी आइटम",
     browseItems: "आइटम देखें",

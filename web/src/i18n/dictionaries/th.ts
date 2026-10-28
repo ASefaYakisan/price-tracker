@@ -21,7 +21,7 @@ const th: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "สร้างด้วย Node.js, Supabase และ Next.js ข้อมูล: books.toscrape.com (เว็บไซต์สาธารณะสำหรับฝึกดึงข้อมูล), CoinGecko, ธนาคารกลางแห่งสาธารณรัฐตุรกี และ fawazahmed0/exchange-api อัปเดตทุกวัน",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "สินค้าทั้งหมด",
     browseItems: "ดูสินค้า",

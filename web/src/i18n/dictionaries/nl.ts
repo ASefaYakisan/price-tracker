@@ -21,7 +21,7 @@ const nl: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Gebouwd met Node.js, Supabase en Next.js. Data: books.toscrape.com (een openbare scraping-sandbox), CoinGecko, de Centrale Bank van de Republiek Turkije en fawazahmed0/exchange-api. Dagelijks bijgewerkt.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "Alle items",
     browseItems: "Items bekijken",

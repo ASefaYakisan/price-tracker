@@ -21,7 +21,7 @@ const uk: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Створено на Node.js, Supabase і Next.js. Дані: books.toscrape.com (публічна пісочниця для скрапінгу), CoinGecko, Центральний банк Турецької Республіки та fawazahmed0/exchange-api. Оновлюється щодня.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "Усі товари",
     browseItems: "Переглянути товари",
