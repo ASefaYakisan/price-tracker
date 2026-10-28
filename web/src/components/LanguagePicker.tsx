@@ -32,7 +32,7 @@ export function LanguagePicker() {
       <select
         value={lang}
         onChange={(e) => change(e.target.value as Locale)}
-        className="h-9 max-w-36 cursor-pointer appearance-none rounded-lg border border-line bg-card ps-8 pe-3 text-sm text-ink hover:bg-hover focus:border-accent focus:outline-none"
+        className="h-9 max-w-28 sm:max-w-36 cursor-pointer appearance-none rounded-lg border border-line bg-card ps-8 pe-3 text-sm text-ink hover:bg-hover focus:border-accent focus:outline-none"
       >
         {LOCALE_CODES.map((code) => (
           <option key={code} value={code}>
