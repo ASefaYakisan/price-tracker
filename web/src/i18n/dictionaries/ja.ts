@@ -134,6 +134,7 @@ const ja: Dict = {
     chartLabel: "{from} から {to} までの価格履歴（{min}〜{max}）",
     notEnough: "履歴がまだ足りません。2 回取得するとグラフが表示されます。",
     trackingStarted: "{date} に追跡を開始しました。確認のたびにグラフが増えていきます。",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "データを表で表示",
     date: "日付",
     price: "価格",

@@ -134,6 +134,7 @@ const ru: Dict = {
     chartLabel: "История цен с {from} по {to}, от {min} до {max}",
     notEnough: "Пока недостаточно истории. График появится после двух сборов.",
     trackingStarted: "Отслеживание началось {date}. График пополняется с каждой проверкой.",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "Показать данные таблицей",
     date: "Дата",
     price: "Цена",

@@ -134,6 +134,7 @@ const ro: Dict = {
     chartLabel: "Istoricul prețurilor de la {from} la {to}, între {min} și {max}",
     notEnough: "Nu există încă suficient istoric. Graficul apare după două colectări.",
     trackingStarted: "Urmărirea a început pe {date}. Graficul se completează la fiecare verificare.",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "Afișează datele ca tabel",
     date: "Data",
     price: "Preț",

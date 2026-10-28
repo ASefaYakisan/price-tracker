@@ -134,6 +134,7 @@ const hi: Dict = {
     chartLabel: "{from} से {to} तक कीमत का इतिहास, {min} और {max} के बीच",
     notEnough: "अभी पर्याप्त इतिहास नहीं है। दो स्क्रेप के बाद चार्ट दिखेगा।",
     trackingStarted: "ट्रैकिंग {date} को शुरू हुई। हर जाँच के साथ चार्ट भरता जाएगा।",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "डेटा तालिका के रूप में दिखाएँ",
     date: "तारीख",
     price: "कीमत",

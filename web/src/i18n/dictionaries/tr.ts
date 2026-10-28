@@ -134,6 +134,7 @@ const tr: Dict = {
     chartLabel: "{from} ile {to} arasındaki fiyat geçmişi, {min} ile {max} aralığında",
     notEnough: "Henüz yeterli geçmiş yok. Grafik iki taramadan sonra görünür.",
     trackingStarted: "Takip {date} tarihinde başladı. Grafik her kontrolde dolar.",
+    historyProgress: "Geçmiş oluşuyor: gün {day} / {goal}",
     showTable: "Veriyi tablo olarak göster",
     date: "Tarih",
     price: "Fiyat",

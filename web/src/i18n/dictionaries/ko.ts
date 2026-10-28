@@ -134,6 +134,7 @@ const ko: Dict = {
     chartLabel: "{from}부터 {to}까지의 가격 기록, {min}~{max} 범위",
     notEnough: "아직 기록이 부족합니다. 두 번 수집한 후 차트가 표시됩니다.",
     trackingStarted: "{date}에 추적을 시작했습니다. 확인할 때마다 차트가 채워집니다.",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "데이터를 표로 보기",
     date: "날짜",
     price: "가격",

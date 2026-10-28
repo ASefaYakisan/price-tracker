@@ -134,6 +134,7 @@ const nl: Dict = {
     chartLabel: "Prijsgeschiedenis van {from} tot {to}, tussen {min} en {max}",
     notEnough: "Nog niet genoeg geschiedenis. De grafiek verschijnt na twee scrapes.",
     trackingStarted: "Volgen gestart op {date}. De grafiek vult zich bij elke controle.",
+    historyProgress: "History is building: day {day} of {goal}",
     showTable: "Data als tabel tonen",
     date: "Datum",
     price: "Prijs",
