@@ -113,6 +113,8 @@ const it: Dict = {
     showMore: "Mostra altri ({count} rimanenti)",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Nessuna variazione",
     downBy: "Sceso di {amount} dall'ultima rilevazione",
     upBy: "Salito di {amount} dall'ultima rilevazione",

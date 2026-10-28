@@ -113,6 +113,8 @@ const uk: Dict = {
     showMore: "Показати ще (залишилось {count})",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Без змін",
     downBy: "Зниження на {amount} з останнього збору",
     upBy: "Зростання на {amount} з останнього збору",

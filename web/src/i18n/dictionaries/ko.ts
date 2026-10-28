@@ -113,6 +113,8 @@ const ko: Dict = {
     showMore: "더 보기 ({count}개 남음)",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "변동 없음",
     downBy: "마지막 수집 이후 {amount} 하락",
     upBy: "마지막 수집 이후 {amount} 상승",

@@ -113,6 +113,8 @@ const id: Dict = {
     showMore: "Tampilkan lagi ({count} tersisa)",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Tidak berubah",
     downBy: "Turun {amount} sejak pengambilan terakhir",
     upBy: "Naik {amount} sejak pengambilan terakhir",

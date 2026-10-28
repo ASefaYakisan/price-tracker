@@ -113,6 +113,8 @@ const nl: Dict = {
     showMore: "Meer tonen (nog {count})",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Geen wijziging",
     downBy: "{amount} gedaald sinds de laatste scrape",
     upBy: "{amount} gestegen sinds de laatste scrape",

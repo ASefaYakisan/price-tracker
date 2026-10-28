@@ -113,6 +113,8 @@ const hi: Dict = {
     showMore: "और दिखाएँ ({count} बाकी)",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "कोई बदलाव नहीं",
     downBy: "पिछले स्क्रेप से {amount} कम",
     upBy: "पिछले स्क्रेप से {amount} ज़्यादा",

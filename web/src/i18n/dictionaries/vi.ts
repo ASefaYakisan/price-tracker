@@ -113,6 +113,8 @@ const vi: Dict = {
     showMore: "Xem thêm (còn {count})",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Không đổi",
     downBy: "Giảm {amount} kể từ lần thu thập trước",
     upBy: "Tăng {amount} kể từ lần thu thập trước",

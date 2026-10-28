@@ -113,6 +113,8 @@ const zh: Dict = {
     showMore: "显示更多（还剩 {count} 个）",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "无变化",
     downBy: "自上次抓取以来下降 {amount}",
     upBy: "自上次抓取以来上涨 {amount}",

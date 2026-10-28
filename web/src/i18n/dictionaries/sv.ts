@@ -113,6 +113,8 @@ const sv: Dict = {
     showMore: "Visa fler ({count} kvar)",
   },
   change: {
+    trend30: "Last 30 days",
+    sinceLast: "Since the last reading",
     none: "Ingen förändring",
     downBy: "Ned {amount} sedan senaste hämtningen",
     upBy: "Upp {amount} sedan senaste hämtningen",
