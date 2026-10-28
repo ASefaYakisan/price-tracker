@@ -21,7 +21,7 @@ const ja: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Node.js、Supabase、Next.js で構築。データ：books.toscrape.com（公開スクレイピング練習サイト）、CoinGecko、トルコ共和国中央銀行、fawazahmed0/exchange-api。毎日更新。",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "すべての商品",
     browseItems: "商品を見る",

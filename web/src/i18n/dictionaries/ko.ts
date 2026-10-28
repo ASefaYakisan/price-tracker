@@ -21,7 +21,7 @@ const ko: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Node.js, Supabase, Next.js로 제작. 데이터: books.toscrape.com(공개 스크레이핑 연습 사이트), CoinGecko, 튀르키예 공화국 중앙은행, fawazahmed0/exchange-api. 매일 업데이트.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "전체 상품",
     browseItems: "상품 둘러보기",

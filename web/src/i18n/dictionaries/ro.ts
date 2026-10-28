@@ -21,7 +21,7 @@ const ro: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Construit cu Node.js, Supabase și Next.js. Date: books.toscrape.com (un sandbox public pentru scraping), CoinGecko, Banca Centrală a Republicii Turcia și fawazahmed0/exchange-api. Actualizat zilnic.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "Toate produsele",
     browseItems: "Răsfoiește produsele",

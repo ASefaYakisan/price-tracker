@@ -21,7 +21,7 @@ const ar: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "مبني باستخدام Node.js وSupabase وNext.js. البيانات: books.toscrape.com (بيئة تجريبية عامة لجمع البيانات)، وCoinGecko، والبنك المركزي لجمهورية تركيا، وfawazahmed0/exchange-api. يُحدَّث يوميًا.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "كل العناصر",
     browseItems: "تصفح العناصر",

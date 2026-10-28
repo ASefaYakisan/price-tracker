@@ -154,7 +154,7 @@ export function TrackForm() {
           {fill(t.track.found, { title: state.product.title, price: money(state.product.price, state.product.currency, lang) })}
         </p>
       )}
-      <p className="mt-2 text-xs text-faint">
+      <p className="mt-2 text-[13px] leading-5 text-muted">
         {signedOut ? t.track.signIn : t.track.hint}{" "}
         <Link href={href("/how-to-add")} className="font-medium text-accent underline-offset-4 hover:underline">
           {t.howTo.link}

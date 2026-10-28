@@ -21,7 +21,7 @@ const el: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Δημιουργήθηκε με Node.js, Supabase και Next.js. Δεδομένα: books.toscrape.com (δημόσιο περιβάλλον δοκιμών scraping), CoinGecko, Κεντρική Τράπεζα της Δημοκρατίας της Τουρκίας και fawazahmed0/exchange-api. Ενημερώνεται καθημερινά.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "Όλα τα προϊόντα",
     browseItems: "Περιήγηση προϊόντων",

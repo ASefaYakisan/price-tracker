@@ -21,7 +21,7 @@ const ru: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Сделано на Node.js, Supabase и Next.js. Данные: books.toscrape.com (публичная песочница для скрапинга), CoinGecko, Центральный банк Турецкой Республики и fawazahmed0/exchange-api. Обновляется ежедневно.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "Все товары",
     browseItems: "Смотреть товары",

@@ -21,7 +21,7 @@ const da: Dict = {
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
-    "Bygget med Node.js, Supabase og Next.js. Data: books.toscrape.com (en offentlig scraping-sandkasse), CoinGecko, Republikken Tyrkiets centralbank og fawazahmed0/exchange-api. Opdateres dagligt.",
+    "Prices are checked every day from store pages, CoinGecko, the Central Bank of the Republic of Türkiye and exchange-api.",
   common: {
     allItems: "Alle varer",
     browseItems: "Se varer",
