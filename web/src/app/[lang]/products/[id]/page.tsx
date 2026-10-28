@@ -98,12 +98,12 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
             <ChangeBadge price={product.price} previous={product.previous_price} currency={cur} source={product.source} t={t} lang={lang} />
           </div>
           {product.scraped_at && (
-            <p className="mt-1 text-xs text-faint">{fill(t.product.updated, { date: dateTime(product.scraped_at, lang) })}</p>
+            <p className="mt-1 text-xs text-muted">{fill(t.product.updated, { date: dateTime(product.scraped_at, lang) })}</p>
           )}
           <div className="mt-4 flex flex-wrap gap-2">
             <a
               href="#alert"
-              className="inline-flex h-9 items-center gap-2 rounded-lg bg-accent px-3 text-sm font-medium text-accent-ink hover:opacity-90"
+              className="inline-flex h-9 items-center gap-2 rounded-lg bg-accent px-3 text-sm font-medium text-accent-ink transition hover:opacity-90 active:scale-[.98]"
             >
               <BellIcon /> {t.product.setAlert}
             </a>
@@ -111,7 +111,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
               href={product.url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-line px-3 text-sm font-medium text-ink hover:bg-hover"
+              className="inline-flex h-9 items-center gap-2 rounded-lg border border-line px-3 text-sm font-medium text-ink transition hover:bg-hover active:scale-[.98]"
             >
               {t.product.viewSource} <span aria-hidden>↗</span>
             </a>
@@ -122,12 +122,12 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
       <LinkStatusNote product={product} t={t} lang={lang} />
 
       {figures.length > 0 && (
-        <dl className="mt-8 flex divide-x divide-line border-y border-line rtl:divide-x-reverse">
+        <dl className="mt-8 grid grid-cols-3 gap-2 sm:gap-3">
           {figures.map((f) => (
-            <div key={f.label} className="min-w-0 flex-1 px-3 py-3 first:ps-0 sm:px-5">
-              <dt className="text-xs text-muted">{f.label}</dt>
-              <dd className={`mt-0.5 text-base font-semibold tabular-nums sm:text-lg ${"tone" in f ? f.tone : "text-ink"}`}>{f.value}</dd>
-              {"hint" in f && f.hint && <dd className="text-xs text-faint">{f.hint}</dd>}
+            <div key={f.label} className="min-w-0 rounded-xl border border-line bg-card px-3 py-3 sm:px-4">
+              <dt className="text-xs font-medium text-muted">{f.label}</dt>
+              <dd className={`mt-1 truncate text-base font-semibold tabular-nums sm:text-xl ${"tone" in f ? f.tone : "text-ink"}`}>{f.value}</dd>
+              {"hint" in f && f.hint && <dd className="truncate text-xs text-muted">{f.hint}</dd>}
             </div>
           ))}
         </dl>
