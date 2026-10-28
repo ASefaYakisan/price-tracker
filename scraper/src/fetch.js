@@ -1,3 +1,5 @@
+import { isPageType, readCapped } from './read-body.js';
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Set SCRAPER_USER_AGENT to add a contact address for shop operators, e.g. 'PriceTrackerBot/0.1 (+https://your-site)'.
@@ -13,7 +15,14 @@ export async function fetchText(url, { retries = 3, accept = 'text/html', header
       const signal = timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined;
       const init = { headers: { 'user-agent': USER_AGENT, accept, ...headers }, signal };
       const res = guard ? await fetchGuarded(url, init, guard) : await fetch(url, init);
-      if (res.ok) return await res.text();
+      if (res.ok) {
+        // Links visitors saved can point at anything; only pages are read, and never more than the size cap.
+        if (guard && !isPageType(res.headers.get('content-type'))) {
+          await res.body?.cancel().catch(() => {});
+          throw Object.assign(new Error(`not a product page (${res.headers.get('content-type')}) for ${url}`), { notPage: true });
+        }
+        return await readCapped(res);
+      }
       const error = Object.assign(new Error(`HTTP ${res.status} for ${url}`), { status: res.status });
       if (res.status < 500 && res.status !== 429) throw error;
       throw Object.assign(error, { retryable: true });
