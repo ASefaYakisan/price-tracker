@@ -132,6 +132,7 @@ const id: Dict = {
     history: "Riwayat harga",
     chartLabel: "Riwayat harga dari {from} hingga {to}, antara {min} dan {max}",
     notEnough: "Riwayat belum cukup. Grafik muncul setelah dua kali pengambilan data.",
+    trackingStarted: "Pelacakan dimulai {date}. Grafik terisi pada setiap pemeriksaan.",
     showTable: "Tampilkan data sebagai tabel",
     date: "Tanggal",
     price: "Harga",

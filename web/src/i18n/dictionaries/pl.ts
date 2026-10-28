@@ -132,6 +132,7 @@ const pl: Dict = {
     history: "Historia cen",
     chartLabel: "Historia cen od {from} do {to}, w przedziale od {min} do {max}",
     notEnough: "Za mało historii. Wykres pojawi się po dwóch pobraniach.",
+    trackingStarted: "Śledzenie rozpoczęte {date}. Wykres uzupełnia się przy każdym sprawdzeniu.",
     showTable: "Pokaż dane jako tabelę",
     date: "Data",
     price: "Cena",

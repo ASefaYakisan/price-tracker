@@ -132,6 +132,7 @@ const zh: Dict = {
     history: "价格历史",
     chartLabel: "{from} 至 {to} 的价格历史，介于 {min} 和 {max} 之间",
     notEnough: "历史数据不足。抓取两次后将显示图表。",
+    trackingStarted: "已于 {date} 开始跟踪。图表会随每次检查逐步补充。",
     showTable: "以表格显示数据",
     date: "日期",
     price: "价格",

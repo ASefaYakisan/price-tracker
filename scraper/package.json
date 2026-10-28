@@ -9,6 +9,7 @@
     "test": "node --test test/*.test.js",
     "probe": "node src/probe.js",
     "pending": "node src/pending.js",
+    "backfill": "node src/backfill.js",
     "fix-products": "node src/fix-products.js"
   },
   "dependencies": {

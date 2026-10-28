@@ -132,6 +132,7 @@ const vi: Dict = {
     history: "Lịch sử giá",
     chartLabel: "Lịch sử giá từ {from} đến {to}, trong khoảng {min} đến {max}",
     notEnough: "Chưa đủ dữ liệu lịch sử. Biểu đồ sẽ hiện sau hai lần thu thập.",
+    trackingStarted: "Bắt đầu theo dõi từ {date}. Biểu đồ được bổ sung sau mỗi lần kiểm tra.",
     showTable: "Hiển thị dữ liệu dạng bảng",
     date: "Ngày",
     price: "Giá",

@@ -132,6 +132,7 @@ const cs: Dict = {
     history: "Historie cen",
     chartLabel: "Historie cen od {from} do {to}, v rozmezí {min} až {max}",
     notEnough: "Zatím není dost historie. Graf se zobrazí po dvou staženích.",
+    trackingStarted: "Sledování začalo {date}. Graf se doplňuje s každou kontrolou.",
     showTable: "Zobrazit data jako tabulku",
     date: "Datum",
     price: "Cena",
