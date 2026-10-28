@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { AlertStatus } from "@/lib/alert-status";
-import { getProduct } from "@/lib/data";
+import { getProduct, type ProductRow } from "@/lib/data";
 import { lastReadFailed } from "@/lib/link-status";
 
 export const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -32,9 +32,18 @@ type AlertRow = {
   created_at: string;
 };
 
+// The alert's item. Whoever holds the alert (it was found by its id and token, or belongs to the signed-in account)
+// sees that item even when it is a pasted link, which the shared read does not return.
+async function alertProduct(id: number) {
+  const shared = await getProduct(id);
+  if (shared) return shared;
+  const { data } = (await adminDb()?.from("product_latest").select("*").eq("id", id).maybeSingle()) ?? {};
+  return data ? ({ ...data, price: data.price == null ? null : Number(data.price) } as ProductRow) : null;
+}
+
 // An alert row joined with its item's latest price, in the shape the alerts page shows.
 export async function toStatus(key: string, row: AlertRow): Promise<AlertStatus> {
-  const product = await getProduct(Number(row.product_id));
+  const product = await alertProduct(Number(row.product_id));
   return {
     key,
     id: Number(row.id),
