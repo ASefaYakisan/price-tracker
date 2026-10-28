@@ -70,8 +70,8 @@ async function main() {
   if (store.db) {
     console.log('alerts:');
     try {
-      const { checked, sent } = await processAlerts(store.db);
-      console.log(`  ${checked} open, ${sent} sent`);
+      const { checked, sent, failed } = await processAlerts(store.db);
+      console.log(`  ${checked} open, ${sent} sent${failed ? `, ${failed} failed (will retry next run)` : ''}`);
     } catch (err) {
       console.error(`  FAILED: ${err.message ?? err}`);
       failures.push('alerts');

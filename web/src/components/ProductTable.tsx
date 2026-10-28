@@ -66,7 +66,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
           <span className="sr-only">{t.table.searchLabel}</span>
           <svg
             viewBox="0 0 20 20"
-            className="pointer-events-none absolute start-3 top-2.5 size-4 text-faint"
+            className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 size-4 text-faint"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
@@ -161,7 +161,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
                 </div>
               </div>
               <Sparkline points={sparklines[p.id]} source={p.source} className="hidden md:block" />
-              <div className="shrink-0 text-end">
+              <div className="min-w-0 max-w-[40%] shrink-0 text-end sm:max-w-none">
                 {p.price == null && linkState(p) ? (
                   <div className="text-sm text-muted">{linkState(p) === "failed" ? t.linkStatus.failed : t.home.readingPrice}</div>
                 ) : (
@@ -201,7 +201,7 @@ function Chevron() {
   return (
     <svg
       viewBox="0 0 20 20"
-      className="pointer-events-none absolute end-2.5 top-2.5 size-4 text-faint"
+      className="pointer-events-none absolute end-2.5 top-1/2 -translate-y-1/2 size-4 text-faint"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"

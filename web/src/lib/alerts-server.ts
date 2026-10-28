@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { AlertStatus } from "@/lib/alert-status";
 import { getProduct } from "@/lib/data";
+import { lastReadFailed } from "@/lib/link-status";
 
 export const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 export { UUID } from "@/lib/alert-lookup";
@@ -48,5 +49,6 @@ export async function toStatus(key: string, row: AlertRow): Promise<AlertStatus>
     imageUrl: product?.image_url ?? null,
     currency: product?.currency ?? null,
     price: product?.price ?? null,
+    readError: product && lastReadFailed(product) ? product.last_error! : null,
   };
 }
