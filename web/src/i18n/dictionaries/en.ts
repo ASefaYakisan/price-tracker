@@ -19,6 +19,7 @@ const en = {
     myAlerts: "My alerts",
     signOut: "Sign out",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Built with Node.js, Supabase and Next.js. Data: books.toscrape.com (a public scraping sandbox), CoinGecko, Central Bank of the Republic of Türkiye and fawazahmed0/exchange-api. Updated daily.",
   common: {

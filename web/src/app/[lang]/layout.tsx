@@ -66,7 +66,13 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
             </div>
           </header>
           <div className="flex-1">{children}</div>
-          <footer className="mx-auto w-full max-w-6xl px-4 py-8 text-xs text-faint">{t.footer}</footer>
+          <footer className="mx-auto w-full max-w-6xl px-4 py-8 text-xs text-faint">
+            <p>{t.footer}</p>
+            <div className="mt-2 flex flex-wrap gap-x-4">
+              <Link href={`/${lang}/privacy`} className="inline-flex min-h-11 items-center underline">{t.legal.privacy}</Link>
+              <Link href={`/${lang}/terms`} className="inline-flex min-h-11 items-center underline">{t.legal.terms}</Link>
+            </div>
+          </footer>
         </I18nProvider>
       </body>
     </html>

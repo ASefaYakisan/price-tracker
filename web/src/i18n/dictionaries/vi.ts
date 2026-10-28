@@ -19,6 +19,7 @@ const vi: Dict = {
     myAlerts: "Cảnh báo của tôi",
     signOut: "Đăng xuất",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Xây dựng bằng Node.js, Supabase và Next.js. Dữ liệu: books.toscrape.com (trang thử nghiệm thu thập dữ liệu công khai), CoinGecko, Ngân hàng Trung ương Cộng hòa Thổ Nhĩ Kỳ và fawazahmed0/exchange-api. Cập nhật hằng ngày.",
   common: {

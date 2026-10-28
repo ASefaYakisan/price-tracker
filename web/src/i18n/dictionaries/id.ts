@@ -19,6 +19,7 @@ const id: Dict = {
     myAlerts: "Peringatan saya",
     signOut: "Keluar",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Dibuat dengan Node.js, Supabase, dan Next.js. Data: books.toscrape.com (sandbox scraping publik), CoinGecko, Bank Sentral Republik Turki, dan fawazahmed0/exchange-api. Diperbarui setiap hari.",
   common: {

@@ -19,6 +19,7 @@ const pl: Dict = {
     myAlerts: "Moje alerty",
     signOut: "Wyloguj się",
   },
+  legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
     "Zbudowano z użyciem Node.js, Supabase i Next.js. Dane: books.toscrape.com (publiczna piaskownica do scrapingu), CoinGecko, Bank Centralny Republiki Turcji oraz fawazahmed0/exchange-api. Aktualizowane codziennie.",
   common: {
