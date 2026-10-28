@@ -25,5 +25,7 @@
   { "file": "n11.html", "url": "https://www.n11.com/urun/termos-750-ml-123", "layer": "shop-adapter",
     "expect": { "title": "Paslanmaz Çelik Termos 750 ml", "price": 449.9, "currency": "TRY", "in_stock": false, "image_url": "https://n11scdn.akamaized.net/termos.jpg" } },
   { "file": "mediamarkt-buyaction.html", "url": "https://www.mediamarkt.com.tr/tr/product/_apple-iphone-16-128gb-akilli-telefon-siyah-mye73tua-1239553.html", "layer": "json-ld",
-    "expect": { "title": "APPLE iPhone 16 128 GB Akıllı Telefon Siyah MYE73TU/A", "price": 72999, "currency": "TRY", "in_stock": true } }
+    "expect": { "title": "APPLE iPhone 16 128 GB Akıllı Telefon Siyah MYE73TU/A", "price": 72999, "currency": "TRY", "in_stock": true } },
+  { "file": "item-list.html", "url": "https://shop.example/ekran-karti/rtx-5070.html", "layer": "json-ld-list",
+    "expect": { "title": "RTX 5070 Fiyatları", "price": 61999, "currency": "TRY", "in_stock": true, "image_url": "https://cdn.example/a.jpg" } }
 ]
