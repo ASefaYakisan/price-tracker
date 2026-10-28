@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useI18n } from "@/i18n/client";
 import { setInMyProducts, useMyProducts } from "@/lib/my-products";
@@ -8,8 +7,7 @@ import { setInMyProducts, useMyProducts } from "@/lib/my-products";
 // "Add to my list" / "Remove from my list" on the product page, for signed-in visitors.
 // Removing only touches this visitor's list; other people keep the item, its history and their alerts.
 export function ListButton({ productId }: { productId: number }) {
-  const router = useRouter();
-  const { t, href, apiError } = useI18n();
+  const { t, apiError } = useI18n();
   const { user, ids } = useMyProducts();
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -26,12 +24,6 @@ export function ListButton({ productId }: { productId: number }) {
     if (res?.ok && json?.ok) {
       setInMyProducts(productId, add);
       setConfirm(false);
-      // Nobody else followed it, so it is no longer tracked at all.
-      if (json.dropped) {
-        router.push(href("/"));
-        router.refresh();
-        return;
-      }
     } else setError(apiError(json?.error));
     setBusy(false);
   }

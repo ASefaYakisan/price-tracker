@@ -14,11 +14,14 @@ export const name = 'custom';
 // `onBatch(products)` saves prices while the run goes on (see refresh.js); without it the products are returned for the caller to save.
 export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
   if (!db) return []; // nothing to refresh without the database that holds the links
-  const { data, error } = await db
+  const { data: all, error } = await db
     .from('products')
     .select('id, url, external_id, added_by, last_checked_at, currency, failed_checks')
     .eq('source', 'custom');
   if (error) throw error;
+  // A link nobody follows and nobody watches with an alert is kept with its history but not refreshed.
+  const wanted = new Set([...(await productIds(db, 'user_products')), ...(await productIds(db, 'alerts'))]);
+  const data = all.filter((product) => wanted.has(product.id));
   const products = [];
   const unblocker = createUnblocker({ db });
   const browser = createBrowserReader();
@@ -43,6 +46,17 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
   console.log(`  ${summary(result)}`);
   if (result.batchErrors.length) throw result.batchErrors[0];
   return products;
+}
+
+// Ids of the products a table points at, read a page at a time (Supabase returns at most 1000 rows per request).
+async function productIds(db, table) {
+  const ids = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db.from(table).select('product_id').order('product_id').range(from, from + 999);
+    if (error) throw error;
+    ids.push(...data.map((row) => Number(row.product_id)));
+    if (data.length < 1000) return ids;
+  }
 }
 
 // Reads a link through the layers, cheapest first: a plain request, then a real browser (free, see browser-fetch.js),

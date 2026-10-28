@@ -1,6 +1,3 @@
-import { revalidateTag } from "next/cache";
-import { adminDb } from "@/lib/alerts-server";
-import { shouldDropProduct } from "@/lib/lists";
 import { currentUser } from "@/lib/supabase/server";
 
 const fail = (error: string, status: number) => Response.json({ ok: false, error }, { status });
@@ -31,8 +28,9 @@ export async function POST(_request: Request, { params }: RouteContext<"/api/tra
   return Response.json({ ok: true, inList: true });
 }
 
-// DELETE -> removes the item from the visitor's list only. Other people's lists, the price history and alerts stay;
-// a link left with no followers and no alerts stops being checked.
+// DELETE -> removes the item from the visitor's list only. Other people's lists, the price history and alerts stay.
+// A link left with no followers and no alerts is kept as an archive (the scraper stops refreshing it), so whoever
+// pastes the same link later gets its earlier price history right away.
 export async function DELETE(_request: Request, { params }: RouteContext<"/api/track/[id]">) {
   const id = Number((await params).id);
   const row = await listRow(id);
@@ -40,19 +38,5 @@ export async function DELETE(_request: Request, { params }: RouteContext<"/api/t
   const { error } = await row.user.db.from("user_products").delete().eq("product_id", id);
   if (error) return fail("Could not update your list. Please try again.", 500);
 
-  const admin = adminDb();
-  let dropped = false;
-  if (admin) {
-    const [product, followers, alerts] = await Promise.all([
-      admin.from("products").select("source").eq("id", id).maybeSingle(),
-      admin.from("user_products").select("product_id", { count: "exact", head: true }).eq("product_id", id),
-      admin.from("alerts").select("id", { count: "exact", head: true }).eq("product_id", id),
-    ]);
-    // A failed count is null, and null never drops anything.
-    if (product.data && shouldDropProduct({ source: product.data.source, followers: followers.count, alerts: alerts.count })) {
-      dropped = !(await admin.from("products").delete().eq("id", id)).error;
-      revalidateTag("products", { expire: 0 });
-    }
-  }
-  return Response.json({ ok: true, inList: false, dropped });
+  return Response.json({ ok: true, inList: false });
 }
