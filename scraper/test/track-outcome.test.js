@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { attemptRow, botWall, messageFor, outcomeForError } from '../src/track-outcome.js';
-import { markdownTable, parseUrlList, probeRow } from '../src/probe.js';
+import { findRegressions, markdownTable, parseUrlList, probeRow, regressionSection } from '../src/probe.js';
 
 test('outcomeForError tells HTTP answers, timeouts and network failures apart', () => {
   assert.equal(outcomeForError(Object.assign(new Error('HTTP 403'), { status: 403 })), 'http_error');
@@ -46,4 +46,25 @@ test('botWall spots robot-check pages but not product pages that mention a captc
   assert.equal(botWall('<h1>Kulaklık</h1>'), false);
   assert.equal(botWall(`<p>captcha</p>${'x'.repeat(70_000)}`), false);
   assert.equal(botWall(null), false);
+});
+
+test('probe regressions are links that read a price before and do not now', () => {
+  const previous = {
+    rows: [
+      { url: 'https://a.example/1', outcome: 'ok' },
+      { url: 'https://b.example/1', outcome: 'ok' },
+      { url: 'https://c.example/1', outcome: 'http_error' },
+    ],
+  };
+  const rows = [
+    { url: 'https://a.example/1', host: 'a.example', status: 403, outcome: 'http_error' },
+    { url: 'https://b.example/1', host: 'b.example', status: 200, outcome: 'ok' },
+    { url: 'https://c.example/1', host: 'c.example', status: 403, outcome: 'http_error' },
+    { url: 'https://d.example/1', host: 'd.example', status: 404, outcome: 'http_error' },
+  ];
+  const broken = findRegressions(previous, rows);
+  assert.deepEqual(broken.map((r) => r.host), ['a.example']);
+  assert.match(regressionSection(broken), /a\.example: read a price last time, now `http_error` \(HTTP 403\)/);
+  assert.deepEqual(findRegressions(null, rows), []);
+  assert.equal(regressionSection([]), '');
 });

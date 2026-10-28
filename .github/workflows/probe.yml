@@ -1,9 +1,14 @@
 name: Shop probe
 
-# Run by hand from the Actions tab: opens sample product links from GitHub's servers and writes,
+# Runs every Monday and by hand from the Actions tab: opens sample product links from GitHub's servers and writes,
 # per shop, how far reading got (HTTP code, JSON-LD, price, layer) to the job summary.
 # Links go through the same layers as the daily refresh: plain request, real Chromium, then the scraping API.
+# The weekly run never uses the paid scraping API (plain request and real Chromium only). It compares with the last
+# good run's report (kept in the Actions cache); a link that read a price then and does not now fails the run.
+# A failed run does not replace the saved report, so the same breakage keeps failing until it is fixed.
 on:
+  schedule:
+    - cron: '17 6 * * 1'
   workflow_dispatch:
     inputs:
       urls:
@@ -36,10 +41,17 @@ jobs:
           cache-dependency-path: scraper/package-lock.json
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - id: previous
+        uses: actions/cache/restore@v4
+        with:
+          path: scraper/probe-previous
+          key: probe-report-none
+          restore-keys: probe-report-
       - run: set -f; npm run probe -- $URLS # set -f: a "*" in a link stays a "*"
         env:
           URLS: ${{ inputs.urls }}
-          PROBE_API: ${{ inputs.api && '1' || '0' }}
+          PROBE_API: ${{ github.event_name == 'workflow_dispatch' && inputs.api && '1' || '0' }}
+          PROBE_PREVIOUS: probe-previous/probe-report.json
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SCRAPER_USER_AGENT: ${{ vars.SCRAPER_USER_AGENT }}
@@ -47,3 +59,18 @@ jobs:
           UNBLOCK_COUNTRY: ${{ inputs.country || vars.UNBLOCK_COUNTRY }}
           UNBLOCK_RENDER_HOSTS: ${{ vars.UNBLOCK_RENDER_HOSTS }}
           UNBLOCK_PREMIUM_HOSTS: ${{ inputs.premium || vars.UNBLOCK_PREMIUM_HOSTS }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-report
+          path: scraper/probe-report.json
+          if-no-files-found: ignore
+      # Only a full run without the paid API is a fair baseline for the weekly one.
+      - name: Keep this report for the next run
+        if: ${{ github.event_name == 'schedule' || (inputs.urls == '' && !inputs.api) }}
+        run: mkdir -p probe-previous && cp probe-report.json probe-previous/probe-report.json
+      - uses: actions/cache/save@v4
+        if: ${{ github.event_name == 'schedule' || (inputs.urls == '' && !inputs.api) }}
+        with:
+          path: scraper/probe-previous
+          key: probe-report-${{ github.run_id }}

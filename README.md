@@ -85,7 +85,7 @@ In the table, **Secret** and **Variable** mean GitHub repository Settings → Se
 | `UNBLOCK_COUNTRY` | scraper | Optional | Actions Variable / root `.env` | Country code; `tr`; `none` lets the API choose. |
 | `UNBLOCK_RENDER_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing JavaScript rendering; empty by default. |
 | `UNBLOCK_PREMIUM_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing premium requests; empty by default. |
-| `PROBE_API` | scraper probe | Optional | Local root `.env` / process environment | `0` disables the probe's paid fallback. Otherwise it uses the configured API key. Not forwarded by the current probe workflow. |
+| `PROBE_API` | scraper probe | Optional | Local root `.env` / process environment | `0` disables the probe's paid fallback. Otherwise it uses the configured API key. The weekly scheduled run sets it to `0`; a manual run sets it from the `api` input. |
 | `GITHUB_STEP_SUMMARY` | scraper probe | Automatic in Actions | Provided by GitHub Actions | Output file for the probe report; do not configure as a secret or variable. No file is written when absent. |
 
 ## Track any product by link
@@ -94,7 +94,7 @@ Paste a product page link on the dashboard. The server reads the price through a
 
 Every read of a pasted link, when it is added and on each daily refresh, is logged to the `track_attempts` table with its outcome (`ok`, `http_error`, `no_price`, `timeout`, `network`), the HTTP status and which layer held the price (`json-ld`, `microdata`, `meta`, `embedded-state`, `shop-adapter`, or `browser/...` when the real browser read it). Visitors see a message that matches the reason, in their language.
 
-To measure which shops can be read, run the **Shop probe** workflow from the Actions tab (or `cd scraper && npm run probe`, optionally followed by links). It opens the sample product pages in `scraper/probe-urls.txt` and writes a per-shop table (HTTP code, HTML size, JSON-LD present, price found, layer) to the job summary.
+To measure which shops can be read, run the **Shop probe** workflow from the Actions tab (or `cd scraper && npm run probe`, optionally followed by links). It opens the sample product pages in `scraper/probe-urls.txt` and writes a per-shop table (HTTP code, HTML size, JSON-LD present, price found, layer) to the job summary. The workflow also runs every Monday without the paid API, saves `probe-report.json` as an artifact, and fails when a link that read a price in the last good run no longer does.
 
 ## Blocked shops (optional scraping API)
 

@@ -4,7 +4,9 @@
 // Chromium is installed, then the scraping API when SCRAPER_API_KEY and the database (for the monthly count) are set.
 // PROBE_API=0 skips the paid layer. Probe reads are not logged, so they do not count toward UNBLOCK_MONTHLY_LIMIT.
 // On GitHub Actions the table also goes to the job summary.
-import { appendFile, readFile } from 'node:fs/promises';
+// The run also writes probe-report.json (PROBE_REPORT overrides the path). When PROBE_PREVIOUS points at an earlier
+// report, a link that read a price then and does not now is listed as broken and the run exits with code 1.
+import { appendFile, readFile, writeFile } from 'node:fs/promises';
 import { readThroughLayers } from './adapters/custom.js';
 import { createBrowserReader } from './browser-fetch.js';
 import { sleep } from './fetch.js';
@@ -50,6 +52,18 @@ export function markdownTable(rows) {
   return [head, head.map(() => '---'), ...lines].map((cells) => `| ${cells.join(' | ')} |`).join('\n');
 }
 
+// Links that read a price in the earlier report and do not now. Links missing from the earlier report are new, not broken.
+export function findRegressions(previous, rows) {
+  const was = new Map((previous?.rows ?? []).map((r) => [r.url, r.outcome]));
+  return rows.filter((r) => was.get(r.url) === 'ok' && r.outcome !== 'ok');
+}
+
+export function regressionSection(regressions) {
+  if (!regressions.length) return '';
+  const lines = regressions.map((r) => `- ${r.host}: read a price last time, now \`${r.outcome}\` (HTTP ${r.status}) ${r.url}`);
+  return `### Broken since the last report\n\n${lines.join('\n')}\n`;
+}
+
 export function parseUrlList(text) {
   return text
     .split('\n')
@@ -68,7 +82,7 @@ async function main() {
     for (const url of urls) {
       const attempt = await readThroughLayers(url, { retries: 1, browser, unblocker });
       if (attempt.outcome === 'no_price' && attempt.html) console.log(url, JSON.stringify(pageHints(attempt.html), null, 1));
-      rows.push(probeRow(url, attempt));
+      rows.push({ url, ...probeRow(url, attempt) });
       await sleep(1000);
     }
   } finally {
@@ -76,9 +90,24 @@ async function main() {
   }
   const ok = rows.filter((r) => r.outcome === 'ok').length;
   const api = unblocker ? 'on' : 'off';
-  const report = `## Shop probe\n\n${ok} of ${rows.length} links read a price (scraping API ${api}).\n\n${markdownTable(rows)}\n`;
+  let previous = null;
+  if (process.env.PROBE_PREVIOUS) {
+    try {
+      previous = JSON.parse(await readFile(process.env.PROBE_PREVIOUS, 'utf8'));
+    } catch {
+      console.log('No earlier report to compare with.');
+    }
+  }
+  const regressions = findRegressions(previous, rows);
+  const rate = rows.length ? Math.round((ok / rows.length) * 100) : 0;
+  const report =
+    `## Shop probe\n\n${ok} of ${rows.length} links read a price (${rate}%, scraping API ${api}).\n\n${markdownTable(rows)}\n` +
+    (regressions.length ? `\n${regressionSection(regressions)}` : '');
   console.log(report);
   if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY, report);
+  const json = { date: new Date().toISOString(), api: Boolean(unblocker), ok, total: rows.length, rows };
+  await writeFile(process.env.PROBE_REPORT || 'probe-report.json', JSON.stringify(json, null, 2));
+  if (regressions.length) process.exitCode = 1;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
