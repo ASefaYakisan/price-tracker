@@ -14,3 +14,15 @@ export function changeCounts(items: Priced[]) {
   }
   return { drops, rises };
 }
+
+// Colours for the drop / rise cards, matching the row badges: a mixed list has no single
+// "good" direction, so its cards stay neutral.
+export type CardTone = "good" | "bad" | "neutral";
+
+export function cardTones(items: { source: string }[], riseIsGood: (source: string) => boolean) {
+  const up = items.filter((p) => riseIsGood(p.source)).length;
+  if (items.length === 0 || (up > 0 && up < items.length)) return { drops: "neutral" as CardTone, rises: "neutral" as CardTone };
+  return up === 0
+    ? { drops: "good" as CardTone, rises: "bad" as CardTone }
+    : { drops: "bad" as CardTone, rises: "good" as CardTone };
+}
