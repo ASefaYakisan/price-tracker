@@ -6,6 +6,12 @@ test('parseAmount reads Turkish, English and plain formats', () => {
   assert.equal(parseAmount('1.299,90 TL'), 1299.9);
   assert.equal(parseAmount('$1,299.90'), 1299.9);
   assert.equal(parseAmount('₺1.299'), 1299);
+  assert.equal(parseAmount('1.299.000'), 1299000);
+  assert.equal(parseAmount('12,500'), 12500);
+  assert.equal(parseAmount('1299.900'), 1299.9);
+  assert.equal(parseAmount('0.999'), 0.999);
+  assert.equal(parseAmount('0,500'), 0.5);
+  assert.equal(parseAmount('12345,678'), 12345.678);
   assert.equal(parseAmount('12,99'), 12.99);
   assert.equal(parseAmount('1.234.567'), 1234567);
   assert.equal(parseAmount(49.5), 49.5);

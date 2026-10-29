@@ -452,8 +452,10 @@ export function parseAmount(value) {
     s = s.split(dec === '.' ? ',' : '.').join('').replace(',', '.');
   } else {
     const sep = lastDot >= 0 ? '.' : lastComma >= 0 ? ',' : null;
-    // One separator followed by exactly three digits is a thousands separator ("1.299"), otherwise decimal.
-    if (sep && (s.split(sep).length > 2 || s.length - s.lastIndexOf(sep) - 1 === 3)) s = s.split(sep).join('');
+    // One separator followed by exactly three digits is a thousands separator ("1.299") only when the leading group is 1-3 digits
+    // without a leading zero; "1299.900", "0.999" and "0,500" are decimals.
+    const thousands = sep && (s.split(sep).length > 2 || (s.length - s.lastIndexOf(sep) - 1 === 3 && /^[1-9]\d{0,2}$/.test(s.slice(0, s.lastIndexOf(sep)))));
+    if (thousands) s = s.split(sep).join('');
     else if (sep) s = s.replace(sep, '.');
   }
   const n = Number(s);
