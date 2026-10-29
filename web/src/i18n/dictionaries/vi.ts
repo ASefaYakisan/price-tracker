@@ -58,6 +58,7 @@ const vi: Dict = {
     title: "Giá đang theo dõi",
     lastScrape: "Lần thu thập gần nhất {date}",
     noScrapes: "Chưa thu thập lần nào",
+    staleData: "Giá có thể đã lỗi thời",
     summary: "{items} sản phẩm từ {sources} nguồn",
     demo: "Bạn đang xem dữ liệu mẫu. Kết nối Supabase và chạy trình thu thập để theo dõi giá thực.",
     trackedItems: "Sản phẩm đang theo dõi",

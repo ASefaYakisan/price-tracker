@@ -123,6 +123,12 @@ Requests are counted from `track_attempts`: reads through the API are logged wit
 
 Both integrations are optional; see [Configuration](#configuration) for their settings. Telegram posts price drops after each run. Google Sheets replaces the `Latest` tab and appends to `History`; share the spreadsheet with the service account as Editor.
 
+## Scheduled jobs and monitoring
+
+All price updates run as scheduled GitHub Actions (`scrape.yml` daily, `pending.yml` every 15 minutes). GitHub disables scheduled workflows in a repository after 60 days without activity, so `.github/workflows/keepalive.yml` runs weekly and re-enables both of them (it makes no commits). You can also start it from the Actions tab.
+
+`GET /api/health` returns the time of the newest read per source. It answers `200` while the newest read is under 36 hours old and `503` when prices are stale or missing, so a free uptime monitor (UptimeRobot, Better Stack and similar) can alert you if updates stop. The home page also shows a "Prices may be out of date" note past the same limit.
+
 ## Public API
 
 Read-only JSON, no key needed, CORS open. Interactive docs (Swagger UI): [`/docs`](https://price-tracker-shop.vercel.app/docs), spec at `/api/openapi.json`.

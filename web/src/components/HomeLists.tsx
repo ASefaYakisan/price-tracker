@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import type { ProductRow } from "@/lib/data";
 import { dateTime } from "@/lib/format";
 import { changeCounts } from "@/lib/change-counts";
+import { isStale } from "@/lib/health";
 import { defaultList, itemsInList, LISTS, type ListKey } from "@/lib/lists";
 import { useMyProducts } from "@/lib/my-products";
 import { useI18n } from "@/i18n/client";
@@ -16,11 +17,15 @@ const TAB_LABEL: Record<ListKey, (t: Dict) => string> = {
   sample: (t) => t.home.tabSample,
 };
 
+const LOADED_AT = Date.now();
+const subscribeNever = () => () => {};
+
 // The lists under the link box: your own items, market feeds and the sample books.
 export function HomeLists({ products, sparklines }: { products: ProductRow[]; sparklines: Record<number, number[]> }) {
   const { t, lang, fill } = useI18n();
   const { user, ids: mine, items: mineItems, sparklines: mineSparklines } = useMyProducts();
   const [picked, setPicked] = useState<ListKey | null>(null);
+  const now = useSyncExternalStore(subscribeNever, () => LOADED_AT, () => null); // the age note needs the browser clock
   const tabs = LISTS.filter((l) => l !== "mine" || user);
   const list = picked && tabs.includes(picked) ? picked : defaultList(Boolean(user));
   const items = itemsInList(products, list, mine ? mineItems : null);
@@ -63,7 +68,10 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
       </dl>
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-8 gap-y-2 text-sm text-muted">
-        <p>{lastRun ? fill(t.home.lastScrape, { date: dateTime(lastRun, lang) }) : t.home.noScrapes}</p>
+        <p>
+          {lastRun ? fill(t.home.lastScrape, { date: dateTime(lastRun, lang) }) : t.home.noScrapes}
+          {now !== null && isStale(lastRun, now) && <span className="ml-2 text-warn">· {t.home.staleData}</span>}
+        </p>
         {items.length > 0 && (
           <p className="hidden items-baseline gap-3 sm:flex">
             <span>{t.home.download}</span>

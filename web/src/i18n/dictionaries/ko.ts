@@ -58,6 +58,7 @@ const ko: Dict = {
     title: "추적 중인 가격",
     lastScrape: "마지막 수집 {date}",
     noScrapes: "아직 수집 기록이 없습니다",
+    staleData: "가격이 최신이 아닐 수 있습니다",
     summary: "{sources}개 출처의 상품 {items}개",
     demo: "데모 데이터를 보고 있습니다. Supabase를 연결하고 스크레이퍼를 실행하면 실시간 가격을 추적할 수 있습니다.",
     trackedItems: "추적 중인 상품",

@@ -58,6 +58,7 @@ const fr: Dict = {
     title: "Prix suivis",
     lastScrape: "Dernière collecte {date}",
     noScrapes: "Aucune collecte pour l'instant",
+    staleData: "Les prix peuvent être périmés",
     summary: "{items} articles issus de {sources} sources",
     demo: "Vous consultez des données de démonstration. Connectez Supabase et lancez le scraper pour suivre les prix en direct.",
     trackedItems: "Articles suivis",

@@ -58,6 +58,7 @@ const en = {
     title: "Tracked prices",
     lastScrape: "Last scrape {date}",
     noScrapes: "No scrapes yet",
+    staleData: "Prices may be out of date",
     summary: "{items} items across {sources} sources",
     demo: "You are viewing demo data. Connect Supabase and run the scraper to track live prices.",
     trackedItems: "Tracked items",

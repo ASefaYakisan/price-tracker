@@ -58,6 +58,7 @@ const cs: Dict = {
     title: "Sledované ceny",
     lastScrape: "Poslední stažení {date}",
     noScrapes: "Zatím žádná stažení",
+    staleData: "Ceny mohou být zastaralé",
     summary: "{items} položek z {sources} zdrojů",
     demo: "Prohlížíte si ukázková data. Připojte Supabase a spusťte scraper, abyste sledovali ceny živě.",
     trackedItems: "Sledované položky",
