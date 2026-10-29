@@ -37,5 +37,7 @@
   { "file": "price-specification-list.html", "url": "https://shop.example/sofa", "layer": "json-ld",
     "expect": { "title": "Corner Sofa", "price": 800, "currency": "TRY", "in_stock": true } },
   { "file": "price-zero-specification.html", "url": "https://shop.example/rug", "layer": "json-ld",
-    "expect": { "title": "Wool Rug", "price": 900, "currency": "TRY", "in_stock": true } }
+    "expect": { "title": "Wool Rug", "price": 900, "currency": "TRY", "in_stock": true } },
+  { "file": "next-data-traps.html", "url": "https://shop.example/p/kahve", "layer": "embedded-state",
+    "expect": { "title": "Kahve Makinesi Pro", "price": 1499, "currency": "TRY" } }
 ]
