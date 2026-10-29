@@ -463,6 +463,9 @@ export function parseAmount(value) {
 }
 
 // Same product, different tracking params, should be one row.
+const TRACKING_PARAM =
+  /^(utm_|gad_|gclid$|gclsrc$|dclid$|gbraid$|wbraid$|fbclid$|msclkid$|yclid$|ttclid$|igshid$|srsltid$|mc_cid$|mc_eid$|_gl$|ref$|ref_|boutiqueId$|merchantId$)/i;
+
 export function canonicalUrl(url) {
   const u = new URL(url);
   u.hash = '';
@@ -470,7 +473,7 @@ export function canonicalUrl(url) {
   const asin = /(^|\.)amazon\.[a-z.]+$/.test(u.hostname) && u.pathname.match(/\/(?:dp|gp\/product|gp\/aw\/d)\/([A-Z0-9]{10})(?:[/?]|$)/i)?.[1];
   if (asin) return `${u.origin}/dp/${asin.toUpperCase()}`;
   for (const key of [...u.searchParams.keys()]) {
-    if (/^(utm_|gclid|fbclid|ref$|ref_|boutiqueId|merchantId$)/i.test(key)) u.searchParams.delete(key);
+    if (TRACKING_PARAM.test(key)) u.searchParams.delete(key);
   }
   return u.href;
 }

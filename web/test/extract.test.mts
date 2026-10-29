@@ -19,6 +19,15 @@ for (const c of cases) {
   });
 }
 
+test("canonicalUrl drops ad and newsletter tracking params regardless of case", () => {
+  assert.equal(
+    canonicalUrl("https://a.com/p?id=5&srsltid=AfmB&gad_source=1&gad_campaignid=9&mc_cid=x&mc_eid=y&_gl=1*a&msclkid=z&igshid=q"),
+    "https://a.com/p?id=5",
+  );
+  assert.equal(canonicalUrl("https://a.com/p?id=5&SRSLTID=x"), "https://a.com/p?id=5");
+  assert.equal(canonicalUrl("https://a.com/p?variant=blue&sku=7&utm_source=x"), "https://a.com/p?variant=blue&sku=7");
+});
+
 test("canonicalUrl reduces Amazon links to /dp/<ASIN>", () => {
   assert.equal(canonicalUrl("https://www.amazon.de/Some-Title/dp/B0ABCDEFGH/ref=sr_1_3?keywords=x&th=1"), "https://www.amazon.de/dp/B0ABCDEFGH");
   assert.equal(canonicalUrl("https://a.com/p?id=5&utm_medium=x&gclid=1"), "https://a.com/p?id=5");
