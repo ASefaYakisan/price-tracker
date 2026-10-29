@@ -58,6 +58,7 @@ const ro: Dict = {
     title: "Prețuri urmărite",
     lastScrape: "Ultima colectare {date}",
     noScrapes: "Nicio colectare încă",
+    staleData: "Prețurile pot fi depășite",
     summary: "{items} produse din {sources} surse",
     demo: "Vezi date demonstrative. Conectează Supabase și rulează scraperul pentru prețuri în timp real.",
     trackedItems: "Produse urmărite",

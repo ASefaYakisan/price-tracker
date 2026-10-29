@@ -58,6 +58,7 @@ const ar: Dict = {
     title: "الأسعار المتتبَّعة",
     lastScrape: "آخر جمع {date}",
     noScrapes: "لم يتم أي جمع بعد",
+    staleData: "قد تكون الأسعار قديمة",
     summary: "{items} عنصرًا من {sources} مصادر",
     demo: "أنت تشاهد بيانات تجريبية. اربط Supabase وشغّل أداة الجمع لتتبع الأسعار الفعلية.",
     trackedItems: "العناصر المتتبَّعة",

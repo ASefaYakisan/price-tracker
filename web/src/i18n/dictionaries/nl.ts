@@ -58,6 +58,7 @@ const nl: Dict = {
     title: "Gevolgde prijzen",
     lastScrape: "Laatste scrape {date}",
     noScrapes: "Nog geen scrapes",
+    staleData: "Prijzen zijn mogelijk verouderd",
     summary: "{items} items uit {sources} bronnen",
     demo: "Je bekijkt demodata. Koppel Supabase en start de scraper om live prijzen te volgen.",
     trackedItems: "Gevolgde items",

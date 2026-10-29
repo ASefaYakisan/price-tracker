@@ -58,6 +58,7 @@ const id: Dict = {
     title: "Harga yang dilacak",
     lastScrape: "Pengambilan terakhir {date}",
     noScrapes: "Belum ada pengambilan data",
+    staleData: "Harga mungkin sudah kedaluwarsa",
     summary: "{items} item dari {sources} sumber",
     demo: "Anda melihat data demo. Hubungkan Supabase dan jalankan scraper untuk melacak harga langsung.",
     trackedItems: "Item yang dilacak",

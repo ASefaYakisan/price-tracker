@@ -58,6 +58,7 @@ const da: Dict = {
     title: "Overvågede priser",
     lastScrape: "Seneste hentning {date}",
     noScrapes: "Ingen hentninger endnu",
+    staleData: "Priserne er muligvis forældede",
     summary: "{items} varer fra {sources} kilder",
     demo: "Du ser demodata. Forbind Supabase og kør scraperen for at følge priser live.",
     trackedItems: "Overvågede varer",
