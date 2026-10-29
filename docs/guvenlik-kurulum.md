@@ -50,3 +50,9 @@ Her adımda sonucu yaz; başarısız olanı issue #56'ya not et.
 6. Bir ürün linki ekle (giriş zorunlu); çıkış yapılmışken eklemenin reddedildiğini doğrula.
 
 Hepsi geçerse #56 kapatılabilir.
+
+## 5. HTTP güvenlik başlıkları ve CSP kararı
+
+`web/next.config.ts` tüm yollara şu başlıkları ekler (`web/src/lib/security-headers.ts`): `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY` ve `Content-Security-Policy: frame-ancestors 'none'` (site iframe içine alınamaz), `Strict-Transport-Security` ve `Permissions-Policy`.
+
+**Tam bir Content-Security-Policy bilinçli olarak eklenmedi.** Nedeni: Turnstile (`challenges.cloudflare.com`), `/docs` Swagger sayfası (`cdn.jsdelivr.net` ve satır içi script) ve satır içi tema script'i; `script-src` kısıtlaması bunları kırar. İleride nonce'lu bir CSP (Next.js proxy'sinde istek başına nonce üretip `script-src 'nonce-…' 'strict-dynamic'`) önerilir; önce Turnstile ve Swagger ile elle denenmelidir.
