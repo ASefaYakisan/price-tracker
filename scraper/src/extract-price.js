@@ -299,27 +299,40 @@ function balancedJson(text, start) {
   return null;
 }
 
+// Subtrees that hold prices of things other than the product itself.
+const NON_PRODUCT_KEYS = /shipping|cargo|delivery|installment|taksit|kargo|coupon|voucher|recommend|related|similar|cross|upsell|carousel|banner|bundle/i;
+
 // Breadth first, so the product's own price is found before prices of related products deeper down.
+// Skips shipping/installment/recommendation subtrees, and within one depth prefers a node that has a name.
 function findPriceInTree(root) {
-  const queue = [root];
-  for (let seen = 0; queue.length && seen < 50_000; seen++) {
-    const node = queue.shift();
-    if (!node || typeof node !== 'object') continue;
-    if (!Array.isArray(node)) {
-      for (const key of PRICE_KEYS) {
-        if (!(key in node)) continue;
-        const { price, holder } = stateAmount(node[key]);
-        if (price == null) continue;
-        return {
-          name: typeof node.name === 'string' ? node.name : null,
-          image: firstImage(node.image ?? node.images),
-          price,
-          currency: stateCurrency(holder) ?? stateCurrency(node[key]) ?? stateCurrency(node),
-          availability: node.inStock === false || node.isSoldOut === true ? 'OutOfStock' : null,
-        };
+  let level = [root];
+  for (let seen = 0; level.length && seen < 50_000; ) {
+    const next = [];
+    let fallback = null;
+    for (const node of level) {
+      seen++;
+      if (!node || typeof node !== 'object') continue;
+      if (!Array.isArray(node)) {
+        for (const key of PRICE_KEYS) {
+          if (!(key in node)) continue;
+          const { price, holder } = stateAmount(node[key]);
+          if (price == null) continue;
+          const found = {
+            name: typeof node.name === 'string' ? node.name : null,
+            image: firstImage(node.image ?? node.images),
+            price,
+            currency: stateCurrency(holder) ?? stateCurrency(node[key]) ?? stateCurrency(node),
+            availability: node.inStock === false || node.isSoldOut === true ? 'OutOfStock' : null,
+          };
+          if (found.name) return found;
+          fallback ??= found;
+          break;
+        }
       }
+      for (const [key, child] of Object.entries(node)) if (!NON_PRODUCT_KEYS.test(key)) next.push(child);
     }
-    queue.push(...Object.values(node));
+    if (fallback) return fallback;
+    level = next;
   }
   return null;
 }
