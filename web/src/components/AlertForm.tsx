@@ -119,8 +119,9 @@ export function AlertForm({
             autoComplete="email"
             placeholder={t.common.emailPlaceholder}
             value={email}
+            readOnly={Boolean(user?.email)}
             onChange={(e) => setEmail(e.target.value)}
-            className={input}
+            className={`${input} read-only:text-muted`}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm text-muted sm:w-48">
