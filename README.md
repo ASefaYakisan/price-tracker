@@ -31,13 +31,13 @@ A Node.js scraper collects prices from four sources on a schedule (an e-commerce
 | Folder | What it does |
 | --- | --- |
 | `scraper/` | Node.js 20+ collector. One adapter per source (`src/adapters/`): HTML crawling with pagination (books.toscrape.com), JSON APIs (CoinGecko, gold) and XML (Central Bank of Türkiye rates). Polite fetching with retries; one failing source never blocks the others. Saves to Supabase, or to local JSON when no credentials are set. |
-| `supabase/migrations/` | Tables `products`, `price_history`, `alerts`, the `product_latest` view and row level security. |
+| `supabase/migrations/` | Twelve ordered migrations: products, price history, alerts, the `product_latest` view, accounts and row level security, pasted-link status and logs, per-user lists, usage stats. |
 | `web/` | Next.js dashboard: search, filters and sorting, per-product price history chart, Excel and CSV export, light and dark themes. Shows demo data until Supabase is connected. |
 
 ## Run it
 
 ```bash
-# 1. Database: paste supabase/migrations/0001_init.sql into the Supabase SQL editor
+# 1. Database: apply every file in supabase/migrations/ in order (supabase db push, or the SQL editor); see docs/SETUP.md
 # 2. Scraper
 cd scraper && npm install
 SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run scrape -- all 3   # or a single source: coingecko, tcmb, gold, books-toscrape
@@ -47,6 +47,8 @@ cd ../web && npm install
 NEXT_PUBLIC_SUPABASE_URL=... NEXT_PUBLIC_SUPABASE_ANON_KEY=... npm run dev
 npm test   # runs the shared shop fixtures in scraper/test/fixtures/shops against the web extractor
 ```
+
+For a full deployment (Supabase, Vercel, GitHub Actions, first run and a checklist) follow [docs/SETUP.md](docs/SETUP.md). The repository holds no database address or key: without the variables above the dashboard runs on demo data.
 
 ## Daily schedule
 
