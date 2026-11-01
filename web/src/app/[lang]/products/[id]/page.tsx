@@ -31,11 +31,19 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
     product.price == null
       ? `${storeName(product, t)} · ${t.meta.description}`
       : `${fill(t.meta.productPrice, { price: money(product.price, product.currency, lang) })} · ${storeName(product, t)}`;
+  // Image-less products (pending links, crypto/gold/forex rows) still get a social
+  // preview: fall back to the brand card the [lang] layout generates via its
+  // opengraph-image file convention (/{lang}/opengraph-image, 1200x630).
+  const fallbackImage = new URL(`/${lang}/opengraph-image`, siteUrl()).toString();
   return {
     title,
     description,
     alternates: { canonical: languages[lang], languages: { ...languages, "x-default": languages.en } },
-    openGraph: { title, description, ...(product.image_url ? { images: [product.image_url] } : {}) },
+    openGraph: {
+      title,
+      description,
+      images: product.image_url ? [product.image_url] : [fallbackImage],
+    },
   };
 }
 
