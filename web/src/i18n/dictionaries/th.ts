@@ -27,6 +27,10 @@ const th: Dict = {
     deleteCancel: "ยกเลิก",
     deleteWorking: "กำลังลบ…",
     deleteFailed: "ลบบัญชีไม่สำเร็จ ตรวจสอบอีเมลแล้วลองอีกครั้ง",
+    profile: "โปรไฟล์",
+    profileEmail: "อีเมล",
+    profileDanger: "โซนอันตราย",
+    profileDangerText: "ลบบัญชี การแจ้งเตือน และรายการของคุณอย่างถาวร",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

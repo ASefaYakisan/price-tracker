@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { DeleteAccount } from "@/components/DeleteAccount";
 import { clearAccountAlerts } from "@/lib/account-alerts";
 import { useUser } from "@/lib/auth";
 import { authEnabled, createClient } from "@/lib/supabase/client";
@@ -14,7 +13,6 @@ export function UserMenu() {
   const router = useRouter();
   const { t, href } = useI18n();
   const [open, setOpen] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,24 +56,17 @@ export function UserMenu() {
       {open && (
         <div className="fixed inset-x-4 top-16 z-30 rounded-xl border border-line bg-card p-1 text-sm shadow-lg sm:absolute sm:inset-x-auto sm:end-0 sm:top-auto sm:mt-2 sm:w-56">
           <div className="truncate px-3 py-2 text-xs text-muted">{user.email}</div>
+          <Link href={href("/profile")} onClick={() => setOpen(false)} className="block rounded-lg px-3 py-2 text-ink hover:bg-hover">
+            {t.nav.profile}
+          </Link>
           <Link href={href("/alerts")} onClick={() => setOpen(false)} className="block rounded-lg px-3 py-2 text-ink hover:bg-hover">
             {t.nav.myAlerts}
           </Link>
           <button onClick={signOut} className="block w-full rounded-lg px-3 py-2 text-start text-bad hover:bg-bad-soft">
             {t.nav.signOut}
           </button>
-          <button
-            onClick={() => {
-              setOpen(false);
-              setDeleting(true);
-            }}
-            className="block w-full rounded-lg px-3 py-2 text-start text-xs text-muted hover:bg-hover"
-          >
-            {t.nav.deleteAccount}
-          </button>
         </div>
       )}
-      {deleting && <DeleteAccount onClose={() => setDeleting(false)} />}
     </div>
   );
 }

@@ -27,6 +27,10 @@ const tr: Dict = {
     deleteCancel: "Vazgeç",
     deleteWorking: "Siliniyor…",
     deleteFailed: "Hesap silinemedi. E-posta adresini kontrol edip tekrar dene.",
+    profile: "Profil",
+    profileEmail: "E-posta",
+    profileDanger: "Tehlikeli bölge",
+    profileDangerText: "Hesabını, alarmlarını ve listeni kalıcı olarak sil.",
   },
   legal: {"privacy": "Gizlilik ve veri silme", "terms": "Kullanım şartları"},
   footer:

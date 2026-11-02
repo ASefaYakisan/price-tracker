@@ -27,6 +27,10 @@ const fr: Dict = {
     deleteCancel: "Annuler",
     deleteWorking: "Suppression…",
     deleteFailed: "Impossible de supprimer le compte. Vérifiez l’adresse e-mail et réessayez.",
+    profile: "Profil",
+    profileEmail: "E-mail",
+    profileDanger: "Zone de danger",
+    profileDangerText: "Supprimer définitivement votre compte, vos alertes et votre liste.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

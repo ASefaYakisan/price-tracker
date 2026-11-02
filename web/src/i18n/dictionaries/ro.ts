@@ -27,6 +27,10 @@ const ro: Dict = {
     deleteCancel: "Anulează",
     deleteWorking: "Se șterge…",
     deleteFailed: "Contul nu a putut fi șters. Verifică adresa de e-mail și încearcă din nou.",
+    profile: "Profil",
+    profileEmail: "E-mail",
+    profileDanger: "Zonă periculoasă",
+    profileDangerText: "Șterge definitiv contul, alertele și lista.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

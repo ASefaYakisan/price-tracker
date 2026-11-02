@@ -27,6 +27,10 @@ const hi: Dict = {
     deleteCancel: "रद्द करें",
     deleteWorking: "हटाया जा रहा है…",
     deleteFailed: "खाता हटाया नहीं जा सका। ईमेल जाँचकर फिर कोशिश करें।",
+    profile: "प्रोफ़ाइल",
+    profileEmail: "ईमेल",
+    profileDanger: "खतरनाक क्षेत्र",
+    profileDangerText: "अपना खाता, अलर्ट और सूची हमेशा के लिए हटाएँ।",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

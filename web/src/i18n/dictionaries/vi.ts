@@ -27,6 +27,10 @@ const vi: Dict = {
     deleteCancel: "Hủy",
     deleteWorking: "Đang xóa…",
     deleteFailed: "Không thể xóa tài khoản. Hãy kiểm tra email và thử lại.",
+    profile: "Hồ sơ",
+    profileEmail: "Email",
+    profileDanger: "Vùng nguy hiểm",
+    profileDangerText: "Xóa vĩnh viễn tài khoản, cảnh báo và danh sách của bạn.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

@@ -27,6 +27,10 @@ const da: Dict = {
     deleteCancel: "Annuller",
     deleteWorking: "Sletter…",
     deleteFailed: "Kontoen kunne ikke slettes. Tjek e-mailadressen, og prøv igen.",
+    profile: "Profil",
+    profileEmail: "E-mail",
+    profileDanger: "Farezone",
+    profileDangerText: "Slet din konto, dine alarmer og din liste permanent.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

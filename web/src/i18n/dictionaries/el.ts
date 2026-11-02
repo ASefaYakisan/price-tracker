@@ -27,6 +27,10 @@ const el: Dict = {
     deleteCancel: "Άκυρο",
     deleteWorking: "Διαγραφή…",
     deleteFailed: "Δεν ήταν δυνατή η διαγραφή του λογαριασμού. Ελέγξτε το email και δοκιμάστε ξανά.",
+    profile: "Προφίλ",
+    profileEmail: "Email",
+    profileDanger: "Επικίνδυνη ζώνη",
+    profileDangerText: "Μόνιμη διαγραφή του λογαριασμού, των ειδοποιήσεων και της λίστας σου.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

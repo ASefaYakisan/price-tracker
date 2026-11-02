@@ -27,6 +27,10 @@ const id: Dict = {
     deleteCancel: "Batal",
     deleteWorking: "Menghapus…",
     deleteFailed: "Akun tidak dapat dihapus. Periksa alamat email lalu coba lagi.",
+    profile: "Profil",
+    profileEmail: "Email",
+    profileDanger: "Zona bahaya",
+    profileDangerText: "Hapus akun, peringatan, dan daftar Anda secara permanen.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

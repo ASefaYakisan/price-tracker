@@ -27,6 +27,10 @@ const zh: Dict = {
     deleteCancel: "取消",
     deleteWorking: "正在删除…",
     deleteFailed: "无法删除账户。请检查邮箱后重试。",
+    profile: "个人资料",
+    profileEmail: "电子邮件",
+    profileDanger: "危险区域",
+    profileDangerText: "永久删除你的账户、提醒和列表。",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
