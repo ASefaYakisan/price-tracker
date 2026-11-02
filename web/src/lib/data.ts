@@ -40,6 +40,7 @@ export async function getProducts(): Promise<ProductRow[]> {
     db
       .from("product_latest")
       .select(columns)
+      .neq("source", "custom") // pasted links belong to the people who added them; see getMyProducts
       .order("price_change", { ascending: true, nullsFirst: false })
       .order("id")
       .range(from, from + PAGE - 1);
@@ -56,6 +57,25 @@ export async function getProducts(): Promise<ProductRow[]> {
     const batch = (data ?? []) as unknown as ProductRow[];
     rows.push(...batch.map(toNumbers));
     if (batch.length < PAGE) break;
+  }
+  return rows;
+}
+
+// The items in one person's list, read with their own client. Pasted links never appear in the shared list above.
+export async function getMyProducts(db: SupabaseClient, ids: number[]): Promise<ProductRow[]> {
+  if (isDemo || !ids.length) return [];
+  const rows: ProductRow[] = [];
+  let columns = `${LIST_COLUMNS}, ${STATUS_COLUMNS}`;
+  // Ids go in the request address, so ask for a couple of hundred items at a time.
+  for (let i = 0; i < ids.length; i += 200) {
+    const chunk = ids.slice(i, i + 200);
+    let { data, error } = await db.from("product_latest").select(columns).in("id", chunk);
+    if (error?.code === "42703" && columns !== LIST_COLUMNS) {
+      columns = LIST_COLUMNS;
+      ({ data, error } = await db.from("product_latest").select(columns).in("id", chunk));
+    }
+    if (error) throw new Error(error.message);
+    rows.push(...((data ?? []) as unknown as ProductRow[]).map(toNumbers));
   }
   return rows;
 }

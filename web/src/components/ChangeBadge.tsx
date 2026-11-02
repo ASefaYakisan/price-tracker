@@ -30,7 +30,7 @@ export function ChangeBadge({
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-sm font-medium tabular-nums ${
         good ? "bg-good-soft text-good" : "bg-bad-soft text-bad"
       }`}
-      title={fill(down ? t.change.downBy : t.change.upBy, { amount })}
+      title={`${t.change.sinceLast}: ${fill(down ? t.change.downBy : t.change.upBy, { amount })}`}
     >
       <span aria-hidden>{down ? "▼" : "▲"}</span>
       {percent(pct, lang, false)}

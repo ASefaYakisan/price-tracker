@@ -32,11 +32,15 @@ test('a pending link stays pending for two failed tries and fails on the third',
   assert.equal(statusChange(blocked, { pending: true, failedChecks: 2, now }).status, 'failed');
 });
 
-test('the daily refresh only records the failure and keeps the status', () => {
+test('the daily refresh records and counts the failure and keeps the status', () => {
   assert.deepEqual(statusChange({ outcome: 'no_price', httpStatus: 200, product: null }, { now }), {
     last_error: 'no_price',
     last_checked_at: now,
+    failed_checks: 1,
   });
+  assert.equal(statusChange(blocked, { failedChecks: 6, now }).failed_checks, 7);
+  // A read that works again starts the count over.
+  assert.equal(statusChange(ok, { failedChecks: 6, now }).failed_checks, 0);
 });
 
 test('saving statuses updates each product and survives a failed write', async () => {

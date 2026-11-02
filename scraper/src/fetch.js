@@ -1,24 +1,38 @@
+import { isPageType, readCapped } from './read-body.js';
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Set SCRAPER_USER_AGENT to add a contact address for shop operators, e.g. 'PriceTrackerBot/0.1 (+https://your-site)'.
 const USER_AGENT = process.env.SCRAPER_USER_AGENT || 'PriceTrackerBot/0.1';
 
 // Polite fetch: identifies itself, retries transient failures with backoff.
-// Errors for an HTTP answer carry its `status`; `timeoutMs` gives up on a slow server with a TimeoutError.
+// Errors for an HTTP answer carry its `status`. Every request has a time limit (DEFAULT_TIMEOUT_MS unless `timeoutMs` is given),
+// so one silent server can never hang a whole run. A TimeoutError is retried (with backoff) only for the default limit;
+// callers that pick their own `timeoutMs` decide for themselves how often to try again.
 // With a `guard` (async url => void, throws to refuse), redirects are followed by hand and every address is checked first;
 // use it for links visitors saved, not for the fixed addresses of rate and price feeds.
+export const DEFAULT_TIMEOUT_MS = 20_000;
+
 export async function fetchText(url, { retries = 3, accept = 'text/html', headers = {}, timeoutMs, guard } = {}) {
+  const retryTimeouts = !timeoutMs;
   for (let attempt = 1; ; attempt++) {
     try {
-      const signal = timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined;
+      const signal = AbortSignal.timeout(timeoutMs || DEFAULT_TIMEOUT_MS);
       const init = { headers: { 'user-agent': USER_AGENT, accept, ...headers }, signal };
       const res = guard ? await fetchGuarded(url, init, guard) : await fetch(url, init);
-      if (res.ok) return await res.text();
+      if (res.ok) {
+        // Links visitors saved can point at anything; only pages are read, and never more than the size cap.
+        if (guard && !isPageType(res.headers.get('content-type'))) {
+          await res.body?.cancel().catch(() => {});
+          throw Object.assign(new Error(`not a product page (${res.headers.get('content-type')}) for ${url}`), { notPage: true });
+        }
+        return await readCapped(res);
+      }
       const error = Object.assign(new Error(`HTTP ${res.status} for ${url}`), { status: res.status });
       if (res.status < 500 && res.status !== 429) throw error;
       throw Object.assign(error, { retryable: true });
     } catch (err) {
-      const retryable = err.retryable || err.name === 'TypeError';
+      const retryable = err.retryable || err.name === 'TypeError' || (retryTimeouts && err.name === 'TimeoutError');
       if (!retryable || attempt >= retries) throw err;
       await sleep(1000 * 2 ** (attempt - 1));
     }

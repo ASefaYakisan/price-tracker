@@ -301,3 +301,41 @@
     color: var(--ink);
   }
 }
+
+/* Keep the existing desktop layout; give phone controls a usable touch target. */
+@media (width < 640px) {
+  :where(button, select, summary, input:not([type="hidden"]), a[href]) {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+
+  a[href] {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  a.truncate {
+    display: block;
+    max-inline-size: 100%;
+    line-height: 44px;
+  }
+
+  /* Product-title links retain their two-line clamp and fill the text column. */
+  a.line-clamp-2 {
+    display: -webkit-box;
+  }
+
+  /* The header stays on one row at phone width; the controls shrink instead of wrapping. */
+  body > header > div {
+    gap: 4px;
+    padding-inline: 12px;
+  }
+
+  body > header > div > nav {
+    min-inline-size: 0;
+  }
+
+  main {
+    overflow-wrap: anywhere;
+  }
+}

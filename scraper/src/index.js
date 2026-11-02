@@ -9,7 +9,8 @@ import { loadLatest, sendTelegram, syncSheet } from './notify.js';
 import { createStore } from './store.js';
 
 // Two adapter shapes: HTML listings we crawl page by page, and APIs that return everything in one call.
-const ADAPTERS = Object.fromEntries([booksToScrape, coingecko, tcmb, gold, custom].map((a) => [a.name, a]));
+// User links run first: a slow fixed source must never delay their prices or the alerts.
+const ADAPTERS = Object.fromEntries([custom, booksToScrape, coingecko, tcmb, gold].map((a) => [a.name, a]));
 
 export async function crawl(adapter, { maxPages = 5, delayMs = 1000 } = {}) {
   const all = [];

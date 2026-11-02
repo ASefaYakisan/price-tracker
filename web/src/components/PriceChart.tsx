@@ -5,6 +5,22 @@ import type { PricePoint } from "@/lib/data";
 import { useI18n } from "@/i18n/client";
 import { intlLocale } from "@/i18n/config";
 import { axisMoney, money, shortDate } from "@/lib/format";
+import { HISTORY_GOAL_DAYS, historyDay } from "@/lib/history-progress";
+
+function HistoryProgress({ firstReadingAt }: { firstReadingAt: string }) {
+  const { t, fill } = useI18n();
+  const day = historyDay(firstReadingAt);
+  if (day == null) return null;
+  const text = fill(t.product.historyProgress, { day: String(day), goal: String(HISTORY_GOAL_DAYS) });
+  return (
+    <div className="mt-3" role="progressbar" aria-label={text} aria-valuemin={1} aria-valuemax={HISTORY_GOAL_DAYS} aria-valuenow={day}>
+      <div className="h-1.5 overflow-hidden rounded-full bg-line">
+        <div className="h-full rounded-full bg-accent" style={{ width: `${(day / HISTORY_GOAL_DAYS) * 100}%` }} />
+      </div>
+      <p className="mt-1 text-xs text-muted">{text}</p>
+    </div>
+  );
+}
 
 const W = 720;
 const H = 260;
@@ -32,6 +48,18 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
   const [hover, setHover] = useState<number | null>(null);
   const { t, lang, fill } = useI18n();
   const data = points.filter((p): p is PricePoint & { price: number } => p.price != null);
+  if (data.length === 1) {
+    // One real reading: show it instead of an empty chart, and say plainly when the history starts.
+    return (
+      <div className="rounded-xl border border-line px-4 py-8 text-center">
+        <p className="text-2xl font-bold tabular-nums">{money(data[0].price, currency, lang)}</p>
+        <p className="mt-2 text-sm text-muted">{fill(t.product.trackingStarted, { date: shortDate(Date.parse(data[0].scraped_at), lang) })}</p>
+        <div className="mx-auto max-w-xs">
+          <HistoryProgress firstReadingAt={data[0].scraped_at} />
+        </div>
+      </div>
+    );
+  }
   if (data.length < 2) {
     return <p className="py-10 text-center text-sm text-muted">{t.product.notEnough}</p>;
   }
@@ -124,7 +152,7 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
           {!h.stock && <div className="text-warn">{t.change.outOfStock}</div>}
         </div>
       )}
-      <details className="mt-4 text-sm">
+      <details className="mt-4 max-sm:overflow-x-auto text-sm">
         <summary className="cursor-pointer text-muted hover:text-ink">{t.product.showTable}</summary>
         <table className="mt-2 w-full">
           <thead className="text-start text-xs text-faint">
@@ -143,6 +171,7 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
           </tbody>
         </table>
       </details>
+      <HistoryProgress firstReadingAt={data[0].scraped_at} />
     </div>
   );
 }

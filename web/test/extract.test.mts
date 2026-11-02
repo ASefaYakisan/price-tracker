@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { canonicalUrl, readPrice } from "../src/lib/extract-price.ts";
+import { canonicalUrl, parseAmount, readPrice } from "../src/lib/extract-price.ts";
 
 // Same cases as scraper/test/shops.test.js, so the two extractors cannot drift apart unnoticed.
 const dir = new URL("../../scraper/test/fixtures/shops/", import.meta.url);
@@ -19,7 +19,31 @@ for (const c of cases) {
   });
 }
 
+test("canonicalUrl drops ad and newsletter tracking params regardless of case", () => {
+  assert.equal(
+    canonicalUrl("https://a.com/p?id=5&srsltid=AfmB&gad_source=1&gad_campaignid=9&mc_cid=x&mc_eid=y&_gl=1*a&msclkid=z&igshid=q"),
+    "https://a.com/p?id=5",
+  );
+  assert.equal(canonicalUrl("https://a.com/p?id=5&SRSLTID=x"), "https://a.com/p?id=5");
+  assert.equal(canonicalUrl("https://a.com/p?variant=blue&sku=7&utm_source=x"), "https://a.com/p?variant=blue&sku=7");
+});
+
 test("canonicalUrl reduces Amazon links to /dp/<ASIN>", () => {
   assert.equal(canonicalUrl("https://www.amazon.de/Some-Title/dp/B0ABCDEFGH/ref=sr_1_3?keywords=x&th=1"), "https://www.amazon.de/dp/B0ABCDEFGH");
   assert.equal(canonicalUrl("https://a.com/p?id=5&utm_medium=x&gclid=1"), "https://a.com/p?id=5");
+});
+
+test("parseAmount treats a three-digit tail as decimals unless the leading group looks like thousands", () => {
+  const cases: [string, number][] = [
+    ["1.299", 1299],
+    ["₺1.299", 1299],
+    ["12,500", 12500],
+    ["1.299.000", 1299000],
+    ["1.299,90 TL", 1299.9],
+    ["1299.900", 1299.9],
+    ["0.999", 0.999],
+    ["0,500", 0.5],
+    ["12345,678", 12345.678],
+  ];
+  for (const [input, want] of cases) assert.equal(parseAmount(input), want, input);
 });

@@ -53,5 +53,6 @@ async function demoStatus(key: string, ask: Ask): Promise<AlertStatus> {
     imageUrl: product.image_url,
     currency: product.currency,
     price: product.price,
+    readError: null,
   };
 }

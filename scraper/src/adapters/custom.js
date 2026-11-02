@@ -6,7 +6,7 @@ import { fetchText } from '../fetch.js';
 import { assertPublicUrl } from '../safe-url.js';
 import { saveStatuses, statusChange } from '../link-status.js';
 import { budgetFromEnv, oldestFirst, refreshLinks, summary } from '../refresh.js';
-import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError } from '../track-outcome.js';
+import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError, scriptRendered } from '../track-outcome.js';
 import { createUnblocker, UNBLOCK_LAYER, UNBLOCK_PLUS_LAYER } from '../unblock-fetch.js';
 
 export const name = 'custom';
@@ -14,11 +14,14 @@ export const name = 'custom';
 // `onBatch(products)` saves prices while the run goes on (see refresh.js); without it the products are returned for the caller to save.
 export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
   if (!db) return []; // nothing to refresh without the database that holds the links
-  const { data, error } = await db
+  const { data: all, error } = await db
     .from('products')
-    .select('id, url, external_id, added_by, last_checked_at, currency')
+    .select('id, url, external_id, added_by, last_checked_at, currency, failed_checks')
     .eq('source', 'custom');
   if (error) throw error;
+  // A link nobody follows and nobody watches with an alert is kept with its history but not refreshed.
+  const wanted = new Set([...(await productIds(db, 'user_products')), ...(await productIds(db, 'alerts'))]);
+  const data = all.filter((product) => wanted.has(product.id));
   const products = [];
   const unblocker = createUnblocker({ db });
   const browser = createBrowserReader();
@@ -34,7 +37,7 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
         // Prices first: the attempt log and statuses are only notes about them.
         if (found.length) await (onBatch ? onBatch(found) : products.push(...found));
         await saveAttempts(db, batch.map(({ link, result: a }) => attemptRow({ url: link.url, stage: 'daily', userId: link.added_by, ...a })));
-        await saveStatuses(db, batch.map(({ link, result: a }) => ({ id: link.id, ...statusChange(a) })));
+        await saveStatuses(db, batch.map(({ link, result: a }) => ({ id: link.id, ...statusChange(a, { failedChecks: link.failed_checks ?? 0 }) })));
       },
     });
   } finally {
@@ -43,6 +46,17 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
   console.log(`  ${summary(result)}`);
   if (result.batchErrors.length) throw result.batchErrors[0];
   return products;
+}
+
+// Ids of the products a table points at, read a page at a time (Supabase returns at most 1000 rows per request).
+async function productIds(db, table) {
+  const ids = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db.from(table).select('product_id').order('product_id').range(from, from + 999);
+    if (error) throw error;
+    ids.push(...data.map((row) => Number(row.product_id)));
+    if (data.length < 1000) return ids;
+  }
 }
 
 // Reads a link through the layers, cheapest first: a plain request, then a real browser (free, see browser-fetch.js),
@@ -77,7 +91,7 @@ async function refuseAddress(url, guard) {
 
 // The shop answered with a status that means it blocks automated visits, or with a robot-check page.
 function refused(attempt) {
-  if (attempt.outcome === 'no_price') return botWall(attempt.html);
+  if (attempt.outcome === 'no_price') return botWall(attempt.html) || scriptRendered(attempt.html);
   return attempt.outcome === 'http_error' && BLOCKED_STATUSES.includes(attempt.httpStatus);
 }
 
@@ -94,7 +108,9 @@ export async function readLink(url, { retries = 3, externalId = null, guard = as
     html = await fetchText(url, { headers: BROWSER_HEADERS, timeoutMs: 20_000, retries, guard });
   } catch (err) {
     console.warn(`  ${url}: ${err.message ?? err}`);
-    return { outcome: outcomeForError(err), httpStatus: err.status ?? null, layer: null, html: null, product: null };
+    // A PDF, video or download is not a product page: no price to find, and no point trying the next layer.
+    const outcome = err.notPage ? 'no_price' : outcomeForError(err);
+    return { outcome, httpStatus: err.status ?? null, layer: null, html: null, product: null };
   }
   const product = keepExternalId(extractProduct(html, url), externalId);
   if (!product) console.warn(`  no price found on ${url}`);

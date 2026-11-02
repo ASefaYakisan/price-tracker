@@ -14,5 +14,7 @@ export type AlertStatus =
       imageUrl: string | null;
       currency: string | null;
       price: number | null;
+      // products.last_error while the newest read of the page failed (see lastReadFailed), else null.
+      readError: string | null;
     }
   | { key: string; missing: true };

@@ -7,11 +7,13 @@ import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 import { LinkStatusNote, LinkStatusPill } from "@/components/LinkStatus";
 import { ProductThumb } from "@/components/ProductThumb";
+import { productJsonLd, productLanguages } from "@/lib/product-seo";
+import { siteUrl } from "@/lib/site-url";
 import { fill } from "@/i18n/config";
 import { BackLink } from "@/components/BackLink";
 import { ListButton } from "@/components/ListButton";
 import { getDictionary, resolveLang } from "@/i18n/server";
-import { getPriceHistory, getProduct } from "@/lib/data";
+import { getPriceHistory, getProduct, getProducts } from "@/lib/data";
 import { changeTone, dateTime, money, percent, percentChange, storeName } from "@/lib/format";
 
 // Tab, bookmark and link-preview title: the product's own name and price. getProduct is
@@ -23,6 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
   const product = Number.isInteger(id) ? await getProduct(id) : null;
   if (!product) return { title: t.meta.title, robots: { index: false } };
 
+  const languages = productLanguages(product.id, siteUrl());
   const title = `${product.title} · ${t.meta.title}`;
   const description =
     product.price == null
@@ -31,11 +34,21 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
   return {
     title,
     description,
+    alternates: { canonical: languages[lang], languages: { ...languages, "x-default": languages.en } },
     openGraph: { title, description, ...(product.image_url ? { images: [product.image_url] } : {}) },
   };
 }
 
-export default function ProductPage({ params }: PageProps<"/[lang]/products/[id]">) {
+// One known id lets the build check the page; every other id is rendered on demand.
+export async function generateStaticParams() {
+  const [first] = await getProducts();
+  return first ? [{ id: String(first.id) }] : [];
+}
+
+export default async function ProductPage({ params }: PageProps<"/[lang]/products/[id]">) {
+  // Checked before anything streams, so an unknown or removed product answers with a real 404 status.
+  const id = Number((await params).id);
+  if (!Number.isInteger(id) || !(await getProduct(id))) notFound();
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-8">
       <BackLink />
@@ -74,6 +87,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: productJsonLd(product, productLanguages(product.id, siteUrl())[lang]) }} />
       <header className="mt-5 flex gap-4 sm:gap-6">
         <ProductThumb product={product} large />
         <div className="min-w-0 flex-1">
@@ -89,12 +103,12 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
             <ChangeBadge price={product.price} previous={product.previous_price} currency={cur} source={product.source} t={t} lang={lang} />
           </div>
           {product.scraped_at && (
-            <p className="mt-1 text-xs text-faint">{fill(t.product.updated, { date: dateTime(product.scraped_at, lang) })}</p>
+            <p className="mt-1 text-xs text-muted">{fill(t.product.updated, { date: dateTime(product.scraped_at, lang) })}</p>
           )}
           <div className="mt-4 flex flex-wrap gap-2">
             <a
               href="#alert"
-              className="inline-flex h-9 items-center gap-2 rounded-lg bg-accent px-3 text-sm font-medium text-accent-ink hover:opacity-90"
+              className="inline-flex h-9 items-center gap-2 rounded-lg bg-accent px-3 text-sm font-medium text-accent-ink transition hover:opacity-90 active:scale-[.98]"
             >
               <BellIcon /> {t.product.setAlert}
             </a>
@@ -102,7 +116,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
               href={product.url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-line px-3 text-sm font-medium text-ink hover:bg-hover"
+              className="inline-flex h-9 items-center gap-2 rounded-lg border border-line px-3 text-sm font-medium text-ink transition hover:bg-hover active:scale-[.98]"
             >
               {t.product.viewSource} <span aria-hidden>↗</span>
             </a>
@@ -113,12 +127,12 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
       <LinkStatusNote product={product} t={t} lang={lang} />
 
       {figures.length > 0 && (
-        <dl className="mt-8 flex divide-x divide-line border-y border-line rtl:divide-x-reverse">
+        <dl className="mt-8 grid grid-cols-3 gap-2 sm:gap-3">
           {figures.map((f) => (
-            <div key={f.label} className="min-w-0 flex-1 px-3 py-3 first:ps-0 sm:px-5">
-              <dt className="text-xs text-muted">{f.label}</dt>
-              <dd className={`mt-0.5 text-base font-semibold tabular-nums sm:text-lg ${"tone" in f ? f.tone : "text-ink"}`}>{f.value}</dd>
-              {"hint" in f && f.hint && <dd className="text-xs text-faint">{f.hint}</dd>}
+            <div key={f.label} className="min-w-0 rounded-xl border border-line bg-card px-3 py-3 sm:px-4">
+              <dt className="text-xs font-medium text-muted">{f.label}</dt>
+              <dd className={`mt-1 truncate text-base font-semibold tabular-nums sm:text-xl ${"tone" in f ? f.tone : "text-ink"}`}>{f.value}</dd>
+              {"hint" in f && f.hint && <dd className="truncate text-xs text-muted">{f.hint}</dd>}
             </div>
           ))}
         </dl>

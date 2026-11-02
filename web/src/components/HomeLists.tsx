@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import type { ProductRow } from "@/lib/data";
-import { dateTime } from "@/lib/format";
-import { changeCounts } from "@/lib/change-counts";
+import { dateTime, riseIsGood } from "@/lib/format";
+import { cardTones, changeCounts, type CardTone } from "@/lib/change-counts";
+import { isStale } from "@/lib/health";
 import { defaultList, itemsInList, LISTS, type ListKey } from "@/lib/lists";
 import { useMyProducts } from "@/lib/my-products";
 import { useI18n } from "@/i18n/client";
@@ -12,22 +13,26 @@ import { ProductTable } from "@/components/ProductTable";
 
 const TAB_LABEL: Record<ListKey, (t: Dict) => string> = {
   mine: (t) => t.home.tabMine,
-  explore: (t) => t.home.tabExplore,
   markets: (t) => t.home.tabMarkets,
   sample: (t) => t.home.tabSample,
 };
 
-// The lists under the link box: your own items, what everyone added, market feeds and the sample books.
+const TONE_CLASS: Record<CardTone, string> = { good: "text-good", bad: "text-bad", neutral: "text-ink" };
+const LOADED_AT = Date.now();
+const subscribeNever = () => () => {};
+
+// The lists under the link box: your own items, market feeds and the sample books.
 export function HomeLists({ products, sparklines }: { products: ProductRow[]; sparklines: Record<number, number[]> }) {
   const { t, lang, fill } = useI18n();
-  const { user, ids: mine } = useMyProducts();
+  const { user, ids: mine, items: mineItems, sparklines: mineSparklines } = useMyProducts();
   const [picked, setPicked] = useState<ListKey | null>(null);
+  const now = useSyncExternalStore(subscribeNever, () => LOADED_AT, () => null); // the age note needs the browser clock
   const tabs = LISTS.filter((l) => l !== "mine" || user);
-  const fallback = defaultList(Boolean(user), itemsInList(products, "explore", null).length);
-  const list = picked && tabs.includes(picked) ? picked : fallback;
-  const items = itemsInList(products, list, mine);
+  const list = picked && tabs.includes(picked) ? picked : defaultList(Boolean(user));
+  const items = itemsInList(products, list, mine ? mineItems : null);
 
   const { drops, rises } = changeCounts(items);
+  const tones = cardTones(items, riseIsGood);
   const outOfStock = items.filter((p) => p.in_stock === false).length;
   const lastRun = items
     .map((p) => p.scraped_at)
@@ -57,37 +62,29 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
         })}
       </div>
 
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-t border-line pt-4">
-        <p className="text-sm text-muted">
-          {fill(t.home.summary, { items: items.length, sources: new Set(items.map((p) => p.source)).size })} ·{" "}
+      <dl className="my-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatCard label={t.home.trackedItems} value={items.length} note={fill(t.home.summary, { items: items.length, sources: new Set(items.map((p) => p.source)).size })} />
+        <StatCard label={t.home.priceDrops} value={drops} tone={drops ? TONE_CLASS[tones.drops] : "text-ink"} note={t.home.sinceLastScrape} />
+        <StatCard label={t.home.priceRises} value={rises} tone={rises ? TONE_CLASS[tones.rises] : "text-ink"} note={t.home.sinceLastScrape} />
+        <StatCard label={t.home.outOfStock} value={outOfStock} tone={outOfStock ? "text-warn" : "text-ink"} />
+      </dl>
+
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-8 gap-y-2 text-sm text-muted">
+        <p>
           {lastRun ? fill(t.home.lastScrape, { date: dateTime(lastRun, lang) }) : t.home.noScrapes}
+          {now !== null && isStale(lastRun, now) && <span className="ml-2 text-warn">· {t.home.staleData}</span>}
         </p>
-        <dl className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-          {drops + rises === 0 ? (
-            <div>
-              <dd className="text-muted">{t.home.noChanges}</dd>
-            </div>
-          ) : (
-            <>
-              <Figure label={t.home.priceDrops} value={drops} tone="text-ink" hint={t.home.sinceLastScrape} />
-              <Figure label={t.home.priceRises} value={rises} tone="text-ink" hint={t.home.sinceLastScrape} />
-            </>
-          )}
-          <Figure label={t.home.outOfStock} value={outOfStock} tone={outOfStock ? "text-warn" : "text-ink"} />
-          {items.length > 0 && (
-            <div className="hidden items-baseline gap-2 sm:flex">
-              <dt className="text-muted">{t.home.download}</dt>
-              <dd className="flex gap-3 font-medium">
-                <a href={`/api/export?format=xlsx&lang=${lang}&list=${list}`} className="text-accent underline-offset-4 hover:underline">
-                  Excel
-                </a>
-                <a href={`/api/export?format=csv&lang=${lang}&list=${list}`} className="text-accent underline-offset-4 hover:underline">
-                  CSV
-                </a>
-              </dd>
-            </div>
-          )}
-        </dl>
+        {items.length > 0 && (
+          <p className="hidden items-baseline gap-3 sm:flex">
+            <span>{t.home.download}</span>
+            <a href={`/api/export?format=xlsx&lang=${lang}&list=${list}`} className="font-medium text-accent underline-offset-4 hover:underline">
+              Excel
+            </a>
+            <a href={`/api/export?format=csv&lang=${lang}&list=${list}`} className="font-medium text-accent underline-offset-4 hover:underline">
+              CSV
+            </a>
+          </p>
+        )}
       </div>
 
       {list === "sample" && <p className="mb-4 text-sm text-muted">{t.home.sampleNote}</p>}
@@ -96,10 +93,8 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
         <div className="h-40 animate-pulse rounded-lg bg-card" />
       ) : list === "mine" && items.length === 0 ? (
         <EmptyList title={t.home.mineEmptyTitle} text={t.home.mineEmptyText} cta={t.home.mineEmptyCta} />
-      ) : list === "explore" && items.length === 0 ? (
-        <EmptyList title={t.home.exploreEmptyTitle} text={t.home.exploreEmptyText} cta={t.home.mineEmptyCta} />
       ) : (
-        <ProductTable key={list} products={items} sparklines={sparklines} />
+        <ProductTable key={list} products={items} sparklines={list === "mine" ? mineSparklines : sparklines} />
       )}
     </>
   );
@@ -127,12 +122,13 @@ function EmptyList({ title, text, cta }: { title: string; text: string; cta: str
   );
 }
 
-// One plain figure in the summary line: no cards, no icons.
-function Figure({ label, value, tone, hint }: { label: string; value: number; tone: string; hint?: string }) {
+// One figure card in the summary row above the list.
+function StatCard({ label, value, tone = "text-ink", note }: { label: string; value: number; tone?: string; note?: string }) {
   return (
-    <div className="flex items-baseline gap-1.5" title={hint}>
-      <dt className="text-muted">{label}</dt>
-      <dd className={`font-semibold tabular-nums ${tone}`}>{value}</dd>
+    <div className="rounded-xl border border-line bg-card px-4 py-3 transition-colors hover:bg-hover">
+      <dt className="text-xs font-medium text-muted">{label}</dt>
+      <dd className={`mt-1 text-2xl font-semibold tabular-nums ${tone}`}>{value}</dd>
+      {note && <p className="mt-0.5 truncate text-xs text-faint">{note}</p>}
     </div>
   );
 }

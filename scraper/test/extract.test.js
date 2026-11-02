@@ -6,6 +6,12 @@ test('parseAmount reads Turkish, English and plain formats', () => {
   assert.equal(parseAmount('1.299,90 TL'), 1299.9);
   assert.equal(parseAmount('$1,299.90'), 1299.9);
   assert.equal(parseAmount('₺1.299'), 1299);
+  assert.equal(parseAmount('1.299.000'), 1299000);
+  assert.equal(parseAmount('12,500'), 12500);
+  assert.equal(parseAmount('1299.900'), 1299.9);
+  assert.equal(parseAmount('0.999'), 0.999);
+  assert.equal(parseAmount('0,500'), 0.5);
+  assert.equal(parseAmount('12345,678'), 12345.678);
   assert.equal(parseAmount('12,99'), 12.99);
   assert.equal(parseAmount('1.234.567'), 1234567);
   assert.equal(parseAmount(49.5), 49.5);
@@ -59,6 +65,15 @@ test('extractProduct returns null when the page has no price', () => {
 
 test('canonicalUrl drops tracking params but keeps product ones', () => {
   assert.equal(canonicalUrl('https://a.com/p?id=5&utm_medium=x&gclid=1'), 'https://a.com/p?id=5');
+});
+
+test('canonicalUrl drops ad and newsletter tracking params regardless of case', () => {
+  assert.equal(
+    canonicalUrl('https://a.com/p?id=5&srsltid=AfmB&gad_source=1&gad_campaignid=9&mc_cid=x&mc_eid=y&_gl=1*a&msclkid=z&igshid=q'),
+    'https://a.com/p?id=5',
+  );
+  assert.equal(canonicalUrl('https://a.com/p?id=5&SRSLTID=x'), 'https://a.com/p?id=5');
+  assert.equal(canonicalUrl('https://a.com/p?variant=blue&sku=7&utm_source=x'), 'https://a.com/p?variant=blue&sku=7');
 });
 
 test('canonicalUrl reduces Amazon links to /dp/<ASIN>', () => {

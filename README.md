@@ -2,19 +2,54 @@
 
 [![CI](https://github.com/ASefaYakisan/price-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/ASefaYakisan/price-tracker/actions/workflows/ci.yml)
 
+## Product overview
+
+Price Tracker helps shoppers keep a watchlist instead of revisiting product pages manually. Paste a product link, inspect the observed price history and set a target-price email alert. It is also a starting point for an owner who wants to operate a price-monitoring service with their own infrastructure accounts.
+
+The dashboard includes search and filters, personal lists, alerts, price charts, CSV/Excel exports, 24 interface languages and light/dark themes. Scheduled collection also supports market data. Store coverage varies: blocked pages may remain unreadable, and newly tracked shop products do not come with invented historical prices. The screenshots below show the dashboard and a product page; they are examples, not a guarantee of current store coverage or business revenue.
+
+The system combines a Next.js/TypeScript web app on Vercel, a Node.js collector running through GitHub Actions, Supabase data storage and accounts, Resend alert email, and optional ScraperAPI fallback reads. These services have separate accounts, limits and running costs.
+
+For handover, the buyer supplies their own service accounts and configuration, applies all database migrations in order to a new database, and validates collection and notifications. See [Configuration](#configuration) and the [handover guide](docs/devir-rehberi.md). Existing user data, account credentials, domain ownership and software licensing require an explicit handover agreement; a code transfer alone does not settle them. The privacy and terms pages are drafts that the operator must complete before launch.
+
 **Live demo:** https://price-tracker-shop.vercel.app
 
-A Node.js scraper collects prices from four sources on a schedule (an e-commerce catalogue, crypto, exchange rates and gold) and stores every run in Supabase (Postgres). A Next.js dashboard shows current prices, the change since the last run and stock status.
+## Features
 
-![Dashboard](panel-onizleme.png)
+- **Track by link.** Paste a product page link (or share text that contains one). Prices are read through layers, cheapest first: structured data on the page, per-shop adapters, a real headless browser and an optional scraping API. Links a shop turns away are saved as pending and retried automatically. See [Track any product by link](#track-any-product-by-link).
+- **Market data.** Scheduled collection of crypto, exchange rates and gold prices next to the shop links.
+- **Price history.** A chart per product with lowest, highest and period change; new products show a "history is building" hint instead of invented history.
+- **Price alerts.** Email (Resend) and Telegram when a target price is reached, with a verification step that holds suspicious jumps. See [Price alerts](#price-alerts).
+- **Accounts and lists.** Email and password sign in (Supabase Auth), a personal list per user, guest alerts that move into the account on first sign in. See [Accounts](#accounts).
+- **24 interface languages**, including right-to-left Arabic, with localised number formats and exports. See [Languages](#languages).
+- **Public API and exports.** Read-only JSON API with OpenAPI docs, plus CSV and Excel downloads. See [Public API](#public-api).
+- **Mobile layout** with light and dark themes.
 
-![Price history](urun-grafik.png)
+## Screenshots
 
-<details><summary>Dark mode</summary>
+Captured in demo mode (sample data, no database connected), so the numbers are examples only.
 
-![Dark mode](panel-koyu.png)
+| Dashboard | Product page |
+| --- | --- |
+| ![Dashboard on desktop](screenshots/readme/home-desktop.png) | ![Product page with price history](screenshots/readme/product-desktop.png) |
 
-</details>
+<img src="screenshots/readme/home-phone.png" alt="Dashboard on a phone" width="280">
+
+## Architecture
+
+```
+ Browser --> Next.js app (web/, Vercel) --> Supabase: Postgres + Auth + RLS
+                  |  /api/track, /api/alerts              ^
+                  v                                       |
+       saves unread links as pending                      |
+                                                          |
+ GitHub Actions (scraper/, Node.js) ----------------------+
+   daily refresh, pending-links retry every 15 min, shop probe
+     |  read layers: plain request > markup > Chromium > scraping API
+     +--> Resend email, Telegram, Google Sheets (all optional)
+```
+
+The web app does not scrape on a schedule; the Node.js collector runs from GitHub Actions and writes every reading to Supabase. Each piece has its own account, limits and running costs.
 
 ## Structure
 
@@ -77,7 +112,7 @@ In the table, **Secret** and **Variable** mean GitHub repository Settings → Se
 | `UNBLOCK_COUNTRY` | scraper | Optional | Actions Variable / root `.env` | Country code; `tr`; `none` lets the API choose. |
 | `UNBLOCK_RENDER_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing JavaScript rendering; empty by default. |
 | `UNBLOCK_PREMIUM_HOSTS` | scraper | Optional | Actions Variable / root `.env` | Comma-separated hosts needing premium requests; empty by default. |
-| `PROBE_API` | scraper probe | Optional | Local root `.env` / process environment | `0` disables the probe's paid fallback. Otherwise it uses the configured API key. Not forwarded by the current probe workflow. |
+| `PROBE_API` | scraper probe | Optional | Local root `.env` / process environment | `0` disables the probe's paid fallback. Otherwise it uses the configured API key. The weekly scheduled run sets it to `0`; a manual run sets it from the `api` input. |
 | `GITHUB_STEP_SUMMARY` | scraper probe | Automatic in Actions | Provided by GitHub Actions | Output file for the probe report; do not configure as a secret or variable. No file is written when absent. |
 
 ## Track any product by link
@@ -86,7 +121,7 @@ Paste a product page link on the dashboard. The server reads the price through a
 
 Every read of a pasted link, when it is added and on each daily refresh, is logged to the `track_attempts` table with its outcome (`ok`, `http_error`, `no_price`, `timeout`, `network`), the HTTP status and which layer held the price (`json-ld`, `microdata`, `meta`, `embedded-state`, `shop-adapter`, or `browser/...` when the real browser read it). Visitors see a message that matches the reason, in their language.
 
-To measure which shops can be read, run the **Shop probe** workflow from the Actions tab (or `cd scraper && npm run probe`, optionally followed by links). It opens the sample product pages in `scraper/probe-urls.txt` and writes a per-shop table (HTTP code, HTML size, JSON-LD present, price found, layer) to the job summary.
+To measure which shops can be read, run the **Shop probe** workflow from the Actions tab (or `cd scraper && npm run probe`, optionally followed by links). It opens the sample product pages in `scraper/probe-urls.txt` and writes a per-shop table (HTTP code, HTML size, JSON-LD present, price found, layer) to the job summary. The workflow also runs every Monday without the paid API, saves `probe-report.json` as an artifact, and fails when a link that read a price in the last good run no longer does.
 
 ## Blocked shops (optional scraping API)
 
@@ -114,6 +149,12 @@ Requests are counted from `track_attempts`: reads through the API are logged wit
 ## Telegram and Google Sheets
 
 Both integrations are optional; see [Configuration](#configuration) for their settings. Telegram posts price drops after each run. Google Sheets replaces the `Latest` tab and appends to `History`; share the spreadsheet with the service account as Editor.
+
+## Scheduled jobs and monitoring
+
+All price updates run as scheduled GitHub Actions (`scrape.yml` daily, `pending.yml` every 15 minutes). GitHub disables scheduled workflows in a repository after 60 days without activity, so `.github/workflows/keepalive.yml` runs weekly and re-enables both of them (it makes no commits). You can also start it from the Actions tab.
+
+`GET /api/health` returns the time of the newest read per source. It answers `200` while the newest read is under 36 hours old and `503` when prices are stale or missing, so a free uptime monitor (UptimeRobot, Better Stack and similar) can alert you if updates stop. The home page also shows a "Prices may be out of date" note past the same limit.
 
 ## Public API
 
@@ -163,3 +204,7 @@ Create `scraper/src/adapters/<site>.js` exporting `name` and either `startUrl` +
 - [x] Telegram price-drop digest
 - [x] Price-drop email alerts (sign up on the product page, sent after each scrape via Resend)
 - [x] Daily schedule (GitHub Actions cron)
+
+## License
+
+Released under the [MIT License](LICENSE). The license covers this source code only; it does not transfer domain names, user data or third-party service accounts (see the handover note above).
