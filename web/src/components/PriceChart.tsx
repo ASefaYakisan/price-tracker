@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PricePoint } from "@/lib/data";
 import { useI18n } from "@/i18n/client";
 import { intlLocale } from "@/i18n/config";
@@ -22,9 +22,7 @@ function HistoryProgress({ firstReadingAt }: { firstReadingAt: string }) {
   );
 }
 
-const W = 720;
 const H = 260;
-const PAD = { top: 16, right: 12, bottom: 28, left: 76 };
 
 // Round axis ticks to 1, 2 or 5 × 10^n so labels read £45, £50, £55.
 function niceTicks(min: number, max: number, count = 4) {
@@ -45,9 +43,37 @@ function niceTicks(min: number, max: number, count = 4) {
 
 export function PriceChart({ points, currency }: { points: PricePoint[]; currency: string | null }) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const labelsRef = useRef<SVGGElement>(null);
+  const [size, setSize] = useState({ width: 720, left: 76 });
   const [hover, setHover] = useState<number | null>(null);
   const { t, lang, fill } = useI18n();
   const data = points.filter((p): p is PricePoint & { price: number } => p.price != null);
+  const hasChart = data.length >= 2;
+  useEffect(() => {
+    const svg = svgRef.current;
+    const labels = labelsRef.current;
+    if (!svg || !labels) return;
+    const observer = new ResizeObserver(() => {
+      const width = svg.getBoundingClientRect().width;
+      if (!width) return;
+      // Keep the desktop drawing unchanged; below this width its 12px text would shrink under 11px.
+      const left = width < 660 ? Math.max(52, Math.ceil(labels.getBBox().width) + 12) : 76;
+      setSize((previous) => previous.width === width && previous.left === left ? previous : { width, left });
+    });
+    observer.observe(svg);
+    observer.observe(labels);
+    return () => observer.disconnect();
+  }, [hasChart]);
+  const narrow = size.width < 660;
+  const W = narrow ? size.width : 720;
+  const PAD = { top: 16, right: 12, bottom: 28, left: size.left };
+  const compactMoney = new Intl.NumberFormat(intlLocale(lang), {
+    style: "currency",
+    currency: currency ?? "USD",
+    currencyDisplay: "narrowSymbol",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  });
   if (data.length === 1) {
     // One real reading: show it instead of an empty chart, and say plainly when the history starts.
     return (
@@ -120,13 +146,15 @@ export function PriceChart({ points, currency }: { points: PricePoint[]; currenc
             <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
           </linearGradient>
         </defs>
-        {ticks.map((v) => (
-          <g key={v}>
-            <line x1={PAD.left} x2={W - PAD.right} y1={y(v)} y2={y(v)} stroke="var(--grid)" />
-            <text x={PAD.left - 10} y={y(v)} textAnchor="end" dominantBaseline="middle" fontSize="12" fill="var(--faint)">
-              {axisMoney(v, currency, lang)}
+        <g ref={labelsRef}>
+          {ticks.map((v) => (
+            <text key={v} x={PAD.left - 10} y={y(v)} textAnchor="end" dominantBaseline="middle" fontSize="12" fill="var(--faint)">
+              {narrow && Math.abs(v) >= 1 ? compactMoney.format(v) : axisMoney(v, currency, lang)}
             </text>
-          </g>
+          ))}
+        </g>
+        {ticks.map((v) => (
+          <line key={v} x1={PAD.left} x2={W - PAD.right} y1={y(v)} y2={y(v)} stroke="var(--grid)" />
         ))}
         {xTicks.map(({ t, i, label }) => (
           <text key={i} x={x(t)} y={H - 6} textAnchor={(["start", "middle", "end"] as const)[i]} fontSize="12" fill="var(--faint)">
