@@ -38,7 +38,7 @@ test("alertProgress fills up as the price nears the target from either side", ()
 });
 
 test("migration 0014 adds a direction column that keeps old alerts as below", () => {
-  const sql = readFileSync(new URL("../../supabase/migrations/0014_alert_direction.sql", import.meta.url), "utf8");
+  const sql = readFileSync(new URL("../../supabase/migrations/0015_alert_direction.sql", import.meta.url), "utf8");
   assert.match(sql, /add column if not exists direction text not null default 'below'/);
   assert.match(sql, /check \(direction in \('below', 'above'\)\)/);
   assert.doesNotMatch(sql, /\bdrop\b|\bdelete\b/i);
