@@ -25,7 +25,7 @@ const copy = {
       [
         "deletion",
         "Account and data deletion",
-        "You can remove individual alerts on the Alerts page or use the removal link in an alert email and confirm deletion. Removing an alert does not delete your account or all tracked data. Full account/data deletion requires an operator request; the contact address has not yet been specified. This draft does not provide a working account-deletion request channel."
+        "You can remove individual alerts on the Alerts page or use the removal link in an alert email and confirm deletion. Removing an alert does not delete your account. To delete your account, open the account menu and choose Delete account, then type your email address to confirm: your account, alerts and personal list are removed immediately. Shared product and price history stays. Backups, the operator contact address and retention periods have not yet been specified."
       ],
       [
         "details",
@@ -56,7 +56,7 @@ const copy = {
       [
         "deletion",
         "Hesap ve veri silme",
-        "Tek bir alarmı Alarmlar sayfasından veya alarm e-postasındaki kaldırma bağlantısını açıp silmeyi onaylayarak kaldırabilirsiniz. Alarmı kaldırmak hesabınızı ve tüm takip verilerinizi silmez. Hesap ve tüm verilerin silinmesi için site işletmecisine başvuru gerekir; iletişim adresi henüz belirtilmedi. Bu taslakta çalışan bir hesap silme başvuru kanalı bulunmuyor."
+        "Tek bir alarmı Alarmlar sayfasından veya alarm e-postasındaki kaldırma bağlantısını açıp silmeyi onaylayarak kaldırabilirsiniz. Alarmı kaldırmak hesabınızı silmez. Hesabınızı silmek için hesap menüsünden Hesabı sil’i seçin ve e-posta adresinizi yazarak onaylayın: hesabınız, alarmlarınız ve kişisel listeniz hemen silinir. Ortak ürün ve fiyat geçmişi kalır. Yedekler, işletmeci iletişim adresi ve saklama süreleri henüz belirtilmedi."
       ],
       [
         "details",

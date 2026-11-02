@@ -26,6 +26,6 @@ Provider references: [Supabase user management](https://supabase.com/docs/guides
 
 ## Complete the legal drafts
 
-The `/privacy` and `/terms` pages contain Turkish and English drafts; other interface languages display English. Supply the operator identity, a verified public contact address for account/data deletion, actual retention periods and provider settings. The contact address is not yet specified. There is no self-service account deletion flow in this change; deleting an alert does not delete an account or all tracked product data. Arrange an operator-handled request process and review related data and backups before making deletion promises.
+The `/privacy` and `/terms` pages contain Turkish and English drafts; other interface languages display English. Supply the operator identity, a verified public contact address for account/data deletion, actual retention periods and provider settings. The contact address is not yet specified. Signed-in users can delete their own account from the account menu (`DELETE /api/account`, confirmed by typing their email; it needs `SUPABASE_SERVICE_ROLE_KEY`). That removes their alerts and personal list; shared products and price history stay. Review backups and retention periods before making deletion promises.
 
 Do not publish the drafts as final legal policies until the missing facts and applicable obligations have been reviewed. Cookies, analytics, provider retention settings and jurisdiction-specific terms are not established by this handover document.
