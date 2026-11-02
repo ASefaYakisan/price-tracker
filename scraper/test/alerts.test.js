@@ -63,6 +63,28 @@ test('legacy alerts without a token do not get a broken removal link', () => {
   assert.doesNotMatch(mail.text, /Remove this alert/);
 });
 
+// Fake `alerts` writes. update(...).eq(id).is('last_sent_at', null).select() is the claim and only succeeds while the
+// row is open; update(...).eq(id) alone is the release. Row state is kept in `rows` (last_sent_at).
+function alertWrites(rows) {
+  return (payload) => ({
+    eq(_column, id) {
+      const row = rows.find((r) => r.id === id);
+      const apply = () => { row.last_sent_at = payload.last_sent_at; };
+      return {
+        is: () => ({
+          select: async () => {
+            if (row.last_sent_at != null) return { data: [], error: null };
+            apply();
+            return { data: [{ id }], error: null };
+          },
+        }),
+        then: (resolve, reject) => { apply(); return Promise.resolve({ error: null }).then(resolve, reject); },
+      };
+    },
+  });
+}
+const markedIds = (rows) => rows.filter((r) => r.last_sent_at != null).map((r) => r.id);
+
 test('processAlerts selects manage_token and passes List-Unsubscribe to Resend', async (t) => {
   const oldKey = process.env.RESEND_API_KEY;
   process.env.RESEND_API_KEY = 'test-only';
@@ -76,14 +98,14 @@ test('processAlerts selects manage_token and passes List-Unsubscribe to Resend',
     payload = JSON.parse(options.body);
     return new Response('{}', { status: 200 });
   });
-  let marked = false;
+  const rows = [{ id: 42, product_id: 7, email: 'test@example.com', target_price: 62000, manage_token: 'test-token' }];
   const db = { from(table) {
     if (table === 'alerts') return {
       select(fields) {
         assert.ok(fields.split(', ').includes('manage_token'));
-        return { is: async () => ({ data: [{ id: 42, product_id: 7, email: 'test@example.com', target_price: 62000, manage_token: 'test-token' }] }) };
+        return { is: async () => ({ data: rows }) };
       },
-      update() { return { eq: async () => { marked = true; return {}; } }; },
+      update: alertWrites(rows),
     };
     if (table === 'price_history') return historyDb([61000, 61500]);
     if (table === 'products') return { select: () => ({ in: async () => ({ data: [] }) }) };
@@ -93,7 +115,7 @@ test('processAlerts selects manage_token and passes List-Unsubscribe to Resend',
   assert.deepEqual(await processAlerts(db, { siteUrl: 'https://example.app' }), { checked: 1, sent: 1, failed: 0 });
   assert.equal(payload.headers['List-Unsubscribe'], '<https://example.app/alerts/remove?id=42&token=test-token>');
   assert.equal(payload.to, 'test@example.com');
-  assert.equal(marked, true);
+  assert.deepEqual(markedIds(rows), [42]);
 });
 
 test('omitted language preserves the full original English email', () => {
@@ -216,19 +238,19 @@ async function runHeldAlert(t, prices) {
   });
   t.mock.method(console, 'warn', () => {});
   let mails = 0;
-  let marked = false;
+  const rows = [{ id: 1, product_id: 7, email: 'a@x.io', target_price: 150 }];
   t.mock.method(globalThis, 'fetch', async () => { mails++; return new Response('{}', { status: 200 }); });
   const latest = { ...product, price: String(prices[0]) };
   const db = { from(table) {
     if (table === 'price_history') return historyDb(prices);
     if (table === 'alerts') return {
-      select: () => ({ is: async () => ({ data: [{ id: 1, product_id: 7, email: 'a@x.io', target_price: 150 }], error: null }) }),
-      update() { return { eq: async () => { marked = true; return {}; } }; },
+      select: () => ({ is: async () => ({ data: rows, error: null }) }),
+      update: alertWrites(rows),
     };
     return { select: () => ({ in: async () => ({ data: [latest] }) }) };
   } };
   const result = await processAlerts(db, { siteUrl: '' });
-  return { result, mails, marked };
+  return { result, mails, marked: markedIds(rows).length > 0 };
 }
 
 test('a single 1000 -> 100 reading sends no alert and leaves the alert open', async (t) => {
@@ -320,7 +342,6 @@ async function runWithResend(t, answers, alertCount = 1) {
   });
   t.mock.method(console, 'error', () => {});
   const calls = [];
-  const marked = [];
   t.mock.method(globalThis, 'fetch', async (url, options) => {
     calls.push(JSON.parse(options.body).to);
     const next = answers.shift() ?? new Response('{}', { status: 200 });
@@ -332,13 +353,13 @@ async function runWithResend(t, answers, alertCount = 1) {
     if (table === 'price_history') return historyDb([61000, 61500]);
     if (table === 'alerts') return {
       select: () => ({ is: async () => ({ data: rows, error: null }) }),
-      update() { return { eq: async (_c, id) => { marked.push(id); return {}; } }; },
+      update: alertWrites(rows),
     };
     return { select: () => ({ in: async () => ({ data: [product] }) }) };
   } };
   const waits = [];
   const result = await processAlerts(db, { siteUrl: '', sleep: async (ms) => { waits.push(ms); } });
-  return { result, calls, marked, waits };
+  return { result, calls, marked: markedIds(rows), waits, rows };
 }
 
 test('a 429 from Resend is retried and the alert is marked sent once', async (t) => {
@@ -387,4 +408,60 @@ test('alertEmail writes no currency symbol when the currency is unknown', () => 
   const mail = alertEmail({ product: { ...product, currency: null, price: '1299' }, target_price: '1500' }, 'https://example.app/');
   assert.match(mail.subject, /is now 1,299$/);
   assert.doesNotMatch(mail.text, /\$/);
+});
+
+test('two runs at the same time send one email per alert', async (t) => {
+  const { rows, calls } = await (async () => {
+    const oldKey = process.env.RESEND_API_KEY;
+    process.env.RESEND_API_KEY = 'test-only';
+    t.after(() => {
+      if (oldKey === undefined) delete process.env.RESEND_API_KEY;
+      else process.env.RESEND_API_KEY = oldKey;
+    });
+    const calls = [];
+    t.mock.method(globalThis, 'fetch', async (_url, options) => {
+      calls.push(JSON.parse(options.body).to);
+      await new Promise((r) => setImmediate(r)); // let the other run get to its claim while this mail is in flight
+      return new Response('{}', { status: 200 });
+    });
+    const rows = [{ id: 1, product_id: 7, email: 'u1@x.io', target_price: 62000 }];
+    const db = { from(table) {
+      if (table === 'price_history') return historyDb([61000, 61500]);
+      if (table === 'alerts') return {
+        // both runs read the alert while it is still open
+        select: () => ({ is: async () => ({ data: rows.map((r) => ({ ...r })), error: null }) }),
+        update: alertWrites(rows),
+      };
+      return { select: () => ({ in: async () => ({ data: [product] }) }) };
+    } };
+    const results = await Promise.all([processAlerts(db, { siteUrl: '' }), processAlerts(db, { siteUrl: '' })]);
+    assert.equal(results.reduce((n, r) => n + r.sent, 0), 1);
+    return { rows, calls };
+  })();
+  assert.deepEqual(calls, ['u1@x.io']);
+  assert.deepEqual(markedIds(rows), [1]);
+});
+
+test('a failed send re-opens the alert (last_sent_at back to null) so the next run retries it', async (t) => {
+  const bad = new Response('bad', { status: 400 });
+  const { result, rows } = await runWithResend(t, [bad]);
+  assert.deepEqual(result, { checked: 1, sent: 0, failed: 1 });
+  assert.equal(rows[0].last_sent_at, null);
+});
+
+test('a dry run (no Resend key) leaves the alert open', async (t) => {
+  const oldKey = process.env.RESEND_API_KEY;
+  delete process.env.RESEND_API_KEY;
+  t.after(() => {
+    if (oldKey !== undefined) process.env.RESEND_API_KEY = oldKey;
+  });
+  t.mock.method(console, 'log', () => {});
+  const rows = [{ id: 1, product_id: 7, email: 'u1@x.io', target_price: 62000 }];
+  const db = { from(table) {
+    if (table === 'price_history') return historyDb([61000, 61500]);
+    if (table === 'alerts') return { select: () => ({ is: async () => ({ data: rows, error: null }) }), update: alertWrites(rows) };
+    return { select: () => ({ in: async () => ({ data: [product] }) }) };
+  } };
+  assert.deepEqual(await processAlerts(db, { siteUrl: '' }), { checked: 1, sent: 0, failed: 0 });
+  assert.deepEqual(markedIds(rows), []);
 });

@@ -15,6 +15,11 @@ on:
         description: Smallest drop in % that goes into the Telegram message (lower it to test)
         default: "2"
 
+# A second run (manual "Run workflow" while the 06:00 one is still going) waits instead of reading and mailing in parallel.
+concurrency:
+  group: daily-scrape
+  cancel-in-progress: false
+
 jobs:
   scrape:
     runs-on: ubuntu-24.04 # Playwright 1.56 cannot install Chromium on ubuntu-latest (26.04)
