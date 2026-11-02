@@ -6,7 +6,7 @@ import { fetchText } from '../fetch.js';
 import { assertPublicUrl } from '../safe-url.js';
 import { saveStatuses, statusChange } from '../link-status.js';
 import { budgetFromEnv, oldestFirst, refreshLinks, summary } from '../refresh.js';
-import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError } from '../track-outcome.js';
+import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError, scriptRendered } from '../track-outcome.js';
 import { createUnblocker, UNBLOCK_LAYER, UNBLOCK_PLUS_LAYER } from '../unblock-fetch.js';
 
 export const name = 'custom';
@@ -91,7 +91,7 @@ async function refuseAddress(url, guard) {
 
 // The shop answered with a status that means it blocks automated visits, or with a robot-check page.
 function refused(attempt) {
-  if (attempt.outcome === 'no_price') return botWall(attempt.html);
+  if (attempt.outcome === 'no_price') return botWall(attempt.html) || scriptRendered(attempt.html);
   return attempt.outcome === 'http_error' && BLOCKED_STATUSES.includes(attempt.httpStatus);
 }
 

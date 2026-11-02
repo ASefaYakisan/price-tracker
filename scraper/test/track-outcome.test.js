@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { attemptRow, botWall, messageFor, outcomeForError } from '../src/track-outcome.js';
+import { attemptRow, botWall, messageFor, outcomeForError, scriptRendered } from '../src/track-outcome.js';
 import { findRegressions, markdownTable, parseUrlList, probeRow, regressionSection } from '../src/probe.js';
 
 test('outcomeForError tells HTTP answers, timeouts and network failures apart', () => {
@@ -67,4 +67,13 @@ test('probe regressions are links that read a price before and do not now', () =
   assert.match(regressionSection(broken), /a\.example: read a price last time, now `http_error` \(HTTP 403\)/);
   assert.deepEqual(findRegressions(null, rows), []);
   assert.equal(regressionSection([]), '');
+});
+
+test('scriptRendered spots empty app shells but not real text pages', () => {
+  const shell = '<html><head><title>Kulaklık</title><script src="/app.js"></script></head><body><div id="root"></div><noscript>Enable JavaScript</noscript></body></html>';
+  assert.equal(scriptRendered(shell), true);
+  const article = `<html><head><title>Blog</title></head><body><div id="app"><p>${'Bu bir yazı. '.repeat(100)}</p></div></body></html>`;
+  assert.equal(scriptRendered(article), false);
+  assert.equal(scriptRendered('<html><head><title>Hi</title></head><body><p>Short page</p></body></html>'), false);
+  assert.equal(scriptRendered(null), false);
 });
