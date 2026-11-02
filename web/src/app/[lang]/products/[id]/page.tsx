@@ -7,11 +7,13 @@ import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 import { LinkStatusNote, LinkStatusPill } from "@/components/LinkStatus";
 import { ProductThumb } from "@/components/ProductThumb";
+import { productJsonLd, productLanguages } from "@/lib/product-seo";
+import { siteUrl } from "@/lib/site-url";
 import { fill } from "@/i18n/config";
 import { BackLink } from "@/components/BackLink";
 import { ListButton } from "@/components/ListButton";
 import { getDictionary, resolveLang } from "@/i18n/server";
-import { getPriceHistory, getProduct, getProducts } from "@/lib/data";
+import { getProduct, getProducts, getVisible, pastedLinkExists } from "@/lib/data";
 import { changeTone, dateTime, money, percent, percentChange, storeName } from "@/lib/format";
 
 // Tab, bookmark and link-preview title: the product's own name and price. getProduct is
@@ -23,6 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
   const product = Number.isInteger(id) ? await getProduct(id) : null;
   if (!product) return { title: t.meta.title, robots: { index: false } };
 
+  const languages = productLanguages(product.id, siteUrl());
   const title = `${product.title} · ${t.meta.title}`;
   const description =
     product.price == null
@@ -31,6 +34,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
   return {
     title,
     description,
+    alternates: { canonical: languages[lang], languages: { ...languages, "x-default": languages.en } },
     openGraph: { title, description, ...(product.image_url ? { images: [product.image_url] } : {}) },
   };
 }
@@ -44,7 +48,9 @@ export async function generateStaticParams() {
 export default async function ProductPage({ params }: PageProps<"/[lang]/products/[id]">) {
   // Checked before anything streams, so an unknown or removed product answers with a real 404 status.
   const id = Number((await params).id);
-  if (!Number.isInteger(id) || !(await getProduct(id))) notFound();
+  // A pasted link may be the visitor's own, which is only known inside the Suspense below (it needs their sign-in);
+  // so only an id that matches no shared item and no pasted link is answered with a real 404 here.
+  if (!Number.isInteger(id) || !((await getProduct(id)) || (await pastedLinkExists(id)))) notFound();
   return (
     <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl px-4 py-8">
       <BackLink />
@@ -60,8 +66,9 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
   const t = await getDictionary(lang);
   const id = Number((await params).id);
   if (!Number.isInteger(id)) notFound();
-  const [product, history] = await Promise.all([getProduct(id), getPriceHistory(id)]);
-  if (!product) notFound();
+  const found = await getVisible(id);
+  if (!found) notFound();
+  const { product, history } = found;
 
   const prices = history.map((p) => p.price).filter((p): p is number => p != null);
   const first = prices[0] ?? null;
@@ -83,6 +90,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: productJsonLd(product, productLanguages(product.id, siteUrl())[lang]) }} />
       <header className="mt-5 flex gap-4 sm:gap-6">
         <ProductThumb product={product} large />
         <div className="min-w-0 flex-1">

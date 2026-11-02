@@ -2,8 +2,8 @@
 
 import { useState, useSyncExternalStore } from "react";
 import type { ProductRow } from "@/lib/data";
-import { dateTime } from "@/lib/format";
-import { changeCounts } from "@/lib/change-counts";
+import { dateTime, riseIsGood } from "@/lib/format";
+import { cardTones, changeCounts, type CardTone } from "@/lib/change-counts";
 import { isStale } from "@/lib/health";
 import { defaultList, itemsInList, LISTS, type ListKey } from "@/lib/lists";
 import { useMyProducts } from "@/lib/my-products";
@@ -17,6 +17,7 @@ const TAB_LABEL: Record<ListKey, (t: Dict) => string> = {
   sample: (t) => t.home.tabSample,
 };
 
+const TONE_CLASS: Record<CardTone, string> = { good: "text-good", bad: "text-bad", neutral: "text-ink" };
 const LOADED_AT = Date.now();
 const subscribeNever = () => () => {};
 
@@ -31,6 +32,7 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
   const items = itemsInList(products, list, mine ? mineItems : null);
 
   const { drops, rises } = changeCounts(items);
+  const tones = cardTones(items, riseIsGood);
   const outOfStock = items.filter((p) => p.in_stock === false).length;
   const lastRun = items
     .map((p) => p.scraped_at)
@@ -62,8 +64,8 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
 
       <dl className="my-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label={t.home.trackedItems} value={items.length} note={fill(t.home.summary, { items: items.length, sources: new Set(items.map((p) => p.source)).size })} />
-        <StatCard label={t.home.priceDrops} value={drops} tone={drops ? "text-good" : "text-ink"} note={t.home.sinceLastScrape} />
-        <StatCard label={t.home.priceRises} value={rises} tone={rises ? "text-bad" : "text-ink"} note={t.home.sinceLastScrape} />
+        <StatCard label={t.home.priceDrops} value={drops} tone={drops ? TONE_CLASS[tones.drops] : "text-ink"} note={t.home.sinceLastScrape} />
+        <StatCard label={t.home.priceRises} value={rises} tone={rises ? TONE_CLASS[tones.rises] : "text-ink"} note={t.home.sinceLastScrape} />
         <StatCard label={t.home.outOfStock} value={outOfStock} tone={outOfStock ? "text-warn" : "text-ink"} />
       </dl>
 

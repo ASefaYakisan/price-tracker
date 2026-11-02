@@ -8,7 +8,7 @@ import { findUrl } from "@/lib/find-url";
 import { isPageType, readCapped } from "@/lib/read-body";
 import { assertPublicUrl } from "@/lib/safe-url";
 import { trackLimitMessage } from "@/lib/track-limits";
-import { attemptRow, botWall, messageFor, outcomeForError, retryLater, type TrackOutcome } from "@/lib/track-outcome";
+import { attemptRow, botWall, messageFor, outcomeForError, retryLater, scriptRendered, type TrackOutcome } from "@/lib/track-outcome";
 
 const MAX_CUSTOM = 5000; // safety ceiling for the whole site; the per-account limits in track-limits.ts do the real work
 const BROWSER_HEADERS = {
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
     db,
     attemptRow({ url: url.href, stage: "add", outcome: product ? "ok" : "no_price", httpStatus: status, layer: product?.layer, userId: user?.id }),
   );
-  if (!product && db && user && botWall(html)) return savePending(db, url, user.id, messageFor("http_error", 403));
+  if (!product && db && user && (botWall(html) || scriptRendered(html))) return savePending(db, url, user.id, messageFor("http_error", 403));
   if (!product) return fail(messageFor("no_price"), 422);
   if (isDemo || !db || !user) return Response.json({ ok: true, demo: true, product });
 

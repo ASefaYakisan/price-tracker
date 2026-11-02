@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cacheLife, cacheTag } from "next/cache";
 import type { LinkState } from "@/lib/link-status";
+import { currentUser } from "@/lib/supabase/server";
 
 export type ProductRow = {
   id: number;
@@ -88,11 +89,17 @@ function toNumbers(row: ProductRow): ProductRow {
 
 export type PricePoint = { scraped_at: string; price: number | null; in_stock: boolean };
 
+// The shared, cached read: anyone may see it. Pasted links (source "custom") never come back here, even before
+// migration 0013 closes them off in the database; their owner reads them with getVisible below.
 export async function getProduct(id: number): Promise<ProductRow | null> {
   "use cache";
   cacheLife("minutes");
   if (isDemo) return DEMO_PRODUCTS.find((p) => p.id === id) ?? null;
-  const db = createClient(url!, anonKey!);
+  const row = await readProduct(createClient(url!, anonKey!), id);
+  return row && row.source !== "custom" ? row : null;
+}
+
+async function readProduct(db: SupabaseClient, id: number): Promise<ProductRow | null> {
   const { data, error } = await db.from("product_latest").select("*").eq("id", id).maybeSingle();
   if (error) throw new Error(error.message);
   return data ? toNumbers(data as ProductRow) : null;
@@ -102,7 +109,11 @@ export async function getPriceHistory(id: number, days = 90): Promise<PricePoint
   "use cache";
   cacheLife("minutes");
   if (isDemo) return demoHistory(id, days);
-  const db = createClient(url!, anonKey!);
+  if (!(await getProduct(id))) return [];
+  return readHistory(createClient(url!, anonKey!), id, days);
+}
+
+async function readHistory(db: SupabaseClient, id: number, days: number): Promise<PricePoint[]> {
   const since = new Date(Date.now() - days * 86_400_000).toISOString();
   const { data, error } = await db
     .from("price_history")
@@ -112,6 +123,35 @@ export async function getPriceHistory(id: number, days = 90): Promise<PricePoint
     .order("scraped_at", { ascending: true });
   if (error) throw new Error(error.message);
   return (data as PricePoint[]).map((p) => ({ ...p, price: p.price == null ? null : Number(p.price) }));
+}
+
+// An item and its history as the visitor may see it: shared items for everyone, a pasted link only for the
+// people who have it in their list (read with their own client, never cached). null means "not found" for both
+// a missing item and someone else's.
+export async function getVisible(id: number, days = 90): Promise<{ product: ProductRow; history: PricePoint[]; shared: boolean } | null> {
+  const [product, history] = await Promise.all([getProduct(id), getPriceHistory(id, days)]);
+  if (product) return { product, history, shared: true };
+  const user = await currentUser();
+  if (!user) return null;
+  const { data } = await user.db.from("user_products").select("product_id").eq("product_id", id).maybeSingle();
+  if (!data) return null;
+  const own = await readProduct(user.db, id);
+  return own ? { product: own, history: await readHistory(user.db, id, days), shared: false } : null;
+}
+
+// Whether a pasted link with this id exists, so the product page can answer an unknown id with a real 404 before
+// it streams. Says nothing about who owns it. Without the server key it cannot tell and answers "maybe".
+export async function pastedLinkExists(id: number): Promise<boolean> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("products");
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (isDemo) return false;
+  if (!key) return true;
+  const db = createClient(url!, key, { auth: { persistSession: false } });
+  const { data, error } = await db.from("products").select("id").eq("id", id).eq("source", "custom").maybeSingle();
+  if (error) return true;
+  return Boolean(data);
 }
 
 // Last 30 days of prices per product, for the small trend line in the list.
