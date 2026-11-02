@@ -5,9 +5,10 @@ import { dispatchPendingRun } from "@/lib/dispatch-pending";
 import { isDemo } from "@/lib/data";
 import { canonicalUrl, extractProduct } from "@/lib/extract-price";
 import { findUrl } from "@/lib/find-url";
+import { isPageType, readCapped } from "@/lib/read-body";
 import { assertPublicUrl } from "@/lib/safe-url";
 import { trackLimitMessage } from "@/lib/track-limits";
-import { attemptRow, botWall, messageFor, outcomeForError, retryLater, type TrackOutcome } from "@/lib/track-outcome";
+import { attemptRow, botWall, messageFor, outcomeForError, retryLater, scriptRendered, type TrackOutcome } from "@/lib/track-outcome";
 
 const MAX_CUSTOM = 5000; // safety ceiling for the whole site; the per-account limits in track-limits.ts do the real work
 const BROWSER_HEADERS = {
@@ -64,12 +65,14 @@ export async function POST(request: Request) {
     const res = await fetchPublic(url);
     status = res.status;
     if (!res.ok) throw new ReadError("http_error", status);
-    html = await res.text().then(
-      (text) => text.slice(0, 3_000_000),
-      (err) => {
-        throw new ReadError(outcomeForError(err));
-      },
-    );
+    // A PDF, video or download is not a product page; it is not opened, so a big file cannot fill the server's memory.
+    if (!isPageType(res.headers.get("content-type"))) {
+      await res.body?.cancel().catch(() => {});
+      throw new ReadError("no_price", status);
+    }
+    html = await readCapped(res).catch((err) => {
+      throw new ReadError(outcomeForError(err));
+    });
     url = new URL(res.url || url.href);
   } catch (err) {
     const e = err instanceof ReadError ? err : new ReadError("network");
@@ -83,7 +86,7 @@ export async function POST(request: Request) {
     db,
     attemptRow({ url: url.href, stage: "add", outcome: product ? "ok" : "no_price", httpStatus: status, layer: product?.layer, userId: user?.id }),
   );
-  if (!product && db && user && botWall(html)) return savePending(db, url, user.id, messageFor("http_error", 403));
+  if (!product && db && user && (botWall(html) || scriptRendered(html))) return savePending(db, url, user.id, messageFor("http_error", 403));
   if (!product) return fail(messageFor("no_price"), 422);
   if (isDemo || !db || !user) return Response.json({ ok: true, demo: true, product });
 

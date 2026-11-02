@@ -58,6 +58,7 @@ const tr: Dict = {
     title: "Takip edilen fiyatlar",
     lastScrape: "Son tarama {date}",
     noScrapes: "Henüz tarama yok",
+    staleData: "Fiyatlar güncel olmayabilir",
     summary: "{sources} kaynakta {items} ürün",
     demo: "Demo verileri görüntülüyorsun. Canlı fiyatları takip etmek için Supabase'i bağla ve tarayıcıyı çalıştır.",
     trackedItems: "Takip edilen ürünler",

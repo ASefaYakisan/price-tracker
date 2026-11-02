@@ -58,6 +58,7 @@ const ja: Dict = {
     title: "追跡中の価格",
     lastScrape: "最終取得：{date}",
     noScrapes: "まだ取得されていません",
+    staleData: "価格が最新でない可能性があります",
     summary: "{sources} ソース・{items} 件の商品",
     demo: "デモデータを表示しています。Supabase に接続してスクレイパーを実行すると、リアルタイムの価格を追跡できます。",
     trackedItems: "追跡中の商品",

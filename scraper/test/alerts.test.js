@@ -116,6 +116,20 @@ for (const [lang, prefix] of Object.entries({
   en: 'Price alert:', tr: 'Fiyat alarmı:', de: 'Preisalarm:', fr: 'Alerte de prix :',
   es: 'Alerta de precio:', it: 'Avviso di prezzo:', pt: 'Alerta de preço:',
   nl: 'Prijsalert:', ru: 'Уведомление о цене:', ar: 'تنبيه السعر:',
+  cs: "Cenová výstraha:",
+  da: "Prisalarm:",
+  el: "Ειδοποίηση τιμής:",
+  hi: "मूल्य अलर्ट:",
+  id: "Peringatan harga:",
+  ja: "価格アラート：",
+  ko: "가격 알림:",
+  pl: "Alert cenowy:",
+  ro: "Alertă de preț:",
+  sv: "Prisvarning:",
+  th: "แจ้งเตือนราคา:",
+  uk: "Сповіщення про ціну:",
+  vi: "Cảnh báo giá:",
+  zh: "价格提醒：",
 })) {
   test(`alertEmail translates ${lang} and preserves prices, product and management links`, () => {
     const alert = { id: 42, manage_token: 'test-token&encoded', product, target_price: 62000 };

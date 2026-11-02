@@ -4,7 +4,7 @@ This guide covers a new owner deploying with their own accounts. It does not aut
 
 ## Agree on the handover
 
-Record the repository and domain ownership being transferred, licensing rights, service costs, and whether existing data is included. There is no assumed license grant or revenue guarantee in this guide. Decide separately how existing users will be informed and how any permitted data transfer and deletion requests will be handled. Start with an empty database unless a reviewed transfer plan says otherwise.
+Record the repository and domain ownership being transferred, licensing rights, service costs, and whether existing data is included. The repository ships an MIT `LICENSE` for the source code (the owner may change it before a sale); this guide does not assume any revenue guarantee. Decide separately how existing users will be informed and how any permitted data transfer and deletion requests will be handled. Start with an empty database unless a reviewed transfer plan says otherwise.
 
 ## Set up the buyer's accounts
 

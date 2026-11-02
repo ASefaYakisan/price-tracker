@@ -58,6 +58,7 @@ const sv: Dict = {
     title: "Bevakade priser",
     lastScrape: "Senaste hämtning {date}",
     noScrapes: "Inga hämtningar än",
+    staleData: "Priserna kan vara föråldrade",
     summary: "{items} artiklar från {sources} källor",
     demo: "Du ser demodata. Anslut Supabase och kör skrapan för att följa priser live.",
     trackedItems: "Bevakade artiklar",

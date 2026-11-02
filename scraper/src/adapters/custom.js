@@ -6,7 +6,7 @@ import { fetchText } from '../fetch.js';
 import { assertPublicUrl } from '../safe-url.js';
 import { saveStatuses, statusChange } from '../link-status.js';
 import { budgetFromEnv, oldestFirst, refreshLinks, summary } from '../refresh.js';
-import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError } from '../track-outcome.js';
+import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError, scriptRendered } from '../track-outcome.js';
 import { createUnblocker, UNBLOCK_LAYER, UNBLOCK_PLUS_LAYER } from '../unblock-fetch.js';
 
 export const name = 'custom';
@@ -91,7 +91,7 @@ async function refuseAddress(url, guard) {
 
 // The shop answered with a status that means it blocks automated visits, or with a robot-check page.
 function refused(attempt) {
-  if (attempt.outcome === 'no_price') return botWall(attempt.html);
+  if (attempt.outcome === 'no_price') return botWall(attempt.html) || scriptRendered(attempt.html);
   return attempt.outcome === 'http_error' && BLOCKED_STATUSES.includes(attempt.httpStatus);
 }
 
@@ -108,7 +108,9 @@ export async function readLink(url, { retries = 3, externalId = null, guard = as
     html = await fetchText(url, { headers: BROWSER_HEADERS, timeoutMs: 20_000, retries, guard });
   } catch (err) {
     console.warn(`  ${url}: ${err.message ?? err}`);
-    return { outcome: outcomeForError(err), httpStatus: err.status ?? null, layer: null, html: null, product: null };
+    // A PDF, video or download is not a product page: no price to find, and no point trying the next layer.
+    const outcome = err.notPage ? 'no_price' : outcomeForError(err);
+    return { outcome, httpStatus: err.status ?? null, layer: null, html: null, product: null };
   }
   const product = keepExternalId(extractProduct(html, url), externalId);
   if (!product) console.warn(`  no price found on ${url}`);

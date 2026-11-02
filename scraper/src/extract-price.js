@@ -111,10 +111,20 @@ function ldOffers(node, variant = null) {
   return out.filter((o) => o.price != null);
 }
 
+// priceSpecification may be one object or a list (ListPrice + SalePrice); list/strikethrough prices are not what the shopper pays.
+function specOf(o) {
+  const specs = [].concat(o.priceSpecification ?? []).filter((s) => s && typeof s === 'object');
+  const paid = specs.filter((s) => !/listprice|strikethrough|msrp/i.test(String(s.priceType ?? '')));
+  const priced = (paid.length ? paid : specs).filter((s) => parseAmount(s.price) > 0);
+  return priced.reduce((a, b) => (a && parseAmount(a.price) <= parseAmount(b.price) ? a : b), null);
+}
+
 function toOffer(o, variant, parentCurrency = null) {
+  const spec = specOf(o);
+  const own = parseAmount(o.price);
   return {
-    price: parseAmount(o.price ?? o.priceSpecification?.price ?? o.lowPrice),
-    currency: o.priceCurrency ?? o.priceSpecification?.priceCurrency ?? parentCurrency ?? null,
+    price: own > 0 ? own : parseAmount(spec?.price) ?? parseAmount(o.lowPrice) ?? own,
+    currency: o.priceCurrency ?? spec?.priceCurrency ?? parentCurrency ?? null,
     availability: String(o.availability ?? ''),
     url: o.url ?? variant?.url ?? null,
     sku: o.sku ?? variant?.sku ?? null,
@@ -122,7 +132,9 @@ function toOffer(o, variant, parentCurrency = null) {
   };
 }
 
-// The offer for the variant in the link if one matches, otherwise the lowest price.
+const outOfStock = (o) => /outofstock|soldout|discontinued/i.test(o.availability);
+
+// The offer for the variant in the link if one matches, otherwise the lowest price among those in stock (all of them if none is).
 function pickOffer(offers, url) {
   if (!offers.length) return null;
   const here = canonicalUrl(url.href);
@@ -135,7 +147,8 @@ function pickOffer(offers, url) {
     }
     return o.sku != null && params.has(String(o.sku));
   });
-  return match ?? offers.reduce((a, b) => (b.price < a.price ? b : a));
+  const buyable = offers.filter((o) => !outOfStock(o));
+  return match ?? (buyable.length ? buyable : offers).reduce((a, b) => (b.price < a.price ? b : a));
 }
 
 function firstImage(image) {
@@ -286,27 +299,40 @@ function balancedJson(text, start) {
   return null;
 }
 
+// Subtrees that hold prices of things other than the product itself.
+const NON_PRODUCT_KEYS = /shipping|cargo|delivery|installment|taksit|kargo|coupon|voucher|recommend|related|similar|cross|upsell|carousel|banner|bundle/i;
+
 // Breadth first, so the product's own price is found before prices of related products deeper down.
+// Skips shipping/installment/recommendation subtrees, and within one depth prefers a node that has a name.
 function findPriceInTree(root) {
-  const queue = [root];
-  for (let seen = 0; queue.length && seen < 50_000; seen++) {
-    const node = queue.shift();
-    if (!node || typeof node !== 'object') continue;
-    if (!Array.isArray(node)) {
-      for (const key of PRICE_KEYS) {
-        if (!(key in node)) continue;
-        const { price, holder } = stateAmount(node[key]);
-        if (price == null) continue;
-        return {
-          name: typeof node.name === 'string' ? node.name : null,
-          image: firstImage(node.image ?? node.images),
-          price,
-          currency: stateCurrency(holder) ?? stateCurrency(node[key]) ?? stateCurrency(node),
-          availability: node.inStock === false || node.isSoldOut === true ? 'OutOfStock' : null,
-        };
+  let level = [root];
+  for (let seen = 0; level.length && seen < 50_000; ) {
+    const next = [];
+    let fallback = null;
+    for (const node of level) {
+      seen++;
+      if (!node || typeof node !== 'object') continue;
+      if (!Array.isArray(node)) {
+        for (const key of PRICE_KEYS) {
+          if (!(key in node)) continue;
+          const { price, holder } = stateAmount(node[key]);
+          if (price == null) continue;
+          const found = {
+            name: typeof node.name === 'string' ? node.name : null,
+            image: firstImage(node.image ?? node.images),
+            price,
+            currency: stateCurrency(holder) ?? stateCurrency(node[key]) ?? stateCurrency(node),
+            availability: node.inStock === false || node.isSoldOut === true ? 'OutOfStock' : null,
+          };
+          if (found.name) return found;
+          fallback ??= found;
+          break;
+        }
       }
+      for (const [key, child] of Object.entries(node)) if (!NON_PRODUCT_KEYS.test(key)) next.push(child);
     }
-    queue.push(...Object.values(node));
+    if (fallback) return fallback;
+    level = next;
   }
   return null;
 }
@@ -439,8 +465,10 @@ export function parseAmount(value) {
     s = s.split(dec === '.' ? ',' : '.').join('').replace(',', '.');
   } else {
     const sep = lastDot >= 0 ? '.' : lastComma >= 0 ? ',' : null;
-    // One separator followed by exactly three digits is a thousands separator ("1.299"), otherwise decimal.
-    if (sep && (s.split(sep).length > 2 || s.length - s.lastIndexOf(sep) - 1 === 3)) s = s.split(sep).join('');
+    // One separator followed by exactly three digits is a thousands separator ("1.299") only when the leading group is 1-3 digits
+    // without a leading zero; "1299.900", "0.999" and "0,500" are decimals.
+    const thousands = sep && (s.split(sep).length > 2 || (s.length - s.lastIndexOf(sep) - 1 === 3 && /^[1-9]\d{0,2}$/.test(s.slice(0, s.lastIndexOf(sep)))));
+    if (thousands) s = s.split(sep).join('');
     else if (sep) s = s.replace(sep, '.');
   }
   const n = Number(s);
@@ -448,6 +476,9 @@ export function parseAmount(value) {
 }
 
 // Same product, different tracking params, should be one row.
+const TRACKING_PARAM =
+  /^(utm_|gad_|gclid$|gclsrc$|dclid$|gbraid$|wbraid$|fbclid$|msclkid$|yclid$|ttclid$|igshid$|srsltid$|mc_cid$|mc_eid$|_gl$|ref$|ref_|boutiqueId$|merchantId$)/i;
+
 export function canonicalUrl(url) {
   const u = new URL(url);
   u.hash = '';
@@ -455,7 +486,7 @@ export function canonicalUrl(url) {
   const asin = /(^|\.)amazon\.[a-z.]+$/.test(u.hostname) && u.pathname.match(/\/(?:dp|gp\/product|gp\/aw\/d)\/([A-Z0-9]{10})(?:[/?]|$)/i)?.[1];
   if (asin) return `${u.origin}/dp/${asin.toUpperCase()}`;
   for (const key of [...u.searchParams.keys()]) {
-    if (/^(utm_|gclid|fbclid|ref$|ref_|boutiqueId|merchantId$)/i.test(key)) u.searchParams.delete(key);
+    if (TRACKING_PARAM.test(key)) u.searchParams.delete(key);
   }
   return u.href;
 }
