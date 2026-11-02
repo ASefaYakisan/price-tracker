@@ -32,7 +32,7 @@ jobs:
       - run: npm ci
       # Chromium for links a plain request cannot read (src/browser-fetch.js).
       - run: npx playwright install --with-deps chromium
-      - run: npm test
+      # Tests run in ci.yml on every PR and push to main; they must not gate the daily read.
       - run: npm run scrape -- ${{ inputs.source || 'all' }} ${{ inputs.pages || '3' }}
         env:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
@@ -67,3 +67,13 @@ jobs:
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+      # Make a failed run visible on the run page (the job itself is already red).
+      - name: Summarize failure
+        if: failure()
+        run: |
+          {
+            echo "### Daily scrape failed"
+            echo
+            echo "A step in this run failed (run: ${GITHUB_RUN_ID}). Prices and alerts for today may be missing."
+            echo "Open the failed step above for the error; fix it and re-run with **Run workflow**."
+          } >> "$GITHUB_STEP_SUMMARY"
