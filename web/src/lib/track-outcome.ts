@@ -13,6 +13,22 @@ export function botWall(html: string) {
   return html.length < 60_000 && BOT_WALL.test(html);
 }
 
+// A 200 page that is an empty shell: the price is drawn by scripts after the page opens (React, Vue, Nuxt apps).
+// Plain requests cannot read it, but the real browser on GitHub"s servers can, so the link is kept instead of refused.
+const SHELL_MARKERS = /id=[""](?:root|__next|app|__nuxt)[""]|__NUXT__|__INITIAL_STATE__|<noscript/i;
+const SHELL_TEXT_LIMIT = 400;
+
+export function scriptRendered(html: string) {
+  if (typeof html !== "string" || html.length >= 600_000 || !/<title[\s>]/i.test(html) || !SHELL_MARKERS.test(html)) return false;
+  const text = html
+    .replace(/<(script|style|noscript|template|svg)\b[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&[a-z#0-9]+;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text.length < SHELL_TEXT_LIMIT;
+}
+
 export function outcomeForError(err: unknown): TrackOutcome {
   const e = err as { status?: number; name?: string; cause?: { name?: string } } | null;
   if (e?.status) return "http_error";
