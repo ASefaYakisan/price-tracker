@@ -159,8 +159,52 @@ test('processAlerts retries without lang when the column does not exist yet', as
     return { is: async () => (fields.includes('lang') ? { data: null, error: { code: '42703' } } : { data: [], error: null }) };
   } }; } };
   assert.deepEqual(await processAlerts(db, {}), { checked: 0, sent: 0, failed: 0 });
+  // First with direction and lang (migration 0014), then lang only, then neither.
+  assert.equal(asked.length, 3);
+  assert.ok(asked[0].includes('direction'));
+  assert.ok(asked[1].includes('lang') && !asked[1].includes('direction'));
+  assert.ok(!asked[2].includes('lang'));
+});
+
+test('processAlerts still works on a database without the direction column', async () => {
+  const asked = [];
+  const db = { from() { return { select(fields) {
+    asked.push(fields);
+    return { is: async () => (fields.includes('direction') ? { data: null, error: { code: '42703' } } : { data: [], error: null }) };
+  } }; } };
+  assert.deepEqual(await processAlerts(db, {}), { checked: 0, sent: 0, failed: 0 });
   assert.equal(asked.length, 2);
-  assert.ok(!asked[1].includes('lang'));
+  assert.ok(asked[1].includes('lang') && !asked[1].includes('direction'));
+});
+
+test('dueAlerts: an "above" alert fires at or above its target, never below it', () => {
+  const alerts = (target) => [{ id: 1, product_id: 7, email: 'a@x.io', target_price: target, direction: 'above' }];
+  const at = (price) => new Map([[7, { ...product, price }]]);
+  assert.deepEqual(dueAlerts(alerts('61000.5'), at('61000.5')).map((a) => a.id), [1]); // equal counts
+  assert.deepEqual(dueAlerts(alerts('61000'), at('61000.5')).map((a) => a.id), [1]);
+  assert.deepEqual(dueAlerts(alerts('62000'), at('61000.5')), []); // still under the target
+});
+
+test('dueAlerts: alerts without a direction, or "below", keep firing at or below the target', () => {
+  const at = new Map([[7, product]]);
+  for (const direction of [undefined, null, 'below']) {
+    assert.deepEqual(dueAlerts([{ id: 1, product_id: 7, email: 'a@x.io', target_price: '62000', direction }], at).map((a) => a.id), [1]);
+    assert.deepEqual(dueAlerts([{ id: 2, product_id: 7, email: 'a@x.io', target_price: '60000', direction }], at), []);
+  }
+});
+
+test('"above" alerts hold while the product is out of stock', () => {
+  const alerts = [{ id: 1, product_id: 7, email: 'a@x.io', target_price: '60000', direction: 'above' }];
+  assert.deepEqual(dueAlerts(alerts, new Map([[7, { ...product, in_stock: false }]])), []);
+});
+
+test('alertEmail says the price rose for an "above" alert, in the alert language', () => {
+  const rose = alertEmail({ product, target_price: '60000', direction: 'above' }, 'https://example.app/');
+  assert.match(rose.text, /Bitcoin \(BTC\) rose to \$61,000\.50 \(your target: \$60,000\.00\)/);
+  assert.doesNotMatch(rose.text, /dropped/);
+  assert.match(alertEmail({ product, target_price: '60000', direction: 'above' }, '', 'tr').text, /seviyesine çıktı/);
+  assert.match(alertEmail({ product, target_price: '62000', direction: 'below' }, '').text, /dropped to/);
+  assert.match(alertEmail({ product, target_price: '62000' }, '').text, /dropped to/);
 });
 
 async function runHeldAlert(t, prices) {

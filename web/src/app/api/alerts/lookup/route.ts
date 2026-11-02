@@ -1,7 +1,8 @@
 import { getProduct, isDemo } from "@/lib/data";
 import type { AlertStatus } from "@/lib/alert-status";
+import { directionOf } from "@/lib/alert-direction";
 import { lookupKey } from "@/lib/alert-lookup";
-import { adminDb, ALERT_COLUMNS, alertError as error, toStatus } from "@/lib/alerts-server";
+import { adminDb, alertError as error, selectAlerts, toStatus } from "@/lib/alerts-server";
 
 type Ask = { id?: number; token?: string; productId?: number; email?: string };
 
@@ -22,14 +23,11 @@ export async function POST(request: Request) {
       if (isDemo) return demoStatus(key, ask);
       const match = lookupKey(ask);
       if (!match) return { key, missing: true };
-      const { data } = await admin!
-        .from("alerts")
-        .select(ALERT_COLUMNS)
-        .eq("id", match.id)
-        .eq("manage_token", match.token)
-        .maybeSingle();
-      if (!data) return { key, missing: true };
-      return toStatus(key, data);
+      const { data } = await selectAlerts((columns) =>
+        admin!.from("alerts").select(columns).eq("id", match.id).eq("manage_token", match.token).limit(1),
+      );
+      if (!data?.[0]) return { key, missing: true };
+      return toStatus(key, data[0]);
     }),
   );
   return Response.json({ ok: true, alerts });
@@ -38,7 +36,7 @@ export async function POST(request: Request) {
 async function demoStatus(key: string, ask: Ask): Promise<AlertStatus> {
   const product = await getProduct(Number(ask.productId));
   if (!product) return { key, missing: true };
-  const b = ask as Ask & { target?: number; createdAt?: string };
+  const b = ask as Ask & { target?: number; direction?: string; createdAt?: string };
   return {
     key,
     id: Number(ask.id) || 0,
@@ -46,6 +44,7 @@ async function demoStatus(key: string, ask: Ask): Promise<AlertStatus> {
     productId: product.id,
     email: String(ask.email ?? ""),
     target: Number(b.target) || 0,
+    direction: directionOf(b.direction),
     sentAt: null,
     createdAt: b.createdAt ?? new Date().toISOString(),
     title: product.title,

@@ -71,6 +71,7 @@ export function useVisibleAlerts(productId?: number): SavedAlert[] {
       title: r.title,
       email: r.email,
       target: r.target,
+      direction: r.direction,
       currency: r.currency,
       createdAt: r.createdAt,
       id: r.id,

@@ -1,4 +1,6 @@
 import { alertText } from './alert-i18n.js';
+
+const messagesEn = alertText('en');
 import { isSuspiciousJump } from './price-sanity.js';
 
 // After each scrape: email everyone whose target price has been reached, once.
@@ -6,12 +8,17 @@ import { isSuspiciousJump } from './price-sanity.js';
 // Pure part, easy to test: which open alerts are due given the latest prices.
 // Out-of-stock products wait (the alert stays open until they are back);
 // unknown stock (null, e.g. crypto or currency rates) counts as in stock.
+// An alert fires when the price reaches its target from its side: direction 'above' at or above, anything else
+// (including alerts from before the column existed) at or below.
+export const targetReached = (price, target, direction) =>
+  direction === 'above' ? Number(price) >= Number(target) : Number(price) <= Number(target);
+
 export function dueAlerts(alerts, latestById) {
   return alerts
     .map((a) => ({ ...a, product: latestById.get(a.product_id) }))
     .filter(
       (a) =>
-        a.product?.price != null && a.product.in_stock !== false && Number(a.product.price) <= Number(a.target_price),
+        a.product?.price != null && a.product.in_stock !== false && targetReached(a.product.price, a.target_price, a.direction),
     );
 }
 
@@ -81,7 +88,7 @@ async function isHeldBySanity(db, alert) {
 }
 
 // Unknown or omitted languages use the original English email.
-export function alertEmail({ id, manage_token, product, target_price }, siteUrl, lang = 'en') {
+export function alertEmail({ id, manage_token, product, target_price, direction }, siteUrl, lang = 'en') {
   // Without a known currency only the number is written; guessing a currency would put the wrong symbol on a price.
   const fmt = (v) =>
     new Intl.NumberFormat('en-GB', {
@@ -99,7 +106,7 @@ export function alertEmail({ id, manage_token, product, target_price }, siteUrl,
     ...(removeLink ? { headers: { 'List-Unsubscribe': `<${removeLink}>` } } : {}),
     subject: fill(t.subject),
     text: [
-      fill(t.body),
+      fill(direction === 'above' ? (t.bodyAbove ?? messagesEn.bodyAbove) : t.body),
       '',
       `${t.history}: ${link}`,
       `${t.source}: ${product.url}`,
@@ -154,7 +161,9 @@ async function sendEmail(to, { subject, text, headers }, sleep = defaultSleep) {
 // sleep and gapMs are options so tests need no real waiting; gapMs spaces the mails to stay under Resend's rate limit.
 export async function processAlerts(db, { siteUrl = process.env.SITE_URL, sleep = defaultSleep, gapMs = 600 } = {}) {
   const columns = 'id, product_id, email, target_price, manage_token';
-  let { data: alerts, error } = await db.from('alerts').select(`${columns}, lang`).is('last_sent_at', null);
+  let { data: alerts, error } = await db.from('alerts').select(`${columns}, lang, direction`).is('last_sent_at', null);
+  // Migration 0015 (direction column) not applied yet: every alert is an "at or below" alert.
+  if (error) ({ data: alerts, error } = await db.from('alerts').select(`${columns}, lang`).is('last_sent_at', null));
   // Migration 0012 (lang column) not applied yet: keep sending, in English.
   if (error) ({ data: alerts, error } = await db.from('alerts').select(columns).is('last_sent_at', null));
   if (error) throw error;

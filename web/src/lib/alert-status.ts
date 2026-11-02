@@ -1,3 +1,5 @@
+import type { AlertDirection } from "@/lib/alert-direction";
+
 // What /api/alerts/lookup returns for each alert a browser asks about.
 export type AlertStatus =
   | {
@@ -7,6 +9,7 @@ export type AlertStatus =
       productId: number;
       email: string;
       target: number;
+      direction: AlertDirection;
       sentAt: string | null;
       createdAt: string;
       title: string;

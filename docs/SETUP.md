@@ -29,6 +29,7 @@ Order matters. Follow the steps top to bottom.
    | 11 | `0011_usage_stats.sql` | Aggregate usage numbers for the owner |
    | 12 | `0012_alert_lang.sql` | Language saved on alerts |
 | 13 | `0013_private_custom_products.sql` | Pasted links visible only to their owners |
+| 14 | `0014_alert_direction.sql` | Alerts can fire at or above a target (price rises), not only at or below it |
 
    A test (`scraper/test/migrations.test.js`) fails if a migration is missing from the numbering, so add new files as `0013_...` and extend this table.
 3. Authentication → URL Configuration: set **Site URL** to your deployed address and add `https://<your-domain>/auth/callback` and `https://<your-domain>/auth/confirm` to the redirect URLs.
