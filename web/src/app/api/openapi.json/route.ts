@@ -48,6 +48,7 @@ const spec = {
           { name: "source", in: "query", schema: Product.properties.source },
           { name: "q", in: "query", description: "Case-insensitive title search", schema: { type: "string" } },
           { name: "limit", in: "query", schema: { type: "integer", minimum: 1, maximum: 200, default: 100 } },
+          { name: "offset", in: "query", description: "Number of items to skip (for paging)", schema: { type: "integer", minimum: 0, default: 0 } },
         ],
         responses: {
           "200": {
@@ -56,7 +57,13 @@ const spec = {
               "application/json": {
                 schema: {
                   type: "object",
-                  properties: { count: { type: "integer" }, items: { type: "array", items: { $ref: "#/components/schemas/Product" } } },
+                  properties: {
+                    count: { type: "integer", description: "Items in this page" },
+                    total: { type: "integer", description: "Items matching the filters, before paging" },
+                    limit: { type: "integer" },
+                    offset: { type: "integer" },
+                    items: { type: "array", items: { $ref: "#/components/schemas/Product" } },
+                  },
                 },
               },
             },

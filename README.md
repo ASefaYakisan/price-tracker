@@ -162,7 +162,7 @@ Read-only JSON, no key needed, CORS open. Interactive docs (Swagger UI): [`/docs
 
 | Endpoint | Returns |
 |---|---|
-| `GET /api/products?source=&q=&limit=` | Items with latest price and change |
+| `GET /api/products?source=&q=&limit=&offset=` | Items with latest price and change; `total` is the filtered count, page with `offset` |
 | `GET /api/products/{id}` | One item |
 | `GET /api/products/{id}/history?days=90` | Price per scrape, oldest first |
 
