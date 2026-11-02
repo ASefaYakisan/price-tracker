@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import type { AlertDirection } from "@/lib/alert-direction";
 
 // Alerts are write-only on the server (nobody can list other people's emails),
 // so each browser remembers the alerts it created to show them back to the visitor.
@@ -9,6 +10,8 @@ export type SavedAlert = {
   title: string;
   email: string;
   target: number;
+  // Older entries have none: they alert at or below the target.
+  direction?: AlertDirection;
   currency: string | null;
   createdAt: string;
   // Returned by the server; needed to edit or delete the alert. Older entries lack them.

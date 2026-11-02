@@ -26,7 +26,7 @@ export function MyAlerts({ productId, title }: { productId?: number; title?: str
               <span className="text-ink">{a.email}</span>
             )}
             <span className="text-muted">
-              {fill(t.myAlerts.atOrBelow, { price: money(a.target, a.currency, lang) })}
+              {fill(a.direction === "above" ? t.myAlerts.atOrAbove : t.myAlerts.atOrBelow, { price: money(a.target, a.currency, lang) })}
               {productId == null && <> · {a.email}</>} · {fill(t.myAlerts.setOn, { date: shortDate(a.createdAt, lang) })}
             </span>
           </li>

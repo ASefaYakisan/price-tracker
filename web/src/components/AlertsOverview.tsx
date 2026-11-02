@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { AlertStatus } from "@/lib/alert-status";
+import { alertProgress, isReached } from "@/lib/alert-direction";
 import { BellIcon } from "@/components/BellIcon";
 import { authEnabled } from "@/lib/supabase/client";
 import { money, percent, shortDate } from "@/lib/format";
@@ -96,7 +97,7 @@ export function AlertsOverview() {
 
   const rows = saved.map((a, i) => ({ saved: a, live: live?.[i] }));
   const sent = rows.filter((r) => r.live && !("missing" in r.live) && r.live.sentAt).length;
-  const reached = rows.filter((r) => r.live && !("missing" in r.live) && !r.live.sentAt && isReached(r.live)).length;
+  const reached = rows.filter((r) => r.live && !("missing" in r.live) && !r.live.sentAt && isReachedLive(r.live)).length;
   return (
     <>
       <dl className="mb-4 flex flex-wrap gap-x-6 gap-y-1 text-sm">
@@ -137,7 +138,7 @@ function Summary({ label, value, good = false }: { label: string; value: number 
   );
 }
 
-const isReached = (l: Live) => l.price != null && l.price <= l.target;
+const isReachedLive = (l: Live) => isReached(l.price, l.target, l.direction);
 
 function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertStatus | null | undefined; account: boolean }) {
   const { t, lang, href, fill, apiError } = useI18n();
@@ -189,13 +190,16 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
       ? null
       : l.sentAt
         ? { label: fill(t.alerts.emailSent, { date: shortDate(l.sentAt, lang) }), cls: "bg-good-soft text-good" }
-        : isReached(l)
+        : isReachedLive(l)
           ? { label: t.alerts.reached, cls: "bg-good-soft text-good" }
           : { label: t.alerts.watching, cls: "bg-accent-soft text-accent" };
 
   // How far the price still has to fall, as a bar that fills up as it gets closer.
-  const progress = l?.price ? Math.min(1, l.target / l.price) : 0;
-  const gap = l?.price != null ? l.price - l.target : null;
+  const direction = l?.direction ?? saved.direction ?? "below";
+  const above = direction === "above";
+  const progress = alertProgress(l?.price ?? null, l?.target ?? saved.target, direction);
+  // Distance still to cover: down to the target for "below" alerts, up to it for "above" alerts.
+  const gap = l?.price != null ? (above ? l.target - l.price : l.price - l.target) : null;
 
   const input = "h-10 rounded-lg border form-field bg-card px-3 text-sm text-ink";
   return (
@@ -230,7 +234,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
               </div>
               <div>
                 <div className="text-xs text-muted">{t.alerts.target}</div>
-                <div className="font-semibold tabular-nums">≤ {money(l?.target ?? saved.target, currency, lang)}</div>
+                <div className="font-semibold tabular-nums">{above ? "≥" : "≤"} {money(l?.target ?? saved.target, currency, lang)}</div>
               </div>
               <div>
                 <div className="text-xs text-muted">{t.alerts.toGo}</div>
@@ -270,7 +274,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
                 <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className={input} />
               </label>
               <label className="flex flex-col gap-1 text-xs text-muted sm:w-40">
-                {t.alerts.alertAt}
+                {above ? t.alerts.alertAtAbove : t.alerts.alertAt}
                 {currency ? ` (${currency})` : ""}
                 <input
                   type="number"

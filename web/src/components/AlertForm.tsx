@@ -8,6 +8,7 @@ import { useUser } from "@/lib/auth";
 import { authEnabled } from "@/lib/supabase/client";
 import { BellIcon } from "@/components/BellIcon";
 import { saveAlert } from "@/lib/my-alerts";
+import { suggestedTarget, type AlertDirection } from "@/lib/alert-direction";
 import { MyAlerts } from "@/components/MyAlerts";
 
 type State = { kind: "idle" | "saving" } | { kind: "done"; demo: boolean; updated: boolean } | { kind: "error"; message: string };
@@ -23,11 +24,12 @@ export function AlertForm({
   price: number | null;
   currency: string | null;
 }) {
-  // Suggest 5% under today's price, rounded to something a person would type.
-  const suggested = price == null ? "" : String(Number((price * 0.95).toPrecision(price >= 1 ? 4 : 3)));
+  const [direction, setDirection] = useState<AlertDirection>("below");
   // null until the visitor types, so a signed-in user starts from their account's email.
   const [typedEmail, setEmail] = useState<string | null>(null);
-  const [target, setTarget] = useState(suggested);
+  // Starts 5% away from today's price in the chosen direction, until the visitor types their own.
+  const [typedTarget, setTarget] = useState<string | null>(null);
+  const target = typedTarget ?? suggestedTarget(price, direction);
   const [state, setState] = useState<State>({ kind: "idle" });
   const user = useUser();
   const { t, lang, href, fill, apiError } = useI18n();
@@ -44,7 +46,7 @@ export function AlertForm({
     const res = await fetch("/api/alerts", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ productId, email, targetPrice: Number(target), lang }),
+      body: JSON.stringify({ productId, email, targetPrice: Number(target), direction, lang }),
     }).catch(() => null);
     const json = await res?.json().catch(() => null);
     if (res?.ok && json?.ok) {
@@ -55,6 +57,7 @@ export function AlertForm({
           title,
           email,
           target: Number(target),
+          direction,
           currency,
           createdAt: new Date().toISOString(),
           id: json.id,
@@ -95,7 +98,7 @@ export function AlertForm({
       <>
         <p className="rounded-lg bg-good-soft px-4 py-3 text-sm text-ink">
           {state.updated ? t.alertForm.updated : t.alertForm.done}{" "}
-          {fill(t.alertForm.willEmail, { email, price: money(Number(target), currency, lang) })}
+          {fill(direction === "above" ? t.alertForm.willEmailAbove : t.alertForm.willEmail, { email, price: money(Number(target), currency, lang) })}
           {state.demo && ` ${t.alertForm.demo}`}{" "}
           <button type="button" onClick={() => setState({ kind: "idle" })} className="font-medium text-accent hover:underline">
             {t.alertForm.addAnother}
@@ -123,8 +126,19 @@ export function AlertForm({
             className={input}
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm text-muted sm:w-48">
-          {t.alertForm.atOrBelow}
+        <label className="flex flex-col gap-1 text-sm text-muted sm:w-56">
+          {t.alertForm.direction}
+          <select
+            value={direction}
+            onChange={(e) => setDirection(e.target.value as AlertDirection)}
+            className={input}
+          >
+            <option value="below">{t.alertForm.atOrBelow}</option>
+            <option value="above">{t.alertForm.atOrAbove}</option>
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm text-muted sm:w-40">
+          {t.alerts.target}
           {currency ? ` (${currency})` : ""}
           <input
             type="number"

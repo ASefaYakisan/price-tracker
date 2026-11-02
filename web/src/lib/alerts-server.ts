@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import type { AlertStatus } from "@/lib/alert-status";
 import { getProduct, type ProductRow } from "@/lib/data";
+import { directionOf } from "@/lib/alert-direction";
 import { lastReadFailed } from "@/lib/link-status";
 
 export const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -21,8 +22,21 @@ export function alertError(message: string, status = 400) {
 }
 
 export const ALERT_COLUMNS = "id, manage_token, product_id, email, target_price, last_sent_at, created_at";
+const WITH_DIRECTION = `${ALERT_COLUMNS}, direction`;
 
-type AlertRow = {
+// Postgres / PostgREST codes for a column that does not exist (migration 0014 not applied yet).
+export const missingColumn = (error: { code?: string } | null | undefined) => error?.code === "42703" || error?.code === "PGRST204";
+
+// Reads alerts with their direction; on a database without the column it reads them again without it (all "below").
+export async function selectAlerts(
+  run: (columns: string) => PromiseLike<{ data: unknown; error: { code?: string } | null }>,
+): Promise<{ data: AlertRow[] | null; error: { code?: string } | null }> {
+  let res = await run(WITH_DIRECTION);
+  if (missingColumn(res.error)) res = await run(ALERT_COLUMNS);
+  return { data: res.error ? null : (res.data as AlertRow[] | null), error: res.error };
+}
+
+export type AlertRow = {
   id: number;
   manage_token: string;
   product_id: number;
@@ -30,6 +44,7 @@ type AlertRow = {
   target_price: number | string;
   last_sent_at: string | null;
   created_at: string;
+  direction?: string | null;
 };
 
 // The alert's item. Whoever holds the alert (it was found by its id and token, or belongs to the signed-in account)
@@ -51,6 +66,7 @@ export async function toStatus(key: string, row: AlertRow): Promise<AlertStatus>
     productId: Number(row.product_id),
     email: row.email,
     target: Number(row.target_price),
+    direction: directionOf(row.direction),
     sentAt: row.last_sent_at,
     createdAt: row.created_at,
     title: product?.title ?? "Removed item",

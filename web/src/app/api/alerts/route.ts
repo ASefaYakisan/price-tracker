@@ -1,6 +1,7 @@
 import { isDemo } from "@/lib/data";
-import { alertError as error, EMAIL, escapeLike } from "@/lib/alerts-server";
+import { alertError as error, EMAIL, escapeLike, missingColumn } from "@/lib/alerts-server";
 import { currentUser } from "@/lib/supabase/server";
+import { parseDirection } from "@/lib/alert-direction";
 import { LOCALES } from "@/i18n/config";
 
 // Price-drop signup for the signed-in account. Returns the alert's id and manage token.
@@ -12,6 +13,10 @@ export async function POST(request: Request) {
   // Language of the page the alert was created on; anything unknown is stored as null (English email).
   const lang = typeof body?.lang === "string" && body.lang in LOCALES ? body.lang : null;
 
+  // "below" (default): at or below the target; "above": at or above it.
+  const direction = parseDirection(body?.direction);
+
+  if (!direction) return error("Choose whether to be alerted at or below or at or above the target.");
   if (!Number.isInteger(productId) || productId <= 0) return error("Unknown item.");
   if (!EMAIL.test(email) || email.length > 254) return error("Enter a valid email address.");
   if (!Number.isFinite(target) || target <= 0) return error("Enter a target price above zero.");
@@ -21,19 +26,33 @@ export async function POST(request: Request) {
   const user = await currentUser();
   if (user) {
     // Signed in: the alert belongs to the account. Runs as the user, so row level security checks ownership.
-    const row = { product_id: productId, email, target_price: target, user_id: user.id };
+    // "below" is the column's default, so it is only written for "above": a database without the column keeps working.
+    const row = { product_id: productId, email, target_price: target, user_id: user.id, ...(direction === "above" ? { direction } : {}) };
     let { data, error: dbError } = await user.db.from("alerts").insert({ ...row, lang }).select("id, manage_token").single();
     // Column missing (migration 0012 not applied yet): save the alert without the language.
-    if (dbError?.code === "42703" || dbError?.code === "PGRST204")
+    if (missingColumn(dbError))
       ({ data, error: dbError } = await user.db.from("alerts").insert(row).select("id, manage_token").single());
+    // Still missing: the direction column (migration 0014). Never save a rise alert as a drop alert.
+    if (direction === "above" && missingColumn(dbError)) return error("Alerts for a price rise are not available yet.", 503);
     if (dbError?.code === "23505") {
-      const { data: updated } = await user.db
+      // Setting the same item and address again replaces the target and its direction.
+      let update = await user.db
         .from("alerts")
-        .update({ target_price: target })
+        .update({ target_price: target, direction })
         .eq("product_id", productId)
         .ilike("email", escapeLike(email))
         .is("last_sent_at", null)
         .select("id, manage_token");
+      if (direction === "below" && missingColumn(update.error))
+        update = await user.db
+          .from("alerts")
+          .update({ target_price: target })
+          .eq("product_id", productId)
+          .ilike("email", escapeLike(email))
+          .is("last_sent_at", null)
+          .select("id, manage_token");
+      if (direction === "above" && missingColumn(update.error)) return error("Alerts for a price rise are not available yet.", 503);
+      const updated = update.data;
       if (!updated?.length) return error("This email already has an alert on this item.", 409);
       return Response.json({ ok: true, updated: true, account: true, id: updated[0].id, token: updated[0].manage_token });
     }
