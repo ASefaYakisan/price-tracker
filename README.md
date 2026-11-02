@@ -19,8 +19,8 @@ For handover, the buyer supplies their own service accounts and configuration, a
 - **Track by link.** Paste a product page link (or share text that contains one). Prices are read through layers, cheapest first: structured data on the page, per-shop adapters, a real headless browser and an optional scraping API. Links a shop turns away are saved as pending and retried automatically. See [Track any product by link](#track-any-product-by-link).
 - **Market data.** Scheduled collection of crypto, exchange rates and gold prices next to the shop links.
 - **Price history.** A chart per product with lowest, highest and period change; new products show a "history is building" hint instead of invented history.
-- **Price alerts.** Email (Resend) and Telegram when a target price is reached, with a verification step that holds suspicious jumps. See [Price alerts](#price-alerts).
-- **Accounts and lists.** Email and password sign in (Supabase Auth), a personal list per user, guest alerts that move into the account on first sign in. See [Accounts](#accounts).
+- **Price alerts.** Email (Resend) when a price is at or below or at or above a chosen target, with a verification step that holds suspicious jumps; Telegram posts price drops. See [Price alerts](#price-alerts).
+- **Accounts and lists.** Email and password sign in (Supabase Auth), a personal list per user, guest alerts that move into the account on first sign in, and a Profile page with account details and self-service account deletion. See [Accounts](#accounts).
 - **24 interface languages**, including right-to-left Arabic, with localised number formats and exports. See [Languages](#languages).
 - **Public API and exports.** Read-only JSON API with OpenAPI docs, plus CSV and Excel downloads. See [Public API](#public-api).
 - **Mobile layout** with light and dark themes.
@@ -170,7 +170,7 @@ Read-only JSON, no key needed, CORS open. Interactive docs (Swagger UI): [`/docs
 
 ## Price alerts
 
-Visitors leave an email and a target price on any product page. After every scrape the job emails each alert whose target is reached, once, then marks it sent. Emails go through [Resend](https://resend.com): see [Configuration](#configuration) to enable sending; otherwise the job only logs which alerts are due. Alerts are write-only for the public (RLS insert policy, no read access).
+Signed-in users enter an email and a target price on a product page and choose **at or below** (the default) or **at or above**. After every scrape the job emails each alert whose target is reached, once, then marks it sent. Emails go through [Resend](https://resend.com): see [Configuration](#configuration) to enable sending; otherwise the job only logs which alerts are due. Alerts are write-only for the public (RLS insert policy, no read access).
 
 ### Alert verification
 
@@ -181,6 +181,8 @@ Guests manage their alerts from the browser that created them: each alert has a 
 ## Accounts
 
 Email and password sign in with Supabase Auth (`@supabase/ssr`, session cookies refreshed in `src/proxy.ts`). Signed-in users' alerts are saved to their account and readable on any device. Row level security lets each user read, change and delete only their own rows (`supabase/migrations/0005_alert_owners.sql`). Alerts made as a guest move into the account on first sign in. Each user also keeps their own list of tracked items (`user_products`, `supabase/migrations/0010_user_products.sql`): two people can follow the same link, and one leaving it never removes the other's item, price history or alerts. The home page splits items into My list, Products (links people added), Markets and Samples. Password reset links open in a separate in-memory session, so they never sign in other tabs. A "Continue with Google" button appears on its own once the Google provider is switched on in Supabase.
+
+The account menu links to the **Profile** page, which shows the account email and a link to its alerts. In **Danger zone**, users can choose **Delete account** and confirm by typing their email address. This removes the account, its alerts and personal list; shared products and price history remain.
 
 ## Languages
 
