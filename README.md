@@ -75,7 +75,7 @@ npm test   # runs the shared shop fixtures in scraper/test/fixtures/shops agains
 
 ## Daily schedule
 
-`.github/workflows/scrape.yml` runs every day at 06:00 UTC and can also be started from Actions. Set the repository secrets and variables listed in [Configuration](#configuration).
+`.github/workflows/scrape.yml` runs every day at 06:00 UTC and can also be started from Actions. Set the repository secrets and variables listed in [Configuration](#configuration). Tests run in CI (`ci.yml`), not in the daily job, so an environment problem in a test cannot stop the day's prices and alerts; if a step in the daily job fails, the run turns red and its summary says so.
 
 ## Configuration
 
