@@ -130,12 +130,14 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
       <LinkStatusNote product={product} t={t} lang={lang} />
 
       {figures.length > 0 && (
-        <dl className="mt-8 grid grid-cols-3 gap-2 sm:gap-3">
+        <dl className="mt-8 grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
           {figures.map((f) => (
-            <div key={f.label} className="min-w-0 rounded-xl border border-line bg-card px-3 py-3 sm:px-4">
+            <div key={f.label} className="flex min-w-0 items-baseline justify-between gap-4 rounded-xl border border-line bg-card px-4 py-3 sm:block">
               <dt className="text-xs font-medium text-muted">{f.label}</dt>
-              <dd className={`mt-1 truncate text-base font-semibold tabular-nums sm:text-xl ${"tone" in f ? f.tone : "text-ink"}`}>{f.value}</dd>
-              {"hint" in f && f.hint && <dd className="truncate text-xs text-muted">{f.hint}</dd>}
+              <div className="min-w-0 text-end sm:text-start">
+                <dd className={`break-words text-lg font-semibold tabular-nums sm:mt-1 sm:text-xl ${"tone" in f ? f.tone : "text-ink"}`}>{f.value}</dd>
+                {"hint" in f && f.hint && <dd className="break-words text-xs text-muted">{f.hint}</dd>}
+              </div>
             </div>
           ))}
         </dl>
