@@ -314,6 +314,56 @@ test('deadLinkEmail names the product, the reason and how to remove the alert', 
   assert.equal(mail.headers['List-Unsubscribe'], '<https://example.app/alerts/remove?id=42&token=tok>');
 });
 
+test('dead-link English output stays byte-for-byte compatible, including unknown languages', () => {
+  const alert = { id: 42, manage_token: 'tok', product: deadProduct, target_price: '100' };
+  const expected = {
+    headers: { 'List-Unsubscribe': '<https://example.app/alerts/remove?id=42&token=tok>' },
+    subject: 'We can no longer read the price of Razer Viper V3 Pro',
+    text: 'For 7 days in a row we could not read a price for Razer Viper V3 Pro: the shop no longer has the page (HTTP 404).\nYour alert (target: 100) is still open, but it cannot fire until the price can be read again.\n\nCheck that the link still works: https://shop.example/viper\nIf the shop moved the product, add the new link and remove this alert.\nRemove this alert: https://example.app/alerts/remove?id=42&token=tok\n\nYou get this email once per alert.',
+  };
+  for (const lang of [undefined, 'en', 'unknown', '__proto__']) {
+    assert.deepEqual(deadLinkEmail(alert, 'https://example.app/', lang), expected);
+    assert.equal(failureReason('timeout', lang), 'the shop did not answer in time');
+  }
+  const tr = deadLinkEmail(alert, 'https://example.app/', 'tr');
+  assert.equal(tr.subject, 'Razer Viper V3 Pro ürününün fiyatını artık okuyamıyoruz');
+  assert.match(tr.text, /üst üste 7 gündür/);
+  assert.match(tr.text, /ürün sayfası artık mağazada yok \(HTTP 404\)/);
+  assert.match(tr.text, /hedef: 100/);
+  assert.deepEqual(tr.headers, expected.headers);
+  assert.match(tr.text, /Bu alarmı kaldır: https:\/\/example.app\/alerts\/remove\?id=42&token=tok/);
+  assert.doesNotMatch(tr.subject + tr.text, /[{}]/);
+  assert.equal(deadLinkEmail(alert, '', 'tr').headers, undefined);
+});
+
+test('processAlerts sends dead-link notices in the saved alert language', async (t) => {
+  const oldKey = process.env.RESEND_API_KEY;
+  process.env.RESEND_API_KEY = 'test-only';
+  t.after(() => {
+    if (oldKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = oldKey;
+  });
+  t.mock.method(console, 'log', () => {});
+  const mails = [];
+  t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    mails.push(JSON.parse(options.body));
+    return new Response('{}', { status: 200 });
+  });
+  const alerts = ['tr', undefined, 'unknown'].map((lang, i) => ({ id: i + 1, product_id: 7, email: 'test@example.com', target_price: 100, lang }));
+  const db = { from(table) {
+    if (table === 'alerts') return { select: () => ({ is: async () => ({ data: alerts }) }) };
+    return { select: () => ({ in: async () => ({ data: table === 'products' ? [deadProduct] : [] }) }) };
+  } };
+  await processAlerts(db, { siteUrl: 'https://example.app' });
+  assert.equal(mails.length, 3);
+  for (let i = 0; i < alerts.length; i++) {
+    const expected = deadLinkEmail({ ...alerts[i], product: deadProduct }, 'https://example.app', alerts[i].lang);
+    assert.equal(mails[i].subject, expected.subject);
+    assert.equal(mails[i].text, expected.text);
+  }
+  assert.match(mails[0].subject, /fiyatını artık okuyamıyoruz/);
+});
+
 test('processAlerts emails the owner of an alert on a dead link once, as a dry run without a key', async (t) => {
   const oldKey = process.env.RESEND_API_KEY;
   delete process.env.RESEND_API_KEY;
