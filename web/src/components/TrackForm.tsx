@@ -107,7 +107,7 @@ export function TrackForm() {
         <label htmlFor="track-url" className="sr-only">
           {t.track.label}
         </label>
-        <div className="flex flex-wrap items-center gap-2 rounded-xl border-2 border-line bg-card p-1.5 ps-3 focus-within:border-accent sm:flex-nowrap">
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border-2 form-field bg-card p-1.5 ps-3 sm:flex-nowrap">
           <svg
             viewBox="0 0 20 20"
             className="size-5 shrink-0 text-faint"
@@ -132,7 +132,7 @@ export function TrackForm() {
             placeholder={t.track.placeholder}
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="h-11 min-w-0 flex-1 basis-40 bg-transparent text-base text-ink placeholder:text-faint focus:outline-none"
+            className="h-11 min-w-0 flex-1 basis-40 bg-transparent text-base text-ink placeholder:text-faint"
           />
           <button
             type="submit"

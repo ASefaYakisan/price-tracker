@@ -2,6 +2,7 @@ import type { Dict } from "./en";
 
 const vi: Dict = {
   meta: {
+    skipToContent: "Chuyển đến nội dung chính",
     title: "Price Tracker",
     description: "Bảng theo dõi giá hằng ngày, chạy bằng trình thu thập Node.js và Supabase",
     alerts: "Cảnh báo của bạn",

@@ -11,7 +11,7 @@ export function AlertsLink() {
   return (
     <Link href={href("/alerts")} className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-muted hover:bg-hover hover:text-ink">
       <BellIcon filled={count > 0} className={count > 0 ? "size-4 text-accent" : "size-4"} />
-      <span className="hidden sm:inline">{t.nav.alerts}</span>
+      <span className="sr-only sm:not-sr-only">{t.nav.alerts}</span>
       {count > 0 && <span className="rounded-full bg-accent px-1.5 text-xs font-medium tabular-nums text-accent-ink">{count}</span>}
     </Link>
   );

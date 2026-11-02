@@ -197,7 +197,7 @@ function AlertCard({ saved, live, account }: { saved: SavedAlert; live: AlertSta
   const progress = l?.price ? Math.min(1, l.target / l.price) : 0;
   const gap = l?.price != null ? l.price - l.target : null;
 
-  const input = "h-10 rounded-lg border border-line bg-card px-3 text-sm text-ink focus:border-accent focus:outline-none";
+  const input = "h-10 rounded-lg border form-field bg-card px-3 text-sm text-ink";
   return (
     <li className="py-5 sm:px-2">
       <div className="flex items-start gap-4">

@@ -77,7 +77,7 @@ export default async function Page({ params }: PageProps<"/[lang]/terms">) {
   const textLang = lang === "tr" ? "tr" : "en";
   const t = copy[textLang];
   return (
-    <main lang={textLang} dir="ltr" className="mx-auto w-full max-w-4xl px-4 py-8">
+    <main id="main-content" tabIndex={-1} lang={textLang} dir="ltr" className="mx-auto w-full max-w-4xl px-4 py-8">
       <h1 className="text-2xl font-semibold tracking-tight">{t.title}</h1>
       <p className="mt-4 rounded-xl border border-line bg-card p-4 text-sm font-medium">{t.note}</p>
       {t.sections.map(([id, title, body]) => (

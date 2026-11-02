@@ -7,7 +7,8 @@
   --card: #ffffff;
   --ink: #1c1b18;
   --muted: #5f5c55;
-  --faint: #8c887f;
+  --faint: #6b675f;
+  --field-line: #817d75;
   --line: #e6e3dc;
   --hover: #efede8;
   --accent: #c2410c;
@@ -43,7 +44,8 @@
     --card: #1b1a17;
     --ink: #f1efe9;
     --muted: #aba79d;
-    --faint: #807c73;
+    --faint: #aaa69d;
+    --field-line: #8b877e;
     --line: #2e2c27;
     --hover: #24221f;
     --accent: #fb8a4c;
@@ -78,7 +80,8 @@
   --card: #1b1a17;
   --ink: #f1efe9;
   --muted: #aba79d;
-  --faint: #807c73;
+  --faint: #aaa69d;
+  --field-line: #8b877e;
   --line: #2e2c27;
   --hover: #24221f;
   --accent: #fb8a4c;
@@ -114,7 +117,7 @@
   --bg: #f4f5fa;
   --ink: #1b2032;
   --muted: #596079;
-  --faint: #8a91a6;
+  --faint: #666d82;
   --line: #e4e7f0;
   --hover: #f0f2f9;
 }
@@ -126,6 +129,7 @@
   --card: #161a25;
   --ink: #eceff7;
   --muted: #a4abbf;
+  --faint: #a4abbf;
   --line: #262b3a;
   --hover: #1d2230;
 }
@@ -138,6 +142,7 @@
     --card: #161a25;
     --ink: #eceff7;
     --muted: #a4abbf;
+    --faint: #a4abbf;
     --line: #262b3a;
     --hover: #1d2230;
   }
@@ -269,6 +274,7 @@
   --color-muted: var(--muted);
   --color-faint: var(--faint);
   --color-line: var(--line);
+  --color-field-line: var(--field-line);
   --color-hover: var(--hover);
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
@@ -338,4 +344,14 @@
   main {
     overflow-wrap: anywhere;
   }
+}
+
+/* Fields need a stronger boundary than decorative card separators. */
+.form-field {
+  border-color: var(--field-line);
+}
+
+:where(a[href], button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }

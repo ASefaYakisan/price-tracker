@@ -51,9 +51,12 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
       </head>
       <body className="flex min-h-full flex-col font-sans">
         <I18nProvider lang={lang} dict={t}>
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-card focus:px-4 focus:py-3 focus:text-ink">
+            {t.meta.skipToContent}
+          </a>
           <header className="sticky top-0 z-20 border-b border-line bg-bg/90 backdrop-blur">
             <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-2 px-4 sm:gap-4">
-              <Link href={`/${lang}`} className="flex shrink-0 items-center gap-2 text-[17px] font-bold tracking-tight">
+              <Link href={`/${lang}`} aria-label={t.meta.title} className="flex shrink-0 items-center gap-2 text-[17px] font-bold tracking-tight">
                 <Logo />
                 <span className="hidden sm:inline">{t.meta.title}</span>
               </Link>

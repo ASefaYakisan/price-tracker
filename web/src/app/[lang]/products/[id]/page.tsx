@@ -46,7 +46,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
   const id = Number((await params).id);
   if (!Number.isInteger(id) || !(await getProduct(id))) notFound();
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 py-8">
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl px-4 py-8">
       <BackLink />
       <Suspense fallback={<div className="mt-5 h-96 animate-pulse rounded-xl bg-hover" />}>
         <ProductDetail params={params} />

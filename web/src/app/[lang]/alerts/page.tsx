@@ -12,7 +12,7 @@ export default async function AlertsPage({ params }: PageProps<"/[lang]/alerts">
   const lang = await resolveLang(params);
   const t = await getDictionary(lang);
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 py-8">
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl px-4 py-8">
       <Link href={`/${lang}`} className="text-sm text-muted hover:text-ink">
         <span aria-hidden className="inline-block rtl:rotate-180">
           ←

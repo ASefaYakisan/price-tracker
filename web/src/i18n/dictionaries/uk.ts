@@ -2,6 +2,7 @@ import type { Dict } from "./en";
 
 const uk: Dict = {
   meta: {
+    skipToContent: "Перейти до основного вмісту",
     title: "Price Tracker",
     description: "Щоденний моніторинг цін на основі скрапера на Node.js і Supabase",
     alerts: "Ваші сповіщення",

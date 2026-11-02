@@ -11,7 +11,7 @@ export default function ErrorPage({ error, retry }: { error: Error & { digest?: 
     console.error(error);
   }, [error]);
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-col items-start px-4 py-16 sm:py-24">
+    <main id="main-content" tabIndex={-1} className="mx-auto flex w-full max-w-xl flex-col items-start px-4 py-16 sm:py-24">
       <h1 className="text-2xl font-bold tracking-tight text-balance sm:text-4xl">{t.errors.errorTitle}</h1>
       <p className="mt-3 text-base text-pretty text-muted">{t.errors.errorText}</p>
       <div className="mt-6 flex flex-wrap gap-2">
