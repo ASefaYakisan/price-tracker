@@ -52,7 +52,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
   // so only an id that matches no shared item and no pasted link is answered with a real 404 here.
   if (!Number.isInteger(id) || !((await getProduct(id)) || (await pastedLinkExists(id)))) notFound();
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 py-8">
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl px-4 py-8">
       <BackLink />
       <Suspense fallback={<div className="mt-5 h-96 animate-pulse rounded-xl bg-hover" />}>
         <ProductDetail params={params} />

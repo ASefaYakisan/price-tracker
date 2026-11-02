@@ -14,7 +14,7 @@ export default async function HowToAddPage({ params }: PageProps<"/[lang]/how-to
   const t = await getDictionary(lang);
   const h = t.howTo;
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-8">
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-3xl px-4 py-8">
       <Link href={`/${lang}`} className="text-sm text-muted hover:text-ink">
         <span aria-hidden className="inline-block rtl:rotate-180">
           ←

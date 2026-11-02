@@ -2,6 +2,7 @@
 // {name} marks a value filled in at runtime; keep it as is in translations.
 const en = {
   meta: {
+    skipToContent: "Skip to main content",
     title: "Price Tracker",
     description: "Daily price tracking dashboard powered by a Node.js scraper and Supabase",
     alerts: "Your alerts",

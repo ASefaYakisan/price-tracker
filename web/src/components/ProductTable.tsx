@@ -80,7 +80,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.table.search}
-            className="h-9 w-full rounded-lg border border-line bg-card ps-9 pe-3 text-sm text-ink placeholder:text-faint focus:border-accent focus:outline-none"
+            className="h-9 w-full rounded-lg border form-field bg-card ps-9 pe-3 text-sm text-ink placeholder:text-faint"
           />
         </label>
         <div className="flex gap-3">
@@ -90,7 +90,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
               <select
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
-                className="h-9 w-full appearance-none rounded-lg border border-line bg-card ps-3 pe-8 text-sm text-ink focus:border-accent focus:outline-none"
+                className="h-9 w-full appearance-none rounded-lg border form-field bg-card ps-3 pe-8 text-sm text-ink"
               >
                 <option value="all">{t.table.allSources}</option>
                 {sources.map((s) => (
@@ -107,7 +107,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
-              className="h-9 w-full appearance-none rounded-lg border border-line bg-card ps-3 pe-8 text-sm text-ink focus:border-accent focus:outline-none"
+              className="h-9 w-full appearance-none rounded-lg border form-field bg-card ps-3 pe-8 text-sm text-ink"
             >
               {Object.entries(SORTS).map(([key, s]) => (
                 <option key={key} value={key}>

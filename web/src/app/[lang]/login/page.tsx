@@ -24,7 +24,7 @@ export default async function LoginPage({ params }: PageProps<"/[lang]/login">) 
     [t.auth.f4Title, t.auth.f4Text],
   ];
   return (
-    <main className="mx-auto flex min-h-[calc(100dvh-10rem)] w-full max-w-4xl items-center px-4 py-8">
+    <main id="main-content" tabIndex={-1} className="mx-auto flex min-h-[calc(100dvh-10rem)] w-full max-w-4xl items-center px-4 py-8">
       <div className="grid w-full overflow-hidden rounded-2xl border border-line bg-card shadow-soft md:grid-cols-[1fr_1.1fr]">
         <section className="order-2 border-t border-line bg-gradient-to-br from-accent-soft to-teal-soft p-6 sm:p-10 md:order-1 md:border-t-0 md:border-e">
           <p className="text-sm font-medium text-accent">{t.meta.title}</p>

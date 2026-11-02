@@ -8,7 +8,7 @@ export const metadata: Metadata = { robots: { index: false, follow: false }, ref
 export default async function RemoveAlertPage({ params }: PageProps<"/[lang]/alerts/remove">) {
   const t = await getDictionary(await resolveLang(params));
   return (
-    <main className="mx-auto w-full max-w-lg px-4 py-10">
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-lg px-4 py-10">
       <h1 className="mb-4 text-2xl font-semibold">{t.removeAlert.title}</h1>
       <Suspense fallback={<p>{t.common.pleaseWait}</p>}>
         <RemoveAlertForm />

@@ -2,6 +2,7 @@ import type { Dict } from "./en";
 
 const zh: Dict = {
   meta: {
+    skipToContent: "跳转到主要内容",
     title: "Price Tracker",
     description: "基于 Node.js 爬虫和 Supabase 的每日价格追踪面板",
     alerts: "我的提醒",

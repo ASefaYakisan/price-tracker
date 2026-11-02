@@ -128,7 +128,7 @@ function StatCard({ label, value, tone = "text-ink", note }: { label: string; va
     <div className="rounded-xl border border-line bg-card px-4 py-3 transition-colors hover:bg-hover">
       <dt className="text-xs font-medium text-muted">{label}</dt>
       <dd className={`mt-1 text-2xl font-semibold tabular-nums ${tone}`}>{value}</dd>
-      {note && <p className="mt-0.5 truncate text-xs text-faint">{note}</p>}
+      {note && <dd className="mt-0.5 truncate text-xs text-faint">{note}</dd>}
     </div>
   );
 }

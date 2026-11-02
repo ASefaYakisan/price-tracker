@@ -22,7 +22,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   const sparklines = await getSparklines(products.map((p) => p.id));
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 pb-12">
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-6xl px-4 pb-12">
       <section className="max-w-3xl py-6 sm:py-14">
         <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-5xl">{t.home.heroTitle}</h1>
         <p className="mt-2 mb-5 max-w-2xl text-base text-pretty text-muted sm:mt-3 sm:mb-6 sm:text-lg">{t.home.heroLead}</p>

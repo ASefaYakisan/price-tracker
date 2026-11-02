@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/reset-pass
 
 export default function ResetPasswordPage() {
   return (
-    <main className="mx-auto flex min-h-[calc(100dvh-10rem)] w-full max-w-md items-center px-4 py-10">
+    <main id="main-content" tabIndex={-1} className="mx-auto flex min-h-[calc(100dvh-10rem)] w-full max-w-md items-center px-4 py-10">
       <div className="w-full">
         <ResetPasswordForm />
       </div>

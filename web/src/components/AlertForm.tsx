@@ -107,7 +107,7 @@ export function AlertForm({
   }
 
   const input =
-    "h-10 rounded-lg border border-line bg-bg px-3 text-sm text-ink placeholder:text-faint focus:border-accent focus:outline-none";
+    "h-10 rounded-lg border form-field bg-bg px-3 text-sm text-ink placeholder:text-faint";
   return (
     <>
       <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row sm:items-end">

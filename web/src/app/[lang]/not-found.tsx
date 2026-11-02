@@ -7,7 +7,7 @@ import { useI18n } from "@/i18n/client";
 export default function NotFound() {
   const { t, href } = useI18n();
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-col items-start px-4 py-16 sm:py-24">
+    <main id="main-content" tabIndex={-1} className="mx-auto flex w-full max-w-xl flex-col items-start px-4 py-16 sm:py-24">
       <p className="text-sm font-semibold text-accent tabular-nums">404</p>
       <h1 className="mt-2 text-2xl font-bold tracking-tight text-balance sm:text-4xl">{t.errors.notFoundTitle}</h1>
       <p className="mt-3 text-base text-pretty text-muted">{t.errors.notFoundText}</p>

@@ -2,6 +2,7 @@ import type { Dict } from "./en";
 
 const ko: Dict = {
   meta: {
+    skipToContent: "본문으로 건너뛰기",
     title: "Price Tracker",
     description: "Node.js 스크레이퍼와 Supabase 기반의 일일 가격 추적 대시보드",
     alerts: "내 알림",
