@@ -7,6 +7,8 @@ import { PriceChart } from "@/components/PriceChart";
 import { ChangeBadge, StockPill } from "@/components/ChangeBadge";
 import { LinkStatusNote, LinkStatusPill } from "@/components/LinkStatus";
 import { ProductThumb } from "@/components/ProductThumb";
+import { productJsonLd, productLanguages } from "@/lib/product-seo";
+import { siteUrl } from "@/lib/site-url";
 import { fill } from "@/i18n/config";
 import { BackLink } from "@/components/BackLink";
 import { ListButton } from "@/components/ListButton";
@@ -23,6 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
   const product = Number.isInteger(id) ? await getProduct(id) : null;
   if (!product) return { title: t.meta.title, robots: { index: false } };
 
+  const languages = productLanguages(product.id, siteUrl());
   const title = `${product.title} · ${t.meta.title}`;
   const description =
     product.price == null
@@ -31,6 +34,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
   return {
     title,
     description,
+    alternates: { canonical: languages[lang], languages: { ...languages, "x-default": languages.en } },
     openGraph: { title, description, ...(product.image_url ? { images: [product.image_url] } : {}) },
   };
 }
@@ -83,6 +87,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: productJsonLd(product, productLanguages(product.id, siteUrl())[lang]) }} />
       <header className="mt-5 flex gap-4 sm:gap-6">
         <ProductThumb product={product} large />
         <div className="min-w-0 flex-1">
