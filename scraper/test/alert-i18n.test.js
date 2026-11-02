@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readdirSync } from 'node:fs';
 import test from 'node:test';
 import { alertText } from '../src/alert-i18n.js';
-import { alertEmail } from '../src/alerts.js';
+import { alertEmail, deadLinkEmail } from '../src/alerts.js';
 
 // Use the site's dictionaries so a newly supported language is checked too.
 const languages = readdirSync(new URL('../../web/src/i18n/dictionaries/', import.meta.url))
@@ -13,6 +13,14 @@ const product = { id: 7, title: 'Test product', price: 100, currency: 'USD', url
 const site = 'https://example.com';
 
 for (const lang of languages) {
+  test(`${lang}: dead-link email fills every failure reason`, () => {
+    for (const last_error of ['no_price', 'timeout', 'network', 'http_error:404', 'http_error:410', 'http_error:403', 'http_error', 'unknown']) {
+      const mail = deadLinkEmail({ product: { ...product, last_error }, target_price: 90 }, site, lang);
+      assert.ok(mail.subject.trim());
+      assert.ok(mail.text.trim());
+      assert.doesNotMatch(mail.subject + mail.text, /[{}]/);
+    }
+  });
   test(`${lang}: alert message keys and placeholders match English`, () => {
     const messages = alertText(lang);
     if (lang !== 'en') assert.notStrictEqual(messages, english, `${lang}: missing translation dictionary`);
