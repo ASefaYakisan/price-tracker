@@ -224,7 +224,7 @@ const ru: Dict = {
     footerSignIn: "Войдите",
     footerSignInRest: "— и оповещения будут доступны на всех устройствах.",
     footerRule:
-      "Каждое оповещение отправляет одно письмо, когда цена достигает цели или опускается ниже; измените его, чтобы отслеживать снова.",
+      "Each alert sends one email when the price reaches your target; edit it to watch again.",
     notActive: "Неактивно",
     emailSent: "Письмо отправлено {date}",
     readFailed: "При последней проверке не удалось прочитать цену на этой странице: {reason}. Ваше оповещение подождёт, пока цену снова можно будет прочитать.",

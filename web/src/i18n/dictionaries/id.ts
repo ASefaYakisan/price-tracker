@@ -223,7 +223,7 @@ const id: Dict = {
     footerBrowser: "Daftar ini disimpan di browser ini.",
     footerSignIn: "Masuk",
     footerSignInRest: "untuk menyimpan peringatan Anda di semua perangkat.",
-    footerRule: "Setiap peringatan mengirim satu email saat harga mencapai target atau lebih rendah; ubah untuk memantau lagi.",
+    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
     notActive: "Tidak aktif",
     emailSent: "Email terkirim {date}",
     readFailed: "Pada pengecekan terakhir harga halaman ini tidak bisa dibaca: {reason}. Alarm Anda menunggu sampai harga bisa dibaca lagi.",

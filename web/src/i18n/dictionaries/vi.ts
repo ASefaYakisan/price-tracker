@@ -223,7 +223,7 @@ const vi: Dict = {
     footerBrowser: "Danh sách này được lưu trong trình duyệt này.",
     footerSignIn: "Đăng nhập",
     footerSignInRest: "để giữ cảnh báo trên mọi thiết bị.",
-    footerRule: "Mỗi cảnh báo gửi một email khi giá bằng hoặc thấp hơn mục tiêu; hãy sửa cảnh báo để theo dõi lại.",
+    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
     notActive: "Không hoạt động",
     emailSent: "Đã gửi email {date}",
     readFailed: "Lần kiểm tra gần nhất không đọc được giá của trang này: {reason}. Cảnh báo của bạn sẽ chờ cho đến khi đọc lại được giá.",
