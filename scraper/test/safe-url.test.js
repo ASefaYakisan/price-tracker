@@ -12,7 +12,7 @@ afterEach(() => {
 const PUBLIC = { resolve: async () => ['93.184.216.34'] };
 
 test('private, loopback, link-local and CGNAT addresses are refused', async () => {
-  for (const host of ['127.0.0.1', '10.0.0.5', '172.16.1.1', '192.168.0.1', '169.254.169.254', '100.64.0.1', '0.0.0.0', '[::1]', '[fd00::1]', '[::ffff:127.0.0.1]']) {
+  for (const host of ['127.0.0.1', '10.0.0.5', '172.16.1.1', '192.168.0.1', '169.254.169.254', '100.64.0.1', '0.0.0.0', '[::1]', '[fd00::1]', '[::ffff:127.0.0.1]', '[::ffff:7f00:1]', '[64:ff9b::7f00:1]', '[2002:7f00:1::1]', '[fec0::1]', '192.0.0.8', '198.18.0.1']) {
     await assert.rejects(assertPublicUrl(`http://${host}/`, PUBLIC), /not a public address/, host);
   }
   await assert.rejects(assertPublicUrl('https://shop.example/', { resolve: async () => ['93.184.216.34', '10.0.0.1'] }), /not a public address/);
