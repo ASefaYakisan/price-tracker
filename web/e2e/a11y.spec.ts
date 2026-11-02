@@ -5,7 +5,10 @@ for (const width of [1280, 390]) {
   for (const theme of ["light", "dark"] as const) {
     test.describe(`${width}px ${theme}`, () => {
       test.use({ viewport: { width, height: 900 }, colorScheme: theme });
-      for (const path of ["/en", "/en/login", "/en/products/9", "/en/alerts"]) {
+      for (const path of [
+        "/en", "/en/login", "/en/products/9", "/en/alerts",
+        "/en/privacy", "/en/terms", "/en/how-to-add", "/ar", "/ar/privacy",
+      ]) {
         test(path, async ({ page }) => {
           await page.goto(path);
           await expect(page.locator("main")).toBeVisible();
