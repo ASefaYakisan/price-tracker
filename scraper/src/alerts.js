@@ -158,6 +158,28 @@ async function sendEmail(to, { subject, text, headers }, sleep = defaultSleep) {
   }
 }
 
+// Marks the alert as sent only if nobody else has; true when this run got it.
+async function claimAlert(db, id) {
+  const { data, error } = await db
+    .from('alerts')
+    .update({ last_sent_at: new Date().toISOString() })
+    .eq('id', id)
+    .is('last_sent_at', null)
+    .select('id');
+  if (error) throw error;
+  return Boolean(data?.length);
+}
+
+// Worst case of a failed release is a mail that is not retried, never a double mail.
+async function releaseAlert(db, id) {
+  try {
+    const { error } = await db.from('alerts').update({ last_sent_at: null }).eq('id', id);
+    if (error) throw error;
+  } catch (err) {
+    console.error(`  alert ${id} could not be re-opened: ${err.message ?? err}`);
+  }
+}
+
 // sleep and gapMs are options so tests need no real waiting; gapMs spaces the mails to stay under Resend's rate limit.
 export async function processAlerts(db, { siteUrl = process.env.SITE_URL, sleep = defaultSleep, gapMs = 600 } = {}) {
   const columns = 'id, product_id, email, target_price, manage_token';
@@ -182,10 +204,16 @@ export async function processAlerts(db, { siteUrl = process.env.SITE_URL, sleep 
     try {
       if (await isHeldBySanity(db, alert)) continue;
       if (sent + failed > 0) await sleep(gapMs);
-      if (!(await sendEmail(alert.email, alertEmail(alert, siteUrl, alert.lang ?? 'en'), sleep))) continue;
-      const { error: markError } = await db.from('alerts').update({ last_sent_at: new Date().toISOString() }).eq('id', alert.id);
-      if (markError) throw markError;
-      sent++;
+      // Claim the alert before mailing: a second run at the same time finds it taken and skips it.
+      if (!(await claimAlert(db, alert.id))) continue;
+      let delivered = false;
+      try {
+        delivered = await sendEmail(alert.email, alertEmail(alert, siteUrl, alert.lang ?? 'en'), sleep);
+      } finally {
+        // Not delivered (dry run or error): open the alert again so the next run retries it.
+        if (!delivered) await releaseAlert(db, alert.id);
+      }
+      if (delivered) sent++;
     } catch (err) {
       failed++;
       console.error(`  alert ${alert.id} failed: ${err.message ?? err}`);
