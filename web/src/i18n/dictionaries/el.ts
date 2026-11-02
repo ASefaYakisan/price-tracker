@@ -2,7 +2,7 @@ import type { Dict } from "./en";
 
 const el: Dict = {
   meta: {
-    skipToContent: "Skip to main content",
+    skipToContent: "Μετάβαση στο κύριο περιεχόμενο",
     title: "Price Tracker",
     description: "Πίνακας καθημερινής παρακολούθησης τιμών με scraper σε Node.js και Supabase",
     alerts: "Οι ειδοποιήσεις σας",
