@@ -58,6 +58,7 @@ const zh: Dict = {
     title: "追踪的价格",
     lastScrape: "上次抓取：{date}",
     noScrapes: "尚未抓取",
+    staleData: "价格可能已过期",
     summary: "{sources} 个来源，共 {items} 件商品",
     demo: "你正在查看演示数据。连接 Supabase 并运行爬虫即可追踪实时价格。",
     trackedItems: "追踪中的商品",
