@@ -56,7 +56,7 @@ The web app does not scrape on a schedule; the Node.js collector runs from GitHu
 | Folder | What it does |
 | --- | --- |
 | `scraper/` | Node.js 20+ collector. One adapter per source (`src/adapters/`): HTML crawling with pagination (books.toscrape.com), JSON APIs (CoinGecko, gold) and XML (Central Bank of Türkiye rates). Polite fetching with retries; one failing source never blocks the others. Saves to Supabase, or to local JSON when no credentials are set. |
-| `supabase/migrations/` | Twelve ordered migrations: products, price history, alerts, the `product_latest` view, accounts and row level security, pasted-link status and logs, per-user lists, usage stats. |
+| `supabase/migrations/` | Ordered migrations: products, price history, alerts, the `product_latest` view, accounts and row level security, pasted-link status and logs, per-user lists, usage stats. |
 | `web/` | Next.js dashboard: search, filters and sorting, per-product price history chart, Excel and CSV export, light and dark themes. Shows demo data until Supabase is connected. |
 
 ## Run it
