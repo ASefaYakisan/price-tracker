@@ -87,5 +87,3 @@ test("keyboard focus stays visible on page controls", async ({ page }) => {
     }
   }
 });
-
-warning: in the working copy of 'web/e2e/a11y.spec.ts', LF will be replaced by CRLF the next time Git touches it
