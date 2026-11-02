@@ -9,12 +9,12 @@ const __dirname = path.dirname(__filename);
 
 const dictsDir = path.resolve(__dirname, '../src/i18n/dictionaries');
 
-function getKeys(obj: Record<string, any>, prefix = ''): string[] {
-  let keys: string[] = [];
+function getKeys(obj: Record<string, unknown>, prefix = ''): string[] {
+  const keys: string[] = [];
   for (const [key, value] of Object.entries(obj)) {
     const fullKey = prefix ? `${prefix}.${key}` : key;
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      keys.push(...getKeys(value, fullKey));
+      keys.push(...getKeys(value as Record<string, unknown>, fullKey));
     } else {
       keys.push(fullKey);
     }
