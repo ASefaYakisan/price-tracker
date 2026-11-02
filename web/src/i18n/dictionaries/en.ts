@@ -223,7 +223,7 @@ const en = {
     footerBrowser: "This list is kept in this browser.",
     footerSignIn: "Sign in",
     footerSignInRest: "to keep your alerts on every device.",
-    footerRule: "Each alert sends one email when the price is at or below the target; edit it to watch again.",
+    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
     notActive: "Not active",
     emailSent: "Email sent {date}",
     readFailed: "We could not read this page's price at the last check: {reason}. Your alert waits until it can be read again.",

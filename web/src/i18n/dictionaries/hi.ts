@@ -223,7 +223,7 @@ const hi: Dict = {
     footerBrowser: "यह सूची इसी ब्राउज़र में रखी गई है।",
     footerSignIn: "साइन इन करें",
     footerSignInRest: "ताकि आपके अलर्ट हर डिवाइस पर रहें।",
-    footerRule: "हर अलर्ट कीमत लक्ष्य पर या उससे कम होने पर एक ईमेल भेजता है; दोबारा नज़र रखने के लिए उसे बदलें।",
+    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
     notActive: "निष्क्रिय",
     emailSent: "ईमेल भेजा गया {date}",
     readFailed: "पिछली जाँच में इस पेज की कीमत पढ़ी नहीं जा सकी: {reason}। आपका अलर्ट तब तक रुका रहेगा जब तक कीमत दोबारा पढ़ी न जा सके।",
