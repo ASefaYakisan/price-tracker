@@ -88,3 +88,44 @@ test('the budget comes from SCRAPE_BUDGET_MINUTES and defaults to 30', () => {
   assert.equal(budgetFromEnv({ SCRAPE_BUDGET_MINUTES: '12' }), 12);
   assert.equal(budgetFromEnv({ SCRAPE_BUDGET_MINUTES: 'x' }), 30);
 });
+
+test('dead links rest longer after repeated failures; working and new links are read every day', async () => {
+  const { dueForRead, restDays } = await import('../src/refresh.js');
+  const now = Date.parse('2026-11-02T06:00:00Z');
+  const ago = (days) => new Date(now - days * 86_400_000 - 20 * 60_000).toISOString();
+  assert.deepEqual([0, 2, 3, 6, 7, 13, 14, 40].map((n) => restDays(n)), [0, 0, 2, 2, 4, 4, 7, 7]);
+  assert.equal(dueForRead({ failed_checks: 2, last_checked_at: ago(1) }, now), true);
+  assert.equal(dueForRead({ failed_checks: 3, last_checked_at: ago(1) }, now), false);
+  assert.equal(dueForRead({ failed_checks: 3, last_checked_at: ago(2) }, now), true); // a run that starts a bit early still counts
+  assert.equal(dueForRead({ failed_checks: 8, last_checked_at: ago(3) }, now), false);
+  assert.equal(dueForRead({ failed_checks: 8, last_checked_at: ago(4) }, now), true);
+  assert.equal(dueForRead({ failed_checks: 20, last_checked_at: ago(6) }, now), false);
+  assert.equal(dueForRead({ failed_checks: 20, last_checked_at: ago(7) }, now), true);
+  assert.equal(dueForRead({ failed_checks: 20, last_checked_at: null }, now), true);
+  assert.equal(dueForRead({ failed_checks: 20, last_checked_at: 'nonsense' }, now), true);
+  assert.equal(dueForRead({ failed_checks: 20, last_checked_at: ago(1) }, now, { hasAlert: true }), false);
+  assert.equal(dueForRead({ failed_checks: 20, last_checked_at: ago(2) }, now, { hasAlert: true }), true);
+});
+
+test('a link failing for 20 days in a row is read at most once a week', async () => {
+  const { dueForRead } = await import('../src/refresh.js');
+  let last = null;
+  let failed = 0;
+  let reads = 0;
+  const start = Date.parse('2026-11-02T06:00:00Z');
+  for (let day = 0; day < 20; day++) {
+    const now = start + day * 86_400_000 + (day % 3) * 600_000;
+    if (!dueForRead({ failed_checks: failed, last_checked_at: last }, now)) continue;
+    reads++;
+    failed++;
+    last = new Date(now).toISOString();
+  }
+  assert.ok(reads <= 3 + 1 + 3 + 2, `${reads} reads in 20 days`);
+  assert.ok(reads < 20 / 2);
+});
+
+test('the summary tells how many dead links were left for later', () => {
+  const base = { read: 5, failed: 1, skipped: [], elapsedMs: 60_000 };
+  assert.match(summary(base, 4), /4 dead links skipped until their next turn/);
+  assert.doesNotMatch(summary(base), /dead links/);
+});

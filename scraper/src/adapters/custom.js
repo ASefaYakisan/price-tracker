@@ -5,7 +5,7 @@ import { extractProduct } from '../extract-price.js';
 import { fetchText } from '../fetch.js';
 import { assertPublicUrl } from '../safe-url.js';
 import { saveStatuses, statusChange } from '../link-status.js';
-import { budgetFromEnv, oldestFirst, refreshLinks, summary } from '../refresh.js';
+import { budgetFromEnv, dueForRead, oldestFirst, refreshLinks, summary } from '../refresh.js';
 import { attemptRow, BLOCKED_STATUSES, botWall, outcomeForError, scriptRendered } from '../track-outcome.js';
 import { createUnblocker, UNBLOCK_LAYER, UNBLOCK_PLUS_LAYER } from '../unblock-fetch.js';
 
@@ -20,8 +20,13 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
     .eq('source', 'custom');
   if (error) throw error;
   // A link nobody follows and nobody watches with an alert is kept with its history but not refreshed.
-  const wanted = new Set([...(await productIds(db, 'user_products')), ...(await productIds(db, 'alerts'))]);
-  const data = all.filter((product) => wanted.has(product.id));
+  const alerted = new Set(await productIds(db, 'alerts'));
+  const wanted = new Set([...(await productIds(db, 'user_products')), ...alerted]);
+  const followed = all.filter((product) => wanted.has(product.id));
+  // A link that keeps failing is read less and less often, so dead links do not eat the time budget or the scraping API credit.
+  const nowMs = Date.now();
+  const data = followed.filter((product) => dueForRead(product, nowMs, { hasAlert: alerted.has(product.id) }));
+  const resting = followed.length - data.length;
   const products = [];
   const unblocker = createUnblocker({ db });
   const browser = createBrowserReader();
@@ -43,7 +48,7 @@ export async function fetchAll({ db, onBatch, refresh = {} } = {}) {
   } finally {
     await browser.close();
   }
-  console.log(`  ${summary(result)}`);
+  console.log(`  ${summary(result, resting)}`);
   if (result.batchErrors.length) throw result.batchErrors[0];
   return products;
 }

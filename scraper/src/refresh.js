@@ -21,6 +21,27 @@ export function oldestFirst(links) {
   return [...links].sort((a, b) => (time(a) === time(b) ? 0 : time(a) < time(b) ? -1 : 1));
 }
 
+const DAY_MS = 86_400_000;
+// A daily run starts a little earlier or later each day; this keeps a "every 2 days" link from slipping to 3.
+const DUE_SLACK_MS = 3 * 3_600_000;
+
+// Days a link rests after failing this many times in a row: 0-2 failures daily, then 2, 4 and 7 days.
+// A link with an open alert is read at least every 2 days, because its owner is told when the link dies.
+export function restDays(failedChecks = 0, { hasAlert = false } = {}) {
+  const failed = Number(failedChecks) || 0;
+  const days = failed < 3 ? 0 : failed < 7 ? 2 : failed < 14 ? 4 : 7;
+  return hasAlert ? Math.min(days, 2) : days;
+}
+
+// Is this link due for a read? Links never checked, or with a missing date, are always due.
+export function dueForRead(link, now = Date.now(), { hasAlert = false } = {}) {
+  const days = restDays(link.failed_checks, { hasAlert });
+  if (!days || !link.last_checked_at) return true;
+  const last = Date.parse(link.last_checked_at);
+  if (!Number.isFinite(last)) return true;
+  return now - last >= days * DAY_MS - DUE_SLACK_MS;
+}
+
 export function budgetFromEnv(env = process.env) {
   const minutes = Number.parseFloat(env.SCRAPE_BUDGET_MINUTES ?? '');
   return Number.isFinite(minutes) && minutes > 0 ? minutes : DEFAULTS.budgetMinutes;
@@ -98,8 +119,9 @@ export async function refreshLinks(links, { read, onBatch, concurrency = DEFAULT
   return { read: done - failed, failed, skipped: queue, batchErrors, elapsedMs };
 }
 
-export function summary({ read, failed, skipped, elapsedMs }) {
+export function summary({ read, failed, skipped, elapsedMs }, resting = 0) {
   const minutes = (elapsedMs / 60_000).toFixed(1);
   const skip = skipped.length ? `, ${skipped.length} links skipped this round (time budget used up; they are read first next time)` : '';
-  return `${read} read, ${failed} failed${skip}, ${minutes} min`;
+  const dead = resting ? `, ${resting} dead links skipped until their next turn` : '';
+  return `${read} read, ${failed} failed${skip}${dead}, ${minutes} min`;
 }
