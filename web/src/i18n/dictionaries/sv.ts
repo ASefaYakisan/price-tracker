@@ -27,6 +27,10 @@ const sv: Dict = {
     deleteCancel: "Avbryt",
     deleteWorking: "Raderar…",
     deleteFailed: "Kontot kunde inte raderas. Kontrollera e-postadressen och försök igen.",
+    profile: "Profil",
+    profileEmail: "E-post",
+    profileDanger: "Farozon",
+    profileDangerText: "Radera ditt konto, dina bevakningar och din lista permanent.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

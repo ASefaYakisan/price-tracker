@@ -27,6 +27,10 @@ const en = {
     deleteCancel: "Cancel",
     deleteWorking: "Deleting…",
     deleteFailed: "Could not delete the account. Check the email address and try again.",
+    profile: "Profile",
+    profileEmail: "Email",
+    profileDanger: "Danger zone",
+    profileDangerText: "Permanently delete your account, alerts and list.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

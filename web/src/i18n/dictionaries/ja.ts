@@ -27,6 +27,10 @@ const ja: Dict = {
     deleteCancel: "キャンセル",
     deleteWorking: "削除中…",
     deleteFailed: "アカウントを削除できませんでした。メールアドレスを確認して、もう一度お試しください。",
+    profile: "プロフィール",
+    profileEmail: "メールアドレス",
+    profileDanger: "危険な操作",
+    profileDangerText: "アカウント、アラート、リストを完全に削除します。",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

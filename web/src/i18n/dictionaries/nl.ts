@@ -27,6 +27,10 @@ const nl: Dict = {
     deleteCancel: "Annuleren",
     deleteWorking: "Verwijderen…",
     deleteFailed: "Het account kon niet worden verwijderd. Controleer het e-mailadres en probeer het opnieuw.",
+    profile: "Profiel",
+    profileEmail: "E-mail",
+    profileDanger: "Gevarenzone",
+    profileDangerText: "Verwijder je account, meldingen en lijst definitief.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

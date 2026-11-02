@@ -27,6 +27,10 @@ const pt: Dict = {
     deleteCancel: "Cancelar",
     deleteWorking: "Excluindo…",
     deleteFailed: "Não foi possível excluir a conta. Verifique o e-mail e tente novamente.",
+    profile: "Perfil",
+    profileEmail: "E-mail",
+    profileDanger: "Zona de perigo",
+    profileDangerText: "Exclua permanentemente sua conta, alertas e lista.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

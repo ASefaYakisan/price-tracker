@@ -27,6 +27,10 @@ const ko: Dict = {
     deleteCancel: "취소",
     deleteWorking: "삭제 중…",
     deleteFailed: "계정을 삭제하지 못했습니다. 이메일 주소를 확인하고 다시 시도하세요.",
+    profile: "프로필",
+    profileEmail: "이메일",
+    profileDanger: "위험 구역",
+    profileDangerText: "계정, 알림, 목록을 영구적으로 삭제합니다.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

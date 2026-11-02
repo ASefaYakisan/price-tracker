@@ -27,6 +27,10 @@ const pl: Dict = {
     deleteCancel: "Anuluj",
     deleteWorking: "Usuwanie…",
     deleteFailed: "Nie udało się usunąć konta. Sprawdź adres e-mail i spróbuj ponownie.",
+    profile: "Profil",
+    profileEmail: "E-mail",
+    profileDanger: "Strefa zagrożenia",
+    profileDangerText: "Trwale usuń konto, alerty i listę.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

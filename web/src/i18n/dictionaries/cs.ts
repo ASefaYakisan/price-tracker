@@ -27,6 +27,10 @@ const cs: Dict = {
     deleteCancel: "Zrušit",
     deleteWorking: "Mazání…",
     deleteFailed: "Účet se nepodařilo smazat. Zkontrolujte e-mail a zkuste to znovu.",
+    profile: "Profil",
+    profileEmail: "E-mail",
+    profileDanger: "Nebezpečná zóna",
+    profileDangerText: "Trvale smazat účet, upozornění a seznam.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

@@ -27,6 +27,10 @@ const ru: Dict = {
     deleteCancel: "Отмена",
     deleteWorking: "Удаление…",
     deleteFailed: "Не удалось удалить аккаунт. Проверьте e-mail и попробуйте снова.",
+    profile: "Профиль",
+    profileEmail: "Электронная почта",
+    profileDanger: "Опасная зона",
+    profileDangerText: "Безвозвратно удалить аккаунт, оповещения и список.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

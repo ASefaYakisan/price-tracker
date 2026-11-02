@@ -27,6 +27,10 @@ const ar: Dict = {
     deleteCancel: "إلغاء",
     deleteWorking: "جارٍ الحذف…",
     deleteFailed: "تعذّر حذف الحساب. تحقق من البريد الإلكتروني وحاول مرة أخرى.",
+    profile: "الملف الشخصي",
+    profileEmail: "البريد الإلكتروني",
+    profileDanger: "منطقة الخطر",
+    profileDangerText: "احذف حسابك وتنبيهاتك وقائمتك نهائيًا.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:

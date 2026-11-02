@@ -27,6 +27,10 @@ const uk: Dict = {
     deleteCancel: "Скасувати",
     deleteWorking: "Видалення…",
     deleteFailed: "Не вдалося видалити акаунт. Перевірте е-пошту й спробуйте ще раз.",
+    profile: "Профіль",
+    profileEmail: "Електронна пошта",
+    profileDanger: "Небезпечна зона",
+    profileDangerText: "Остаточно видалити обліковий запис, сповіщення та список.",
   },
   legal: {"privacy": "Privacy and data deletion", "terms": "Terms of use"},
   footer:
