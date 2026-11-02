@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,7 +23,7 @@ function getKeys(obj: Record<string, unknown>, prefix = ''): string[] {
 }
 
 test('verify all 24 locale dictionaries match en.ts keys', async () => {
-  const enModule = await import(path.join(dictsDir, 'en.ts'));
+  const enModule = await import(pathToFileURL(path.join(dictsDir, 'en.ts')).href);
   const enDict = enModule.default || enModule;
   const enKeys = getKeys(enDict);
 
@@ -35,7 +35,7 @@ test('verify all 24 locale dictionaries match en.ts keys', async () => {
   for (const file of files) {
     if (file === 'en.ts') continue;
     const locale = path.basename(file, '.ts');
-    const mod = await import(path.join(dictsDir, file));
+    const mod = await import(pathToFileURL(path.join(dictsDir, file)).href);
     const dict = mod.default || mod;
     const keys = getKeys(dict);
 
