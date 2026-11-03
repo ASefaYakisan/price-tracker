@@ -26,3 +26,20 @@ https://www.dr.com.tr/kitap/amok-kosucusu/edebiyat/roman/dunya-roman/urunno=0001
 
 # Idefix
 https://www.idefix.com/1984-p-7881157
+
+# Foreign shops (issue #225). Product pages come and go: replace any link that answers 404.
+https://www.amazon.co.uk/dp/B09B8V1LZ3
+https://www.amazon.de/dp/B09B8V1LZ3
+https://www.amazon.fr/dp/B09B8V1LZ3
+https://www.amazon.es/dp/B09B8V1LZ3
+https://www.amazon.it/dp/B09B8V1LZ3
+https://www.walmart.com/ip/Apple-AirPods-with-Charging-Case-2nd-Generation/604342441
+https://www.bestbuy.com/site/apple-airpods-4-white/6447382.p?skuId=6447382
+https://www.target.com/p/apple-airpods-pro-2nd-generation/-/A-85978612
+https://www.aliexpress.com/item/1005006285761012.html
+https://www.etsy.com/listing/1470388273
+https://www.ikea.com/us/en/p/billy-bookcase-white-00263850/
+https://www.zalando.de/nike-sportswear-air-force-1-07-sneaker-low-ni112o0a1-a11.html
+https://www.mediamarkt.de/de/product/_apple-iphone-15-128gb-schwarz-2988372.html
+https://www.argos.co.uk/product/8349000
+https://www.currys.co.uk/products/apple-airpods-pro-2nd-generation-with-magsafe-case-usb-c-10260916.html
