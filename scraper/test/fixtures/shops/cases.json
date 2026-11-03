@@ -39,5 +39,13 @@
   { "file": "price-zero-specification.html", "url": "https://shop.example/rug", "layer": "json-ld",
     "expect": { "title": "Wool Rug", "price": 900, "currency": "TRY", "in_stock": true } },
   { "file": "next-data-traps.html", "url": "https://shop.example/p/kahve", "layer": "embedded-state",
-    "expect": { "title": "Kahve Makinesi Pro", "price": 1499, "currency": "TRY" } }
+    "expect": { "title": "Kahve Makinesi Pro", "price": 1499, "currency": "TRY" } },
+  { "file": "amazon-de.html", "url": "https://www.amazon.de/Kaffeemuehle/dp/B0ABCDEFGH?th=1", "layer": "shop-adapter",
+    "expect": {"title": "Kaffeemühle elektrisch, 150 W", "price": 1299, "currency": "EUR", "in_stock": false, "external_id": "https://www.amazon.de/dp/B0ABCDEFGH"} },
+  { "file": "amazon-co-uk.html", "url": "https://www.amazon.co.uk/Kettle/dp/B0ABCDEFGH", "layer": "shop-adapter",
+    "expect": {"title": "Stainless Steel Kettle 1.7L", "price": 24.99, "currency": "GBP", "in_stock": true} },
+  { "file": "walmart-next-data.html", "url": "https://www.walmart.com/ip/Mainstays-12-Cup/123456", "layer": "embedded-state",
+    "expect": {"title": "Mainstays 12 Cup Coffee Maker", "price": 19.97, "currency": "USD"} },
+  { "file": "microdata-euro-text.html", "url": "https://www.boutique.example/chaussures", "layer": "microdata",
+    "expect": {"title": "Chaussures de course", "price": 89.9, "currency": "EUR"} }
 ]

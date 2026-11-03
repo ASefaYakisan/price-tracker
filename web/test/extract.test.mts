@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { canonicalUrl, parseAmount, readPrice } from "../src/lib/extract-price.ts";
+import { canonicalUrl, currencyFromText, hostCurrency, parseAmount, readPrice } from "../src/lib/extract-price.ts";
 
 // Same cases as scraper/test/shops.test.js, so the two extractors cannot drift apart unnoticed.
 const dir = new URL("../../scraper/test/fixtures/shops/", import.meta.url);
@@ -46,4 +46,23 @@ test("parseAmount treats a three-digit tail as decimals unless the leading group
     ["12345,678", 12345.678],
   ];
   for (const [input, want] of cases) assert.equal(parseAmount(input), want, input);
+});
+
+test("parseAmount reads Arabic-Indic and Persian digits and other countries' number styles", () => {
+  assert.equal(parseAmount("٣٤٫٩٩ ر.س"), 34.99);
+  assert.equal(parseAmount("۱٬۲۹۹٫۵۰"), 1299.5);
+  assert.equal(parseAmount("CHF 1'299.50"), 1299.5);
+  assert.equal(parseAmount("₹1,29,999.00"), 129999);
+  assert.equal(parseAmount("12 990 kr"), 12990);
+  assert.equal(parseAmount("¥12,800"), 12800);
+});
+
+test("currency comes from the text next to the price, else from the shop's country ending", () => {
+  assert.equal(currencyFromText("€ 1.299,00"), "EUR");
+  assert.equal(currencyFromText("USD 12.99"), "USD");
+  assert.equal(currencyFromText("$12.99"), null);
+  assert.equal(currencyFromText("1.849,00 TL"), "TRY");
+  assert.equal(hostCurrency("www.zalando.de"), "EUR");
+  assert.equal(hostCurrency("www.amazon.co.uk"), "GBP");
+  assert.equal(hostCurrency("www.walmart.com"), null);
 });
