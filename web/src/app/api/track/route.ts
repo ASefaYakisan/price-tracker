@@ -7,8 +7,11 @@ import { canonicalUrl, extractProduct } from "@/lib/extract-price";
 import { findUrl } from "@/lib/find-url";
 import { isPageType, readCapped } from "@/lib/read-body";
 import { assertPublicUrl } from "@/lib/safe-url";
+import { fetchViaApi, UNBLOCK_LAYER } from "@/lib/unblock";
 import { trackLimitMessage } from "@/lib/track-limits";
 import { attemptRow, botWall, messageFor, outcomeForError, retryLater, scriptRendered, type TrackOutcome } from "@/lib/track-outcome";
+
+export const maxDuration = 60; // the scraping API can take ~30 s on a blocked shop
 
 const MAX_CUSTOM = 5000; // safety ceiling for the whole site; the per-account limits in track-limits.ts do the real work
 const BROWSER_HEADERS = {
@@ -77,11 +80,19 @@ export async function POST(request: Request) {
   } catch (err) {
     const e = err instanceof ReadError ? err : new ReadError("network");
     await logAttempt(db, attemptRow({ url: url.href, stage: "add", outcome: e.outcome, httpStatus: e.httpStatus, userId: user?.id }));
-    if (db && user && retryLater(e.outcome, e.httpStatus)) return savePending(db, url, user.id, e.message);
+    if (db && user && retryLater(e.outcome, e.httpStatus)) {
+      const viaApi = await readViaApi(db, url, user.id);
+      if (viaApi) return saveProduct(db, user.id, viaApi);
+      return savePending(db, url, user.id, e.message);
+    }
     return fail(e.message, 422);
   }
 
   const product = extractProduct(html, url.href);
+  if (!product && db && user && (botWall(html) || scriptRendered(html))) {
+    const viaApi = await readViaApi(db, url, user.id);
+    if (viaApi) return saveProduct(db, user.id, viaApi);
+  }
   await logAttempt(
     db,
     attemptRow({ url: url.href, stage: "add", outcome: product ? "ok" : "no_price", httpStatus: status, layer: product?.layer, userId: user?.id }),
@@ -90,6 +101,20 @@ export async function POST(request: Request) {
   if (!product) return fail(messageFor("no_price"), 422);
   if (isDemo || !db || !user) return Response.json({ ok: true, demo: true, product });
 
+  return saveProduct(db, user.id, product);
+}
+
+// Reads a blocked link through the scraping API (off without SCRAPER_API_KEY) and logs the paid attempt for the monthly count.
+async function readViaApi(db: SupabaseClient, url: URL, userId: string) {
+  const html = await fetchViaApi(url.href, db);
+  if (!html) return null;
+  const product = extractProduct(html, url.href);
+  await logAttempt(db, attemptRow({ url: url.href, stage: "add", outcome: product ? "ok" : "no_price", layer: product ? `${UNBLOCK_LAYER}:${product.layer}` : UNBLOCK_LAYER, userId }));
+  return product;
+}
+
+// Saves a product that was read, with its first price, into the account's list.
+async function saveProduct(db: SupabaseClient, userId: string, product: NonNullable<ReturnType<typeof extractProduct>>) {
   const { count } = await db.from("products").select("id", { count: "exact", head: true }).eq("source", "custom");
   if ((count ?? 0) >= MAX_CUSTOM) return fail("This demo already tracks the maximum number of links.", 429);
 
@@ -105,8 +130,8 @@ export async function POST(request: Request) {
   const { error: histError } = await db.from("price_history").insert({ product_id: row.id, price, in_stock });
   if (histError) return fail("Could not save the price. Please try again.", 500);
   // added_by records who brought the link in; everyone who adds it gets it in their own list.
-  await db.from("products").update({ added_by: user.id }).eq("id", row.id).is("added_by", null);
-  await addToList(db, user.id, row.id);
+  await db.from("products").update({ added_by: userId }).eq("id", row.id).is("added_by", null);
+  await addToList(db, userId, row.id);
 
   revalidateTag("products", { expire: 0 });
   return Response.json({ ok: true, id: row.id, product });
