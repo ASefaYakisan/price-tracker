@@ -5,7 +5,7 @@ export type StoreStatus = "works" | "limited";
 
 export type SupportedStore = { name: string; domain: string; status: StoreStatus };
 
-export const STORES_TESTED_ON = "2026-10-22";
+export const STORES_TESTED_ON = "2026-11-03";
 
 export const SUPPORTED_STORES: readonly SupportedStore[] = [
   { name: "Trendyol", domain: "trendyol.com", status: "works" },
@@ -20,6 +20,13 @@ export const SUPPORTED_STORES: readonly SupportedStore[] = [
   { name: "eBay", domain: "ebay.com", status: "works" },
   { name: "Akakçe", domain: "akakce.com", status: "works" },
   { name: "İtopya", domain: "itopya.com", status: "works" },
+  { name: "Zalando", domain: "zalando.de", status: "works" },
   { name: "n11", domain: "n11.com", status: "limited" },
   { name: "Decathlon", domain: "decathlon.com.tr", status: "limited" },
+  { name: "Amazon Germany", domain: "amazon.de", status: "limited" },
+  { name: "Amazon UK", domain: "amazon.co.uk", status: "limited" },
+  { name: "Walmart", domain: "walmart.com", status: "limited" },
+  { name: "Best Buy", domain: "bestbuy.com", status: "limited" },
+  { name: "Target", domain: "target.com", status: "limited" },
+  { name: "AliExpress", domain: "aliexpress.com", status: "limited" },
 ];
