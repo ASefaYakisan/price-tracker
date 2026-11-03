@@ -15,6 +15,5 @@ No other advisories were reported: no table without RLS, no exposed views or fun
 
 ## Still open from issue #229
 
-- Server-side sign-in lockout (today the lockout lives in the browser).
 - RLS review table by table against `docs/data-model.md`.
 - DNS rebinding: redirects are re-checked on every hop, but the address checked is not pinned for the actual connection.

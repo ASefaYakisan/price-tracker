@@ -62,9 +62,11 @@ These are controls present in the repository, not an audit of a deployment.
 
 - Source inspection does not verify deployed migrations, provider settings,
   delivery configuration or the availability of private GitHub reporting.
-- Browser-local login delays can be bypassed by clearing browser storage;
-  they are not a server-side account lock. Supabase enforcement depends on
-  the operator's settings. Turnstile is optional and skipped without a site key.
+- Sign-in goes through `POST /api/auth/sign-in`, which locks an account after
+  5 wrong passwords and a network after 20 (15-minute window, doubling delay).
+  The lock needs migration `0016_login_failures.sql` and `SUPABASE_SERVICE_ROLE_KEY`;
+  without them only Supabase's own limits apply. The browser-local delay is
+  just a mirror. Supabase enforcement depends on the operator's settings. Turnstile is optional and skipped without a site key.
 - Link counts that fail to load are treated as zero; these checks fail open.
 - The CSP only contains `frame-ancestors 'none'`; it is not a full script policy.
 - Service-role access bypasses RLS. Alert-email ownership checks exclude

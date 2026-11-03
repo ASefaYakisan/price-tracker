@@ -185,15 +185,33 @@ export function AuthForm() {
     const captchaToken = captcha ?? undefined;
     nextCaptcha();
     if (mode === "sign-in") {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-        options: { captchaToken },
-      });
+      // The server keeps the wrong-password lock (per account and per network); the local one below only mirrors it.
+      let error: { code?: string; status?: number; message: string } | null = null;
+      let tokens: { access_token: string; refresh_token: string } | null = null;
+      try {
+        const res = await fetch("/api/auth/sign-in", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, captchaToken }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.access_token) tokens = data;
+        else if (data.code === "locked") {
+          const until = Date.now() + (Number(data.retryAfter) || 30) * 1000;
+          writeLock({ fails: Math.max(readLock().fails, FREE_TRIES), until });
+          setLocked(secondsLeft(until));
+        } else error = { code: data.code, status: res.status, message: data.message ?? t.auth.rateLimited };
+      } catch {
+        error = { code: "network", message: t.auth.rateLimited };
+      }
+      if (tokens) {
+        const { error: sessionError } = await supabase.auth.setSession(tokens);
+        if (sessionError) error = sessionError;
+      }
       if (error?.code === "email_not_confirmed") {
         setNotice(t.auth.notConfirmed);
         startConfirm(email, 0);
-      } else if (error?.code === "invalid_credentials" || error?.message === "Invalid login credentials") {
+      } else if (error?.code === "invalid_credentials") {
         const fails = readLock().fails + 1;
         const until = fails >= FREE_TRIES ? Date.now() + 30_000 * 2 ** (fails - FREE_TRIES) : 0;
         writeLock({ fails, until });
@@ -201,7 +219,7 @@ export function AuthForm() {
         // When the lock starts, the countdown notice below the fields takes over from the error.
         if (!until) setError(t.auth.wrong);
       } else if (error) setError(explain(error));
-      else writeLock(null);
+      else if (tokens) writeLock(null);
     } else if (mode === "sign-up") {
       if (!isStrong(password)) {
         setError(t.auth.weakPassword);
