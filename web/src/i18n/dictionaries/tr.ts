@@ -4,7 +4,7 @@ const tr: Dict = {
   meta: {
     skipToContent: "Ana içeriğe geç",
     title: "Price Tracker",
-    description: "Node.js tarayıcısı ve Supabase ile çalışan günlük fiyat takip paneli",
+    description: "Ücretsiz fiyat takip sitesi: Amazon, eBay, Trendyol ve daha fazlasından ürün linkini yapıştır, fiyat geçmişini izle, fiyat düşünce e-posta al.",
     alerts: "Alarmların",
     signIn: "Giriş yap",
     newPassword: "Yeni şifre",

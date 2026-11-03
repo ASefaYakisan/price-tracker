@@ -4,11 +4,18 @@ import { getProducts, getSparklines, isDemo } from "@/lib/data";
 import { HomeLists } from "@/components/HomeLists";
 import { TrackForm } from "@/components/TrackForm";
 import { getDictionary, resolveLang } from "@/i18n/server";
+import { homeJsonLd } from "@/lib/home-seo";
+import { siteUrl } from "@/lib/site-url";
 
 // Home alternates must not be inherited by product and account pages.
 export async function generateMetadata({ params }: PageProps<"/[lang]">): Promise<Metadata> {
   const lang = await resolveLang(params);
+  const t = await getDictionary(lang);
   return {
+    // Keyword-bearing title and a user-facing description (the layout default is generic).
+    title: { absolute: `${t.meta.title} – ${t.home.heroTitle}` },
+    description: t.home.heroLead,
+    openGraph: { title: `${t.meta.title} – ${t.home.heroTitle}`, description: t.home.heroLead, url: `/${lang}` },
     alternates: {
       canonical: `/${lang}`,
       languages: Object.fromEntries(LOCALE_CODES.map((l) => [l, `/${l}`])),
@@ -23,6 +30,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
   return (
     <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-6xl px-4 pb-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: homeJsonLd({ name: t.meta.title, description: t.home.heroLead, lang, origin: siteUrl() }) }} />
       <section className="max-w-3xl py-6 sm:py-14">
         <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-5xl">{t.home.heroTitle}</h1>
         <p className="mt-2 mb-5 max-w-2xl text-base text-pretty text-muted sm:mt-3 sm:mb-6 sm:text-lg">{t.home.heroLead}</p>

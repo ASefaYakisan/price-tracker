@@ -1,3 +1,4 @@
+import { LOCALE_CODES } from "@/i18n/config";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { resolveLang } from "@/i18n/server";
@@ -69,7 +70,7 @@ const copy = {
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/terms">): Promise<Metadata> {
   const lang = await resolveLang(params);
-  return { title: `${copy[lang === "tr" ? "tr" : "en"].title} · Price Tracker` };
+  return { title: `${copy[lang === "tr" ? "tr" : "en"].title} · Price Tracker`, alternates: { canonical: `/${lang}/terms`, languages: Object.fromEntries(LOCALE_CODES.map((l) => [l, `/${l}/terms`])) } };
 }
 
 export default async function Page({ params }: PageProps<"/[lang]/terms">) {

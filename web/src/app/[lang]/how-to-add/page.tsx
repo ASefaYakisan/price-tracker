@@ -1,3 +1,4 @@
+import { LOCALE_CODES } from "@/i18n/config";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Bookmarklet } from "@/components/Bookmarklet";
@@ -6,8 +7,9 @@ import { STORES_TESTED_ON, SUPPORTED_STORES } from "@/lib/supported-stores";
 import { getDictionary, resolveLang } from "@/i18n/server";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/how-to-add">): Promise<Metadata> {
-  const t = await getDictionary(await resolveLang(params));
-  return { title: `${t.howTo.title} · ${t.meta.title}` };
+  const lang = await resolveLang(params);
+  const t = await getDictionary(lang);
+  return { title: `${t.howTo.title} · ${t.meta.title}`, alternates: { canonical: `/${lang}/how-to-add`, languages: Object.fromEntries(LOCALE_CODES.map((l) => [l, `/${l}/how-to-add`])) } };
 }
 
 export default async function HowToAddPage({ params }: PageProps<"/[lang]/how-to-add">) {

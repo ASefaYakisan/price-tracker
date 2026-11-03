@@ -4,7 +4,7 @@ const en = {
   meta: {
     skipToContent: "Skip to main content",
     title: "Price Tracker",
-    description: "Daily price tracking dashboard powered by a Node.js scraper and Supabase",
+    description: "Free price tracker: paste a product link from Amazon, eBay, Trendyol and more, watch the price history and get an email when the price drops.",
     alerts: "Your alerts",
     signIn: "Sign in",
     newPassword: "New password",
