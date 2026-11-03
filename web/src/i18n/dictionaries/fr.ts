@@ -376,6 +376,12 @@ const fr: Dict = {
     bookmarkDragHint: "Cliquer ici ne fait rien : faites glisser le bouton dans la barre de favoris, puis cliquez dessus sur la page produit d'une boutique.",
     cta: "Ajouter un produit",
     link: "Comment ajouter un produit",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Connectez-vous pour créer une alerte.",

@@ -159,6 +159,10 @@ export function TrackForm() {
         <Link href={href("/how-to-add")} className="font-medium text-accent underline-offset-4 hover:underline">
           {t.howTo.link}
         </Link>
+        {" · "}
+        <Link href={href("/how-to-add") + "#stores"} className="font-medium text-accent underline-offset-4 hover:underline">
+          {t.howTo.storesLink}
+        </Link>
       </p>
     </div>
   );

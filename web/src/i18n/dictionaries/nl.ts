@@ -375,6 +375,12 @@ const nl: Dict = {
     bookmarkDragHint: "Hier klikken doet niets: sleep de knop naar je bladwijzerbalk en klik er dan op op de productpagina van een winkel.",
     cta: "Product toevoegen",
     link: "Zo voeg je een product toe",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Log in om een alert aan te maken.",

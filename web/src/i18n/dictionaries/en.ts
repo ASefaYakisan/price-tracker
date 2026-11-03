@@ -375,6 +375,12 @@ const en = {
     bookmarkDragHint: "Clicking here does nothing: drag the button to your bookmarks bar, then click it on a shop's product page.",
     cta: "Add a product",
     link: "How to add a product",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   // Server messages, keyed by the English text the API returns.
   api: {

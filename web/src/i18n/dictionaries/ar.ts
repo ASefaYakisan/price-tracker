@@ -375,6 +375,12 @@ const ar: Dict = {
     bookmarkDragHint: "النقر هنا لا يفعل شيئًا: اسحب الزر إلى شريط الإشارات المرجعية، ثم انقر عليه في صفحة منتج في أحد المتاجر.",
     cta: "أضف منتجًا",
     link: "كيف تضيف منتجًا",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "سجّل الدخول لإنشاء تنبيه.",

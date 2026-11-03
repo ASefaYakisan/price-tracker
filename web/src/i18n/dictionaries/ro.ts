@@ -376,6 +376,12 @@ const ro: Dict = {
     bookmarkDragHint: "Un clic aici nu face nimic: trage butonul în bara de marcaje, apoi dă clic pe el pe pagina de produs a unui magazin.",
     cta: "Adaugă un produs",
     link: "Cum adaugi un produs",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Conectează-te pentru a crea o alertă.",

@@ -376,6 +376,12 @@ const th: Dict = {
     bookmarkDragHint: "คลิกตรงนี้ไม่มีผล: ลากปุ่มไปที่แถบบุ๊กมาร์ก แล้วคลิกบนหน้าสินค้าของร้าน",
     cta: "เพิ่มสินค้า",
     link: "วิธีเพิ่มสินค้า",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "เข้าสู่ระบบเพื่อสร้างการแจ้งเตือน",

@@ -376,6 +376,12 @@ const vi: Dict = {
     bookmarkDragHint: "Nhấp vào đây không có tác dụng: hãy kéo nút lên thanh dấu trang, rồi nhấp vào nó trên trang sản phẩm của cửa hàng.",
     cta: "Thêm sản phẩm",
     link: "Cách thêm sản phẩm",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Đăng nhập để tạo cảnh báo.",

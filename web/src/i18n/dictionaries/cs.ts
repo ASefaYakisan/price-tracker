@@ -376,6 +376,12 @@ const cs: Dict = {
     bookmarkDragHint: "Kliknutí sem nic nedělá: přetáhněte tlačítko na lištu záložek a pak na něj klikněte na stránce produktu v obchodě.",
     cta: "Přidat produkt",
     link: "Jak přidat produkt",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Pro vytvoření upozornění se přihlaste.",

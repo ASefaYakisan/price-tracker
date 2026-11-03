@@ -376,6 +376,12 @@ const ru: Dict = {
     bookmarkDragHint: "Нажатие здесь ничего не делает: перетащите кнопку на панель закладок, а затем нажмите её на странице товара в магазине.",
     cta: "Добавить товар",
     link: "Как добавить товар",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Войдите, чтобы создать оповещение.",

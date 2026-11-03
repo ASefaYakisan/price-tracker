@@ -376,6 +376,12 @@ const id: Dict = {
     bookmarkDragHint: "Mengeklik di sini tidak melakukan apa-apa: seret tombol ke bilah bookmark, lalu klik di halaman produk sebuah toko.",
     cta: "Tambahkan produk",
     link: "Cara menambahkan produk",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Masuk untuk membuat peringatan.",

@@ -375,6 +375,12 @@ const ko: Dict = {
     bookmarkDragHint: "여기를 클릭해도 아무 일도 없습니다. 버튼을 북마크바로 끌어다 놓은 뒤 쇼핑몰 상품 페이지에서 클릭하세요.",
     cta: "상품 추가",
     link: "상품 추가 방법",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "알림을 만들려면 로그인하세요.",

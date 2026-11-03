@@ -376,6 +376,12 @@ const de: Dict = {
     bookmarkDragHint: "Ein Klick hier bewirkt nichts: Ziehe den Knopf in die Lesezeichenleiste und klicke ihn dann auf der Produktseite eines Shops.",
     cta: "Produkt hinzufügen",
     link: "So fügst du ein Produkt hinzu",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Melde dich an, um einen Alarm zu erstellen.",

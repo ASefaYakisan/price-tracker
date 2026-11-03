@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Bookmarklet } from "@/components/Bookmarklet";
 import { fill } from "@/i18n/config";
+import { STORES_TESTED_ON, SUPPORTED_STORES } from "@/lib/supported-stores";
 import { getDictionary, resolveLang } from "@/i18n/server";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/how-to-add">): Promise<Metadata> {
@@ -40,6 +41,29 @@ export default async function HowToAddPage({ params }: PageProps<"/[lang]/how-to
           </div>
         </Way>
       </ol>
+
+      <section id="stores" aria-labelledby="stores-title" className="mt-10 scroll-mt-6">
+        <h2 id="stores-title" className="text-lg font-semibold">
+          {h.storesTitle}
+        </h2>
+        <p className="mt-1 max-w-2xl text-sm text-muted text-pretty">{h.storesLead}</p>
+        <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+          {SUPPORTED_STORES.map((s) => (
+            <li key={s.domain} className="flex items-center justify-between gap-3 rounded-lg border border-line px-3 py-2">
+              <span className="min-w-0">
+                <span className="block truncate font-medium">{s.name}</span>
+                <span className="block truncate text-xs text-faint">{s.domain}</span>
+              </span>
+              <span
+                className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${s.status === "works" ? "bg-accent-soft text-accent" : "bg-line text-muted"}`}
+              >
+                {s.status === "works" ? h.storesWorks : h.storesLimited}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-sm text-muted">{fill(h.storesNote, { date: STORES_TESTED_ON })}</p>
+      </section>
 
       <Link
         href={`/${lang}`}
