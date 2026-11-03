@@ -34,38 +34,37 @@ export function deadLinkAlerts(alerts, productsById, { afterChecks = DEAD_LINK_A
     .filter((a) => a.product && a.product.failed_checks === afterChecks && a.product.last_error);
 }
 
-const READ_FAILURE = {
-  no_price: 'no price could be found on the page any more',
-  timeout: 'the shop did not answer in time',
-  network: 'the page could not be opened',
-};
-
-// 'http_error:404' -> "the shop no longer has the page (HTTP 404)"
-export function failureReason(code) {
+// Unknown languages and missing translations use the original English copy.
+export function failureReason(code, lang = 'en') {
+  const t = { ...messagesEn, ...alertText(lang) };
+  const reasons = { no_price: t.deadNoPrice, timeout: t.deadTimeout, network: t.deadNetwork };
   const [outcome, rawStatus] = String(code).split(':');
-  if (outcome !== 'http_error') return READ_FAILURE[outcome] ?? 'the page could not be read';
+  if (outcome !== 'http_error') return Object.hasOwn(reasons, outcome) ? reasons[outcome] : t.deadOther;
   const status = Number(rawStatus) || null;
-  const text = status === 404 || status === 410 ? 'the shop no longer has the page' : 'the shop blocks or rejects our visits';
+  const text = status === 404 || status === 410 ? t.deadGone : t.deadBlocked;
   return status ? `${text} (HTTP ${status})` : text;
 }
 
-export function deadLinkEmail({ id, manage_token, product, target_price }, siteUrl) {
+export function deadLinkEmail({ id, manage_token, product, target_price }, siteUrl, lang = 'en') {
+  const t = { ...messagesEn, ...alertText(lang) };
+  const values = { title: product.title, days: DEAD_LINK_AFTER_CHECKS, reason: failureReason(product.last_error, lang), target: target_price, url: product.url };
+  const fill = (text) => text.replace(/\{(title|days|reason|target|url)\}/g, (_, key) => values[key]);
   const base = siteUrl?.replace(/\/$/, '');
   const removeLink = base && id && manage_token
     ? `${base}/alerts/remove?${new URLSearchParams({ id: String(id), token: manage_token })}`
     : null;
   return {
     ...(removeLink ? { headers: { 'List-Unsubscribe': `<${removeLink}>` } } : {}),
-    subject: `We can no longer read the price of ${product.title}`,
+    subject: fill(t.deadSubject),
     text: [
-      `For ${DEAD_LINK_AFTER_CHECKS} days in a row we could not read a price for ${product.title}: ${failureReason(product.last_error)}.`,
-      `Your alert (target: ${target_price}) is still open, but it cannot fire until the price can be read again.`,
+      fill(t.deadBody),
+      fill(t.deadTarget),
       '',
-      `Check that the link still works: ${product.url}`,
-      'If the shop moved the product, add the new link and remove this alert.',
-      ...(removeLink ? [`Remove this alert: ${removeLink}`] : []),
+      fill(t.deadCheck),
+      t.deadMoved,
+      ...(removeLink ? [`${t.deadRemove}: ${removeLink}`] : []),
       '',
-      'You get this email once per alert.',
+      t.deadOnce,
     ].join('\n'),
   };
 }
@@ -232,7 +231,7 @@ async function notifyDeadLinks(db, alerts, productIds, siteUrl) {
     if (error) throw error;
     for (const alert of deadLinkAlerts(alerts, new Map(data.map((p) => [p.id, p])))) {
       try {
-        if (await sendEmail(alert.email, deadLinkEmail(alert, siteUrl))) notified++;
+        if (await sendEmail(alert.email, deadLinkEmail(alert, siteUrl, alert.lang ?? 'en'))) notified++;
       } catch (err) {
         console.error(`  dead-link notice for alert ${alert.id} failed: ${err.message ?? err}`);
       }

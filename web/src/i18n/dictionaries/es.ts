@@ -223,7 +223,7 @@ const es: Dict = {
     footerBrowser: "Esta lista se guarda en este navegador.",
     footerSignIn: "Inicia sesión",
     footerSignInRest: "para tener tus alertas en todos tus dispositivos.",
-    footerRule: "Cada alerta envía un solo correo cuando el precio es igual o inferior al objetivo; edítala para volver a seguirlo.",
+    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
     notActive: "Inactiva",
     emailSent: "Correo enviado el {date}",
     readFailed: "En la última comprobación no pudimos leer el precio de esta página: {reason}. Tu alerta espera hasta que se pueda volver a leer.",

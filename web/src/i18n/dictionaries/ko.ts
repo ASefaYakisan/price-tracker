@@ -223,7 +223,7 @@ const ko: Dict = {
     footerBrowser: "이 목록은 이 브라우저에 저장됩니다.",
     footerSignIn: "로그인",
     footerSignInRest: "후 모든 기기에서 알림을 유지하세요.",
-    footerRule: "각 알림은 가격이 목표 이하가 되면 이메일을 한 번 보냅니다. 다시 지켜보려면 수정하세요.",
+    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
     notActive: "비활성",
     emailSent: "{date} 이메일 발송",
     readFailed: "마지막 확인에서 이 페이지의 가격을 읽지 못했습니다: {reason}. 가격을 다시 읽을 수 있을 때까지 알림은 대기합니다.",

@@ -224,7 +224,7 @@ const el: Dict = {
     footerSignIn: "Συνδεθείτε",
     footerSignInRest: "για να έχετε τις ειδοποιήσεις σας σε κάθε συσκευή.",
     footerRule:
-      "Κάθε ειδοποίηση στέλνει ένα email όταν η τιμή φτάσει στον στόχο ή χαμηλότερα· επεξεργαστείτε την για να την ενεργοποιήσετε ξανά.",
+      "Each alert sends one email when the price reaches your target; edit it to watch again.",
     notActive: "Ανενεργή",
     emailSent: "Το email στάλθηκε {date}",
     readFailed: "Στον τελευταίο έλεγχο δεν μπορέσαμε να διαβάσουμε την τιμή αυτής της σελίδας: {reason}. Η ειδοποίησή σου περιμένει μέχρι να διαβαστεί ξανά.",

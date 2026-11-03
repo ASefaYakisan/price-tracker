@@ -223,7 +223,7 @@ const nl: Dict = {
     footerBrowser: "Deze lijst wordt in deze browser bewaard.",
     footerSignIn: "Log in",
     footerSignInRest: "om je alerts op elk apparaat te hebben.",
-    footerRule: "Elke alert stuurt één e-mail wanneer de prijs op of onder het doel staat; bewerk hem om opnieuw te volgen.",
+    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
     notActive: "Niet actief",
     emailSent: "E-mail verstuurd {date}",
     readFailed: "Bij de laatste controle kon de prijs van deze pagina niet worden gelezen: {reason}. Je alert wacht tot de prijs weer te lezen is.",
