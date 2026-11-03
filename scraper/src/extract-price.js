@@ -35,7 +35,7 @@ const LAYERS = [
 function buildProduct(found, { $, url }, layer) {
   const meta = metaReader($);
   const currency =
-    found.currency ?? meta('product:price:currency') ?? meta('og:price:currency') ?? itempropValue($, 'priceCurrency') ?? null;
+    found.currency ?? meta('product:price:currency') ?? meta('og:price:currency') ?? itempropValue($, 'priceCurrency') ?? hostCurrency(url.hostname);
   const availability = found.availability ?? meta('product:availability') ?? $('[itemprop="availability"]').first().attr('href') ?? '';
   // The layer's own picture first, then the page's general tags; logos and placeholders are skipped (clean-product.js).
   const image = pickImage(
@@ -224,7 +224,7 @@ function microdataProduct({ $ }) {
         name: (name?.attr('content') ?? name?.text())?.trim() || null,
         image: image?.attr('content') ?? image?.attr('src') ?? image?.attr('href') ?? null,
         price,
-        currency: null,
+        currency: currencyFromText(node.text()),
         availability: null,
       };
     }
@@ -251,7 +251,7 @@ const STATE_VARS = [
   '__NUXT__',
 ];
 const PRICE_KEYS = ['discountedPrice', 'sellingPrice', 'salePrice', 'currentPrice', 'finalPrice', 'price'];
-const CURRENCY_KEYS = ['currency', 'currencyCode', 'priceCurrency'];
+const CURRENCY_KEYS = ['currency', 'currencyCode', 'priceCurrency', 'currencyUnit'];
 
 function embeddedStateProduct({ $, html }) {
   for (const state of embeddedStates($, html)) {
@@ -409,23 +409,22 @@ export const SHOP_ADAPTERS = [
     name: 'amazon',
     match: (host) => /(^|\.)amazon\.[a-z.]+$/.test(host),
     extract($, _html, url) {
-      const price = parseAmount(
-        textOf($, [
-          '#corePrice_feature_div .a-price .a-offscreen',
-          '#corePriceDisplay_desktop_feature_div .a-price .a-offscreen',
-          '#priceblock_dealprice',
-          '#priceblock_ourprice',
-          '#attach-base-product-price',
-          '.a-price .a-offscreen',
-        ]),
-      );
+      const priceText = textOf($, [
+        '#corePrice_feature_div .a-price .a-offscreen',
+        '#corePriceDisplay_desktop_feature_div .a-price .a-offscreen',
+        '#priceblock_dealprice',
+        '#priceblock_ourprice',
+        '#attach-base-product-price',
+        '.a-price .a-offscreen',
+      ]);
+      const price = parseAmount(priceText);
       if (price == null) return null;
       const img = $('#landingImage, #imgBlkFront').first();
       return {
         name: textOf($, ['#productTitle']),
         image: img.attr('data-old-hires') || img.attr('src') || null,
         price,
-        currency: textOf($, ['#attach-currency-of-preference']) ?? amazonCurrency(url.hostname),
+        currency: textOf($, ['#attach-currency-of-preference']) ?? currencyFromText(priceText) ?? amazonCurrency(url.hostname),
         availability: /currently unavailable|şu anda mevcut değil|derzeit nicht verfügbar/i.test(textOf($, ['#availability']) ?? '') ? 'OutOfStock' : null,
       };
     },
@@ -447,6 +446,31 @@ export const SHOP_ADAPTERS = [
   },
 ];
 
+// The currency a shop's own country uses, from its domain ending (".de" -> EUR). Generic endings such as .com say nothing.
+const TLD_CURRENCY = {
+  tr: 'TRY', uk: 'GBP', de: 'EUR', fr: 'EUR', it: 'EUR', es: 'EUR', nl: 'EUR', be: 'EUR', at: 'EUR', ie: 'EUR', pt: 'EUR', fi: 'EUR',
+  gr: 'EUR', jp: 'JPY', in: 'INR', ae: 'AED', sa: 'SAR', pl: 'PLN', se: 'SEK', no: 'NOK', dk: 'DKK', ch: 'CHF', cz: 'CZK', hu: 'HUF',
+  ro: 'RON', au: 'AUD', nz: 'NZD', ca: 'CAD', br: 'BRL', mx: 'MXN', kr: 'KRW', sg: 'SGD', za: 'ZAR', il: 'ILS', eg: 'EGP',
+};
+
+export function hostCurrency(host) {
+  const parts = host.toLowerCase().split('.');
+  const tld = parts.at(-1);
+  if (parts.length < 2 || tld.length !== 2) return null;
+  return TLD_CURRENCY[tld] ?? null;
+}
+
+const SYMBOL_CURRENCY = [[/€/, 'EUR'], [/£/, 'GBP'], [/₺/, 'TRY'], [/₹/, 'INR'], [/₩/, 'KRW'], [/₫/, 'VND'], [/฿/, 'THB'], [/R\$/, 'BRL'], [/\bzł\b/i, 'PLN'], [/\bTL\b/, 'TRY']];
+const ISO_CODES = new Set(['USD', 'EUR', 'GBP', 'TRY', 'JPY', 'CNY', 'INR', 'CAD', 'AUD', 'CHF', 'SEK', 'NOK', 'DKK', 'PLN', 'CZK', 'HUF', 'RON', 'BRL', 'MXN', 'KRW', 'AED', 'SAR', 'SGD', 'ZAR', 'NZD', 'ILS', 'EGP']);
+
+// The currency written next to an amount ("€ 1.299,00", "USD 12.99"). "$", "¥" and "kr" are shared by several currencies and give null.
+export function currencyFromText(text) {
+  if (typeof text !== 'string') return null;
+  const code = text.match(/\b[A-Z]{3}\b/g)?.find((c) => ISO_CODES.has(c));
+  if (code) return code;
+  return SYMBOL_CURRENCY.find(([re]) => re.test(text))?.[1] ?? null;
+}
+
 function amazonCurrency(host) {
   const tld = host.replace(/^.*amazon\./, '');
   return { 'com.tr': 'TRY', com: 'USD', ca: 'CAD', 'co.uk': 'GBP', de: 'EUR', fr: 'EUR', it: 'EUR', es: 'EUR', nl: 'EUR', 'co.jp': 'JPY', in: 'INR', ae: 'AED', sa: 'SAR', pl: 'PLN', se: 'SEK', 'com.au': 'AUD', 'com.br': 'BRL', 'com.mx': 'MXN' }[tld] ?? null;
@@ -456,7 +480,10 @@ function amazonCurrency(host) {
 export function parseAmount(value) {
   if (typeof value === 'number') return Number.isFinite(value) && value > 0 ? value : null;
   if (typeof value !== 'string') return null;
-  let s = value.replace(/[^\d.,]/g, '');
+  // Arabic-Indic (٣٤٫٩٩) and Persian (۳۴) digits are read like ASCII ones; the Arabic decimal mark ٫ becomes a dot.
+  value = value.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0)).replace(/\u066B/g, '.').replace(/\u066C/g, ',');
+  // Text around the amount may hold dots of its own ("ر.س", "Rs."); only the stretch from the first to the last digit counts.
+  let s = value.replace(/^\D+|\D+$/g, '').replace(/[^\d.,]/g, '');
   if (!s) return null;
   const lastDot = s.lastIndexOf('.');
   const lastComma = s.lastIndexOf(',');

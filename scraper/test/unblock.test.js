@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { afterEach, test } from 'node:test';
 import { readThroughLayers } from '../src/adapters/custom.js';
-import { apiUrl, createUnblocker, isListed, unblockConfig } from '../src/unblock-fetch.js';
+import { apiUrl, countryForUrl, createUnblocker, isListed, unblockConfig } from '../src/unblock-fetch.js';
 
 const PAGE = `<html><head><script type="application/ld+json">
 {"@type":"Product","name":"Kulaklık","offers":{"@type":"Offer","price":"1299.90","priceCurrency":"TRY"}}
@@ -180,18 +180,19 @@ test('a listed shop skips the browser and goes to the API', async () => {
 });
 
 test('config parsing and host matching', () => {
-  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], country: 'tr', renderHosts: [], premiumHosts: [], monthlyLimit: 900 });
+  assert.deepEqual(unblockConfig({}), { apiKey: null, hosts: [], country: 'auto', renderHosts: [], premiumHosts: [], monthlyLimit: 900 });
   const config = unblockConfig({ SCRAPER_API_KEY: ' k ', UNBLOCK_HOSTS: 'www.Hepsiburada.com, ,vatanbilgisayar.com', UNBLOCK_MONTHLY_LIMIT: 'x' });
-  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], country: 'tr', renderHosts: [], premiumHosts: [], monthlyLimit: 900 });
+  assert.deepEqual(config, { apiKey: 'k', hosts: ['hepsiburada.com', 'vatanbilgisayar.com'], country: 'auto', renderHosts: [], premiumHosts: [], monthlyLimit: 900 });
   assert.ok(isListed(config.hosts, 'https://m.hepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'https://nothepsiburada.com/p'));
   assert.ok(!isListed(config.hosts, 'not a url'));
   assert.equal(apiUrl('k', 'https://a.example/x?y=1'), 'https://api.scraperapi.com/?api_key=k&url=https%3A%2F%2Fa.example%2Fx%3Fy%3D1');
 });
 
-test('pages are opened from Turkey unless told otherwise, and without the country when the plan refuses it', async () => {
+test('pages are opened from the shop\'s own country unless told otherwise, and without the country when the plan refuses it', async () => {
   assert.equal(unblockConfig({ UNBLOCK_COUNTRY: 'none' }).country, null);
   assert.equal(unblockConfig({ UNBLOCK_COUNTRY: ' DE ' }).country, 'de');
+  const expectedCountry = countryForUrl(LINK);
   const urls = [];
   globalThis.fetch = async (url) => {
     urls.push(String(url));
@@ -199,7 +200,7 @@ test('pages are opened from Turkey unless told otherwise, and without the countr
     return String(url).includes('country_code=') ? new Response('no geotargeting on this plan', { status: 403 }) : new Response(PAGE);
   };
   const attempt = await readLink(LINK, { retries: 1, unblocker: createUnblocker({ db: fakeDb(), env: env() }) });
-  assert.match(urls[1], /country_code=tr/);
+  assert.match(urls[1], new RegExp(`country_code=${expectedCountry}`));
   assert.doesNotMatch(urls[2], /country_code/);
   assert.equal(attempt.outcome, 'ok');
 });
@@ -236,4 +237,22 @@ test('a product read by the real browser keeps its saved external id', async () 
   const browser = fakeBrowser({ outcome: 'ok', httpStatus: 200, layer: 'browser/json-ld', html: PAGE, product: { price: 1, external_id: 'new-id' } });
   const attempt = await readLink(LINK, { retries: 1, externalId: 'saved-id', browser, unblocker: null });
   assert.equal(attempt.product.external_id, 'saved-id');
+});
+
+test('countryForUrl opens each shop from its own country', () => {
+  const cases = {
+    'https://www.trendyol.com/x/y-p-1': 'tr',
+    'https://www.amazon.com.tr/dp/B0ABCDEFGH': 'tr',
+    'https://www.amazon.de/dp/B0ABCDEFGH': 'de',
+    'https://www.amazon.co.uk/dp/B0ABCDEFGH': 'uk',
+    'https://www.amazon.co.jp/dp/B0ABCDEFGH': 'jp',
+    'https://www.amazon.com/dp/B0ABCDEFGH': 'us',
+    'https://www.walmart.com/ip/123': 'us',
+    'https://www.bestbuy.com/site/x/123.p': 'us',
+    'https://www.zalando.fr/x.html': 'fr',
+    'https://www.ebay.com/itm/123': 'us',
+    'https://www.shop.xx/p': null,
+  };
+  for (const [url, country] of Object.entries(cases)) assert.equal(countryForUrl(url), country, url);
+  assert.equal(countryForUrl('not a url'), null);
 });

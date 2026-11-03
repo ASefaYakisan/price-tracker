@@ -11,8 +11,9 @@ import { fetchText } from './fetch.js';
 export const UNBLOCK_LAYER = 'unblock';
 export const UNBLOCK_PLUS_LAYER = 'unblock-plus';
 const PLUS_COST = 10;
-// Most tracked shops are Turkish, and some (Trendyol) show a country picker instead of the product to foreign addresses.
-const DEFAULT_COUNTRY = 'tr';
+// "auto" opens each page from the shop's own country (countryForUrl); some shops (Trendyol) show a country picker instead of the
+// product to foreign addresses, and foreign shops show the wrong currency or refuse addresses from elsewhere.
+const DEFAULT_COUNTRY = 'auto';
 const ENDPOINT = 'https://api.scraperapi.com/';
 const DEFAULT_MONTHLY_LIMIT = 900;
 const RETRY_AFTER_HOURS = 24; // a pending link that failed through the API waits this long before the next paid try
@@ -22,7 +23,7 @@ export function unblockConfig(env = process.env) {
   return {
     apiKey: env.SCRAPER_API_KEY?.trim() || null,
     hosts: hostList(env.UNBLOCK_HOSTS),
-    // Where the API opens pages from (ScraperAPI country_code); "none" lets the API pick.
+    // Where the API opens pages from (ScraperAPI country_code); "auto" picks it per shop, "none" lets the API pick.
     country: countryCode(env.UNBLOCK_COUNTRY),
     // Shops whose page is an empty app shell until its scripts run; none needed one so far.
     renderHosts: hostList(env.UNBLOCK_RENDER_HOSTS),
@@ -39,6 +40,28 @@ function hostList(value) {
 function countryCode(value) {
   const code = value?.trim().toLowerCase() || DEFAULT_COUNTRY;
   return code === 'none' ? null : code;
+}
+
+// ScraperAPI country codes by domain ending ("uk" is what it calls Great Britain).
+const TLD_COUNTRY = {
+  tr: 'tr', uk: 'uk', de: 'de', fr: 'fr', it: 'it', es: 'es', nl: 'nl', be: 'be', at: 'de', ie: 'uk', pt: 'es', pl: 'pl', se: 'se',
+  jp: 'jp', in: 'in', ae: 'ae', sa: 'sa', au: 'au', ca: 'ca', br: 'br', mx: 'mx', sg: 'sg', kr: 'kr', za: 'za', us: 'us',
+};
+// Generic .com shops that are Turkish; any other .com/.net/.org shop is read from the US (Walmart, Best Buy, Target, eBay, AliExpress...).
+const TURKISH_COM = /(^|\.)(trendyol|hepsiburada|n11|teknosa|vatanbilgisayar|itopya|akakce|lcw|hepsiburada|ciceksepeti|gittigidiyor|morhipo)\.com$/;
+
+// Where a shop's page should be opened from, by its domain.
+export function countryForUrl(url) {
+  let host;
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return null;
+  }
+  if (TURKISH_COM.test(host)) return 'tr';
+  const tld = host.split('.').at(-1);
+  if (tld.length === 2) return TLD_COUNTRY[tld] ?? null;
+  return 'us';
 }
 
 function normalHost(host) {
@@ -104,6 +127,7 @@ export async function recentlyUnblocked(db, urls, now = Date.now()) {
 export function createUnblocker({ db, env = process.env, now = Date.now(), fetcher = fetchText } = {}) {
   const { apiKey, hosts, renderHosts, premiumHosts, country, monthlyLimit } = unblockConfig(env);
   const options = (url) => ({ render: isListed(renderHosts, url), premium: isListed(premiumHosts, url) });
+  const countryOf = (url) => (country === 'auto' ? countryForUrl(url) : country);
   if (!apiKey || !db) return null;
   let used;
   let warned = false;
@@ -126,14 +150,15 @@ export function createUnblocker({ db, env = process.env, now = Date.now(), fetch
     },
     async fetchPage(url) {
       const extra = options(url);
+      const where = countryOf(url);
       used += Object.values(extra).some(Boolean) ? PLUS_COST : 1;
       try {
         try {
-          return await fetcher(apiUrl(apiKey, url, { ...extra, country }), { timeoutMs: 70_000, retries: 1 });
+          return await fetcher(apiUrl(apiKey, url, { ...extra, country: where }), { timeoutMs: 70_000, retries: 1 });
         } catch (err) {
           // A plan without that country answers 403, and some shops fail (500) only from that country;
           // failed requests cost nothing, so try once without it.
-          if (!country || ![403, 500].includes(err.status)) throw err;
+          if (!where || ![403, 500].includes(err.status)) throw err;
           return await fetcher(apiUrl(apiKey, url, extra), { timeoutMs: 70_000, retries: 1 });
         }
       } catch (err) {

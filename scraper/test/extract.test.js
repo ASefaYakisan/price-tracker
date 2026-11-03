@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { canonicalUrl, extractProduct, parseAmount, readPrice } from '../src/extract-price.js';
+import { canonicalUrl, currencyFromText, extractProduct, hostCurrency, parseAmount, readPrice } from '../src/extract-price.js';
 
 test('parseAmount reads Turkish, English and plain formats', () => {
   assert.equal(parseAmount('1.299,90 TL'), 1299.9);
@@ -103,4 +103,23 @@ test('embedded state ignores unparseable scripts and price ranges', () => {
   const html = `<script>window.__INITIAL_STATE__ = {"broken": </script>
     <script id="__NEXT_DATA__" type="application/json">{"props":{"filters":{"price":"100-500"}}}</script>`;
   assert.equal(readPrice(html, 'https://shop.example/x'), null);
+});
+
+test('parseAmount reads Arabic-Indic and Persian digits and other countries\' number styles', () => {
+  assert.equal(parseAmount('٣٤٫٩٩ ر.س'), 34.99);
+  assert.equal(parseAmount('۱٬۲۹۹٫۵۰'), 1299.5);
+  assert.equal(parseAmount("CHF 1'299.50"), 1299.5);
+  assert.equal(parseAmount('₹1,29,999.00'), 129999);
+  assert.equal(parseAmount('12 990 kr'), 12990);
+  assert.equal(parseAmount('¥12,800'), 12800);
+});
+
+test('currency comes from the text next to the price, else from the shop\'s country ending', () => {
+  assert.equal(currencyFromText('€ 1.299,00'), 'EUR');
+  assert.equal(currencyFromText('USD 12.99'), 'USD');
+  assert.equal(currencyFromText('$12.99'), null);
+  assert.equal(currencyFromText('1.849,00 TL'), 'TRY');
+  assert.equal(hostCurrency('www.zalando.de'), 'EUR');
+  assert.equal(hostCurrency('www.amazon.co.uk'), 'GBP');
+  assert.equal(hostCurrency('www.walmart.com'), null);
 });
