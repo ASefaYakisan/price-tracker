@@ -375,6 +375,12 @@ const es: Dict = {
     bookmarkDragHint: "Hacer clic aquí no hace nada: arrastra el botón a la barra de marcadores y luego haz clic en él en la página de producto de una tienda.",
     cta: "Añadir un producto",
     link: "Cómo añadir un producto",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Inicia sesión para crear una alerta.",

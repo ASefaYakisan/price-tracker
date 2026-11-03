@@ -376,6 +376,12 @@ const uk: Dict = {
     bookmarkDragHint: "Натискання тут нічого не робить: перетягніть кнопку на панель закладок, а потім натисніть її на сторінці товару в магазині.",
     cta: "Додати товар",
     link: "Як додати товар",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Увійдіть, щоб створити сповіщення.",

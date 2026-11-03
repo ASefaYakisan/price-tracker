@@ -375,6 +375,12 @@ const tr: Dict = {
     bookmarkDragHint: "Buraya tıklamak bir şey yapmaz: düğmeyi yer imleri çubuğuna sürükle, sonra bir mağazanın ürün sayfasında tıkla.",
     cta: "Ürün ekle",
     link: "Ürün nasıl eklenir",
+    storesTitle: "Denenen mağazalar",
+    storesLead: "Bu mağazaların ürün sayfalarını denedik. “Sınırlı” yazan mağazalar otomatik okumayı sık engeller; link bekliyor durumunda kalabilir.",
+    storesWorks: "Okunuyor",
+    storesLimited: "Sınırlı",
+    storesNote: "Son test: {date}. Bu bir anlık görüntüdür, garanti değildir: mağazalar sayfalarını değiştirir ve her ürün okunamaz.",
+    storesLink: "Denenen mağazalar",
   },
   api: {
     "Sign in to create an alert.": "Alarm kurmak için giriş yap.",

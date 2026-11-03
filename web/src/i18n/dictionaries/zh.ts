@@ -375,6 +375,12 @@ const zh: Dict = {
     bookmarkDragHint: "点击这里没有作用：请把按钮拖到书签栏，然后在商店的商品页面上点击它。",
     cta: "添加商品",
     link: "如何添加商品",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "请登录后创建提醒。",

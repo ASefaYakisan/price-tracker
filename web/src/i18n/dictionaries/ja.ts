@@ -375,6 +375,12 @@ const ja: Dict = {
     bookmarkDragHint: "ここをクリックしても何も起きません。ボタンをブックマークバーにドラッグし、ショップの商品ページでクリックしてください。",
     cta: "商品を追加",
     link: "商品の追加方法",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "アラートを作成するにはログインしてください。",

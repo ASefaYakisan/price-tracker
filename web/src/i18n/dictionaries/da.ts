@@ -376,6 +376,12 @@ const da: Dict = {
     bookmarkDragHint: "Et klik her gør ingenting: træk knappen til bogmærkelinjen, og klik så på den på en butiks produktside.",
     cta: "Tilføj et produkt",
     link: "Sådan tilføjer du et produkt",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Log ind for at oprette en alarm.",

@@ -375,6 +375,12 @@ const hi: Dict = {
     bookmarkDragHint: "यहाँ क्लिक करने से कुछ नहीं होता: बटन को बुकमार्क बार में खींचें, फिर किसी दुकान के उत्पाद पेज पर उस पर क्लिक करें।",
     cta: "उत्पाद जोड़ें",
     link: "उत्पाद कैसे जोड़ें",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "अलर्ट बनाने के लिए साइन इन करें।",

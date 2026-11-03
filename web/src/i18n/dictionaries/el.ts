@@ -377,6 +377,12 @@ const el: Dict = {
     bookmarkDragHint: "Το κλικ εδώ δεν κάνει τίποτα: σύρετε το κουμπί στη γραμμή σελιδοδεικτών και μετά κάντε κλικ σε αυτό στη σελίδα προϊόντος ενός καταστήματος.",
     cta: "Προσθήκη προϊόντος",
     link: "Πώς προσθέτετε ένα προϊόν",
+    storesTitle: "Tested stores",
+    storesLead: "We tried product pages from these stores. A store marked “Limited” often blocks automated reading, so a link may stay pending.",
+    storesWorks: "Readable",
+    storesLimited: "Limited",
+    storesNote: "Last tested {date}. This is a snapshot, not a guarantee: stores change their pages, and not every product can be read.",
+    storesLink: "Tested stores",
   },
   api: {
     "Sign in to create an alert.": "Συνδεθείτε για να δημιουργήσετε ειδοποίηση.",
