@@ -208,6 +208,7 @@ const sv: Dict = {
     atOrAbove: "Meddela mig vid eller över",
     direction: "Larmriktning",
     create: "Skapa bevakning",
+    quickAlert: "Meddela mig vid {price} (5 % billigare) med ett klick",
     updated: "Bevakningen har uppdaterats.",
     done: "Klart.",
     willEmail: "Vi mejlar {email} när priset är {price} eller lägre.",

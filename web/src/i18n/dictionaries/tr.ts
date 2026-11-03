@@ -208,6 +208,7 @@ const tr: Dict = {
     atOrAbove: "Bu fiyat ve üstünde haber ver",
     direction: "Alarm yönü",
     create: "Alarm kur",
+    quickAlert: "Tek tıkla {price} fiyatına (%5 daha ucuz) alarm kur",
     updated: "Alarm güncellendi.",
     done: "Tamam.",
     willEmail: "Fiyat {price} veya altına indiğinde {email} adresine e-posta göndereceğiz.",

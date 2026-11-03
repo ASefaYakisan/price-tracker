@@ -208,6 +208,7 @@ const ar: Dict = {
     atOrAbove: "نبّهني عند سعر أعلى من أو يساوي",
     direction: "اتجاه التنبيه",
     create: "إنشاء تنبيه",
+    quickAlert: "نبّهني عند {price} (أقل بنسبة 5٪) بنقرة واحدة",
     updated: "تم تحديث التنبيه.",
     done: "تم.",
     willEmail: "سنراسل {email} عندما يصبح السعر {price} أو أقل.",

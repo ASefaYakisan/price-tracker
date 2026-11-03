@@ -42,6 +42,18 @@ export function AlertForm({
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    await create(email, target, direction);
+  }
+
+  // One click: 5% below today's price, to the signed-in account's email.
+  const quickTarget = suggestedTarget(price, "below");
+  async function quick() {
+    setDirection("below");
+    setTarget(null);
+    await create(user?.email ?? "", quickTarget, "below");
+  }
+
+  async function create(email: string, target: string, direction: AlertDirection) {
     setState({ kind: "saving" });
     const res = await fetch("/api/alerts", {
       method: "POST",
@@ -113,6 +125,16 @@ export function AlertForm({
     "h-10 rounded-lg border form-field bg-bg px-3 text-sm text-ink placeholder:text-faint";
   return (
     <>
+      {user?.email && quickTarget && (
+        <button
+          type="button"
+          onClick={quick}
+          disabled={state.kind === "saving"}
+          className="mb-4 min-h-11 w-full rounded-lg border border-accent bg-accent-soft px-4 py-2 text-sm font-medium text-accent hover:opacity-90 disabled:opacity-60 sm:w-auto"
+        >
+          {fill(t.alertForm.quickAlert, { price: money(Number(quickTarget), currency, lang) })}
+        </button>
+      )}
       <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <label className="flex flex-1 flex-col gap-1 text-sm text-muted">
           {t.common.email}

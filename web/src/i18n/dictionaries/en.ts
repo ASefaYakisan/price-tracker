@@ -208,6 +208,7 @@ const en = {
     atOrAbove: "Alert me at or above",
     direction: "Alert direction",
     create: "Create alert",
+    quickAlert: "Alert me at {price} (5% lower) in one click",
     updated: "Alert updated.",
     done: "Done.",
     willEmail: "We will email {email} once the price is at or below {price}.",

@@ -208,6 +208,7 @@ const zh: Dict = {
     atOrAbove: "价格高于或等于此值时提醒我",
     direction: "提醒方向",
     create: "创建提醒",
+    quickAlert: "一键设置提醒：降至 {price}（便宜 5%）时通知我",
     updated: "提醒已更新。",
     done: "完成。",
     willEmail: "价格降至 {price} 或以下时，我们将发送邮件至 {email}。",

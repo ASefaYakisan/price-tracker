@@ -208,6 +208,7 @@ const ja: Dict = {
     atOrAbove: "この価格以上で通知",
     direction: "通知の方向",
     create: "アラートを作成",
+    quickAlert: "ワンクリックで {price}（5%安）のアラートを設定",
     updated: "アラートを更新しました。",
     done: "完了しました。",
     willEmail: "価格が {price} 以下になったら {email} にメールでお知らせします。",
