@@ -87,6 +87,12 @@ In the table, **Secret** and **Variable** mean GitHub repository Settings → Se
 
 | Variable | Consumer | Required? | Where to set | Purpose / default |
 | --- | --- | --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | web | Optional | Vercel / `web/.env.local` | Explicit metadata/sitemap origin; otherwise uses Vercel's production hostname, then localhost port 3000. |
+| `ADMIN_EMAILS` | web server | For admin statistics access | Vercel / `web/.env.local` | Comma-separated account emails allowed to read usage statistics; case-insensitive and trimmed. Empty means no admin emails. |
+| `GITHUB_DISPATCH_REF` | web server | Optional | Vercel / `web/.env.local` | Branch/ref used when dispatching Pending links; defaults to `main`. |
+| `TRACK_ATTEMPTS_KEEP_DAYS` | scraper | Optional | Process environment / explicitly loaded root `.env` | Read-attempt log retention in days; defaults to `90`, also used for invalid or nonpositive values. Current workflows do not forward this variable, so scheduled runs use the default. |
+| `PROBE_PREVIOUS` | scraper probe | Optional | Process environment / explicitly loaded root `.env` | Path to an earlier JSON probe report for regression comparison; no comparison file when unset. |
+| `PROBE_REPORT` | scraper probe | Optional | Process environment / explicitly loaded root `.env` | Output JSON report path; defaults to `probe-report.json`. |
 | `SUPABASE_URL` | scraper | For database storage | Actions Variable / root `.env` | Project API URL; without both database values the collector writes local JSON. |
 | `SUPABASE_SERVICE_ROLE_KEY` | scraper, web server | For database writes and server alert operations | Actions Secret / root `.env`; Vercel / `web/.env.local` | Server-only database credential; no default. Never expose to the browser. |
 | `NEXT_PUBLIC_SUPABASE_URL` | web | For live data and accounts | Vercel / `web/.env.local` | Project API URL; missing URL or public key enables demo data. |
