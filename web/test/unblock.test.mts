@@ -17,8 +17,11 @@ const db = (all: number, plus = 0) => ({
 test("country follows the shop's domain", () => {
   assert.equal(countryFor("www.trendyol.com"), "tr");
   assert.equal(countryFor("www.amazon.de"), "de");
-  assert.equal(countryFor("www.amazon.co.uk"), "gb");
-  assert.equal(countryFor("www.ebay.com"), null);
+  assert.equal(countryFor("www.amazon.co.uk"), "uk");
+  assert.equal(countryFor("www.ebay.com"), "us");
+  assert.equal(countryFor("www.walmart.com"), "us");
+  assert.equal(countryFor("www.zalando.de"), "de");
+  assert.equal(countryFor("www.example.zz"), null);
 });
 
 test("apiUrl carries the key, the page and the country", () => {

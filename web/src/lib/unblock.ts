@@ -9,17 +9,20 @@ const DEFAULT_LIMIT = 900;
 const TOTAL_MS = 22_000; // one budget for the whole read, so the visitor never waits long on a shop the API cannot open
 
 // Shops answer with their own country's page; Turkish shops need a Turkish address (Trendyol shows a country picker otherwise).
+// Same table as scraper/src/unblock-fetch.js ("uk" is what ScraperAPI calls Great Britain).
 const TLD_COUNTRY: Record<string, string> = {
-  tr: "tr", de: "de", fr: "fr", es: "es", it: "it", nl: "nl", pl: "pl", uk: "gb", se: "se", dk: "dk", pt: "pt", ro: "ro", cz: "cz", jp: "jp", kr: "kr", br: "br", in: "in", au: "au", ca: "ca",
+  tr: "tr", uk: "uk", de: "de", fr: "fr", it: "it", es: "es", nl: "nl", be: "be", at: "de", ie: "uk", pt: "es", pl: "pl", se: "se",
+  jp: "jp", in: "in", ae: "ae", sa: "sa", au: "au", ca: "ca", br: "br", mx: "mx", sg: "sg", kr: "kr", za: "za", us: "us",
 };
+// Generic .com shops that are Turkish; any other .com/.net/.org shop is read from the US (Walmart, Best Buy, Target, eBay, AliExpress...).
+const TURKISH_COM = /(^|\.)(trendyol|hepsiburada|n11|teknosa|vatanbilgisayar|itopya|akakce|lcw|ciceksepeti|gittigidiyor|morhipo)\.com$/;
 
 export function countryFor(hostname: string): string | null {
-  const parts = hostname.toLowerCase().split(".");
-  const tld = parts[parts.length - 1];
-  if (tld === "uk") return "gb";
-  if (TLD_COUNTRY[tld]) return TLD_COUNTRY[tld];
-  // Trendyol, Hepsiburada and n11 style .com shops of Turkey.
-  return /(^|\.)(trendyol|hepsiburada|n11|akakce|itopya)\.com$/.test(hostname.toLowerCase()) ? "tr" : null;
+  const host = hostname.toLowerCase();
+  if (TURKISH_COM.test(host)) return "tr";
+  const tld = host.split(".").at(-1) ?? "";
+  if (tld.length === 2) return TLD_COUNTRY[tld] ?? null;
+  return "us";
 }
 
 export function apiUrl(apiKey: string, url: string, country: string | null) {
