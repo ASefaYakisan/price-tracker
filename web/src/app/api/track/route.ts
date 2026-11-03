@@ -9,25 +9,12 @@ import { isPageType, readCapped } from "@/lib/read-body";
 import { assertPublicUrl } from "@/lib/safe-url";
 import { fetchViaApi, UNBLOCK_LAYER } from "@/lib/unblock";
 import { LIMIT_CHECK_FAILED, limitCheckFailed, trackLimitMessage } from "@/lib/track-limits";
-import { attemptRow, botWall, messageFor, outcomeForError, retryLater, scriptRendered, type TrackOutcome } from "@/lib/track-outcome";
+import { attemptRow, botWall, messageFor, outcomeForError, retryLater, scriptRendered } from "@/lib/track-outcome";
+import { fetchPublic, ReadError } from "@/lib/fetch-public";
 
 export const maxDuration = 60; // the scraping API can take ~30 s on a blocked shop
 
 const MAX_CUSTOM = 5000; // safety ceiling for the whole site; the per-account limits in track-limits.ts do the real work
-const BROWSER_HEADERS = {
-  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
-  accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-  "accept-language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
-  "cache-control": "no-cache",
-  "sec-ch-ua": '"Chromium";v="141", "Google Chrome";v="141", "Not?A_Brand";v="99"',
-  "sec-ch-ua-mobile": "?0",
-  "sec-ch-ua-platform": '"Windows"',
-  "sec-fetch-dest": "document",
-  "sec-fetch-mode": "navigate",
-  "sec-fetch-site": "none",
-  "sec-fetch-user": "?1",
-  "upgrade-insecure-requests": "1",
-};
 
 // POST { url } -> reads the price from the page now, saves it, and the daily job keeps checking it.
 export async function POST(request: Request) {
@@ -176,33 +163,6 @@ function titleFromUrl(url: URL) {
     .trim();
   const words = slug.length >= 8 && /[a-z]/i.test(slug) ? slug : url.hostname.replace(/^www\./, "");
   return (words[0].toUpperCase() + words.slice(1)).slice(0, 300);
-}
-
-// Follows redirects by hand so every hop gets the same public-address check.
-async function fetchPublic(start: URL) {
-  let url = start;
-  for (let hop = 0; hop < 5; hop++) {
-    const res = await fetch(url, { headers: BROWSER_HEADERS, redirect: "manual", signal: AbortSignal.timeout(15_000) }).catch((err) => {
-      throw new ReadError(outcomeForError(err));
-    });
-    const location = res.headers.get("location");
-    if (res.status < 300 || res.status >= 400 || !location) return res;
-    url = await assertPublicUrl(new URL(location, url).href).catch((err) => {
-      throw new ReadError("network", null, (err as Error).message);
-    });
-  }
-  throw new ReadError("network", null, "That link redirects too many times.");
-}
-
-// A failed read of the shop's page: the reason goes to track_attempts, the message to the visitor.
-class ReadError extends Error {
-  outcome: TrackOutcome;
-  httpStatus: number | null;
-  constructor(outcome: TrackOutcome, httpStatus: number | null = null, message = messageFor(outcome, httpStatus)) {
-    super(message);
-    this.outcome = outcome;
-    this.httpStatus = httpStatus;
-  }
 }
 
 // A failed log write never stops the link from being added.
