@@ -57,6 +57,7 @@ In your repository: Settings → Secrets and variables → Actions.
 - Variable `SITE_URL`: your dashboard address (used for links in emails).
 - Secret `SUPABASE_SERVICE_ROLE_KEY`: your service role key.
 - Optional: `RESEND_API_KEY` and `ALERT_FROM` for email alerts, `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`, `SCRAPER_API_KEY` for blocked shops. See the README for what each does.
+- Optional variable `TRACK_ATTEMPTS_KEEP_DAYS` (default 90): the daily run deletes `track_attempts` rows older than this, so the free Supabase database does not fill up over the years.
 
 ## 4. First run
 

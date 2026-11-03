@@ -6,6 +6,7 @@ import * as gold from './adapters/gold.js';
 import * as tcmb from './adapters/tcmb.js';
 import { fetchText, sleep } from './fetch.js';
 import { loadLatest, sendTelegram, syncSheet } from './notify.js';
+import { keepDays, pruneAttempts } from './prune.js';
 import { createStore } from './store.js';
 
 // Two adapter shapes: HTML listings we crawl page by page, and APIs that return everything in one call.
@@ -92,6 +93,14 @@ async function main() {
         console.error(`${label}: FAILED ${err.message ?? err}`);
         failures.push(label);
       }
+    }
+  }
+  // Housekeeping: a failure only warns, it never changes prices, alerts or the exit code.
+  if (store.db) {
+    try {
+      console.log(`cleanup: removed ${await pruneAttempts(store.db)} track_attempts rows older than ${keepDays()} days`);
+    } catch (err) {
+      console.warn(`cleanup: WARNING ${err.message ?? err}`);
     }
   }
   if (failures.length) {
