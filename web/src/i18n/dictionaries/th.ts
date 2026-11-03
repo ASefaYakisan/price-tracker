@@ -244,7 +244,7 @@ const th: Dict = {
     footerBrowser: "รายการนี้เก็บไว้ในเบราว์เซอร์นี้",
     footerSignIn: "เข้าสู่ระบบ",
     footerSignInRest: "เพื่อเก็บการแจ้งเตือนไว้ใช้ในทุกอุปกรณ์",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "การแจ้งเตือนแต่ละรายการจะส่งอีเมลหนึ่งครั้งเมื่อราคาถึงเป้าหมายของคุณ หากต้องการติดตามอีกครั้ง ให้แก้ไขการแจ้งเตือน",
     notActive: "ไม่ได้ใช้งาน",
     emailSent: "ส่งอีเมลแล้วเมื่อ {date}",
     readFailed: "การตรวจสอบครั้งล่าสุดอ่านราคาของหน้านี้ไม่ได้: {reason} การแจ้งเตือนของคุณจะรอจนกว่าจะอ่านราคาได้อีกครั้ง",
