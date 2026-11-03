@@ -5,7 +5,7 @@ import { DeleteAccount } from "@/components/DeleteAccount";
 import { ExportData } from "@/components/ExportData";
 import { ProfileSecurity } from "@/components/ProfileSecurity";
 import { useUser } from "@/lib/auth";
-import { authEnabled } from "@/lib/supabase/client";
+import { authEnabled } from "@/lib/supabase/enabled";
 import { useI18n } from "@/i18n/client";
 
 const date = (iso: string | undefined, lang: string) => (iso ? new Date(iso).toLocaleDateString(lang) : "");
