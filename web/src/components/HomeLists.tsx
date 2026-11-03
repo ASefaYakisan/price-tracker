@@ -52,7 +52,7 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
               role="tab"
               aria-selected={active}
               onClick={() => setPicked(l)}
-              className={`shrink-0 border-b-2 pb-2 font-semibold whitespace-nowrap transition-colors ${
+              className={`shrink-0 border-b-2 pb-3 pt-3 font-semibold whitespace-nowrap transition-colors ${
                 active ? "border-accent text-ink" : "border-transparent text-muted hover:text-ink"
               }`}
             >
@@ -114,7 +114,7 @@ function EmptyList({ title, text, cta }: { title: string; text: string; cta: str
       <button
         type="button"
         onClick={focusLinkBox}
-        className="mt-4 h-10 rounded-lg bg-accent px-4 text-sm font-semibold text-accent-ink hover:opacity-90"
+        className="mt-4 h-11 rounded-lg bg-accent px-4 text-sm font-semibold text-accent-ink hover:opacity-90"
       >
         {cta}
       </button>
