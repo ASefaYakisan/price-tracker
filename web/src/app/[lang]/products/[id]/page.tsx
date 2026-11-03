@@ -10,6 +10,7 @@ import { ProductThumb } from "@/components/ProductThumb";
 import { productJsonLd, productLanguages } from "@/lib/product-seo";
 import { siteUrl } from "@/lib/site-url";
 import { fill } from "@/i18n/config";
+import { SkeletonDetail } from "@/components/Skeleton";
 import { BackLink } from "@/components/BackLink";
 import { ListButton } from "@/components/ListButton";
 import { getDictionary, resolveLang } from "@/i18n/server";
@@ -51,10 +52,11 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
   // A pasted link may be the visitor's own, which is only known inside the Suspense below (it needs their sign-in);
   // so only an id that matches no shared item and no pasted link is answered with a real 404 here.
   if (!Number.isInteger(id) || !((await getProduct(id)) || (await pastedLinkExists(id)))) notFound();
+  const t = await getDictionary(await resolveLang(params));
   return (
     <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl px-4 py-8">
       <BackLink />
-      <Suspense fallback={<div className="mt-5 h-96 animate-pulse rounded-xl bg-hover" />}>
+      <Suspense fallback={<SkeletonDetail label={t.common.pleaseWait} className="mt-5" />}>
         <ProductDetail params={params} />
       </Suspense>
     </main>

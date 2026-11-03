@@ -9,6 +9,7 @@ import { defaultList, itemsInList, LISTS, type ListKey } from "@/lib/lists";
 import { useMyProducts } from "@/lib/my-products";
 import { useI18n } from "@/i18n/client";
 import type { Dict } from "@/i18n/dictionaries/en";
+import { SkeletonRows } from "@/components/Skeleton";
 import { ProductTable } from "@/components/ProductTable";
 
 const TAB_LABEL: Record<ListKey, (t: Dict) => string> = {
@@ -90,7 +91,7 @@ export function HomeLists({ products, sparklines }: { products: ProductRow[]; sp
       {list === "sample" && <p className="mb-4 text-sm text-muted">{t.home.sampleNote}</p>}
 
       {list === "mine" && !mine ? (
-        <div className="h-40 animate-pulse rounded-lg bg-card" />
+        <SkeletonRows label={t.common.pleaseWait} rows={3} />
       ) : list === "mine" && items.length === 0 ? (
         <EmptyList title={t.home.mineEmptyTitle} text={t.home.mineEmptyText} cta={t.home.mineEmptyCta} />
       ) : (
