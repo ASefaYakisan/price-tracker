@@ -27,6 +27,21 @@ The **22 October 2026 probe** read prices from 10 of 12 stores. Per-store layers
 | Akakçe | Not specified | Manual product-page test succeeded; date not supplied |
 | İtopya | Not specified | Manual product-page test succeeded; date not supplied |
 
+### Foreign stores (3 November 2026 probe, GitHub Actions)
+
+Eight sample links, plain request, real Chromium, then ScraperAPI opened from the shop's own country; a second run tried premium requests for Amazon, Walmart, Best Buy and AliExpress and a rendered request for Target.
+
+| Store | Result |
+| --- | --- |
+| Zalando (zalando.de) | Read: 107.95 EUR through JSON-LD, no API credit needed |
+| Amazon.de, Amazon.co.uk | Limited: the plain request is refused and ScraperAPI answers HTTP 403, also with premium |
+| Walmart | Limited: Chromium gets a page without a price; ScraperAPI answers HTTP 403, also with premium |
+| Best Buy | Limited: the request times out from GitHub's servers |
+| Target | Limited: the page loads but the price is filled in by scripts (placeholder in the HTML); the API was not reached because the page answered 200 |
+| AliExpress | Limited: from GitHub's US address the item shows "unavailable in your location" |
+
+Amazon.com was read in the 22 October probe; Amazon.de/.co.uk were not. The 403 from ScraperAPI may be a plan restriction rather than a shop block; the response body was not captured. Pasted links from limited shops are saved as pending and retried (see Limits).
+
 Issue #163 also reports **11–13 days of price history** for Hepsiburada, Akakçe, Trendyol and İtopya during **21 October–1 November 2026**. The manual checks and history are separate from the 12-store probe.
 
 The current [sample URL list](../scraper/probe-urls.txt) includes additional stores. A URL being listed is not evidence of a successful price read. [Probe code](../scraper/src/probe.js) records the price, layer and outcome in `probe-report.json` for new measurements.
