@@ -5,19 +5,27 @@ import { Bookmarklet } from "@/components/Bookmarklet";
 import { fill } from "@/i18n/config";
 import { STORES_TESTED_ON, SUPPORTED_STORES } from "@/lib/supported-stores";
 import { getDictionary, resolveLang } from "@/i18n/server";
+import { howToJsonLd } from "@/lib/howto-seo";
+import { siteUrl } from "@/lib/site-url";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/how-to-add">): Promise<Metadata> {
   const lang = await resolveLang(params);
   const t = await getDictionary(lang);
-  return { title: `${t.howTo.title} · ${t.meta.title}`, alternates: { canonical: `/${lang}/how-to-add`, languages: Object.fromEntries(LOCALE_CODES.map((l) => [l, `/${l}/how-to-add`])) } };
+  return { title: `${t.howTo.title} · ${t.meta.title}`, description: t.howTo.lead, alternates: { canonical: `/${lang}/how-to-add`, languages: Object.fromEntries(LOCALE_CODES.map((l) => [l, `/${l}/how-to-add`])) } };
 }
 
 export default async function HowToAddPage({ params }: PageProps<"/[lang]/how-to-add">) {
   const lang = await resolveLang(params);
   const t = await getDictionary(lang);
   const h = t.howTo;
+  const ways = [
+    { title: h.phoneTitle, steps: [h.phoneStep1, h.phoneStep2, h.phoneStep3] },
+    { title: h.pasteTitle, steps: [h.pasteStep1, fill(h.pasteStep2, { button: t.track.submit })] },
+    { title: h.bookmarkTitle, steps: [h.bookmarkStep1, h.bookmarkStep2] },
+  ];
   return (
     <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-3xl px-4 py-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: howToJsonLd({ name: h.title, description: h.lead, lang, url: new URL(`/${lang}/how-to-add`, siteUrl()).href, ways }) }} />
       <Link href={`/${lang}`} className="text-sm text-muted hover:text-ink">
         <span aria-hidden className="inline-block rtl:rotate-180">
           ←
