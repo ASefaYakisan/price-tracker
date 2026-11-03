@@ -244,7 +244,7 @@ const da: Dict = {
     footerBrowser: "Listen gemmes i denne browser.",
     footerSignIn: "Log ind",
     footerSignInRest: "for at have dine alarmer på alle enheder.",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "Hver alarm sender én e-mail, når prisen når din målpris; redigér den for at følge prisen igen.",
     notActive: "Ikke aktiv",
     emailSent: "E-mail sendt {date}",
     readFailed: "Vi kunne ikke læse prisen på denne side ved sidste tjek: {reason}. Din prisalarm venter, indtil prisen kan læses igen.",

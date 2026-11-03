@@ -244,7 +244,7 @@ const sv: Dict = {
     footerBrowser: "Listan sparas i den här webbläsaren.",
     footerSignIn: "Logga in",
     footerSignInRest: "för att ha dina bevakningar på alla enheter.",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "Varje varning skickar ett e-postmeddelande när priset når ditt målpris; redigera den för att följa priset igen.",
     notActive: "Inte aktiv",
     emailSent: "Mejl skickat {date}",
     readFailed: "Vid senaste kontrollen kunde vi inte läsa priset på den här sidan: {reason}. Ditt larm väntar tills priset går att läsa igen.",
