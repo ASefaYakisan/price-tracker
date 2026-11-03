@@ -6,7 +6,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 export const UNBLOCK_LAYER = "unblock"; // track_attempts.layer prefix, shared with the scraper's monthly count
 const ENDPOINT = "https://api.scraperapi.com/";
 const DEFAULT_LIMIT = 900;
-const TIMEOUT_MS = 28_000;
+const TOTAL_MS = 22_000; // one budget for the whole read, so the visitor never waits long on a shop the API cannot open
 
 // Shops answer with their own country's page; Turkish shops need a Turkish address (Trendyol shows a country picker otherwise).
 const TLD_COUNTRY: Record<string, string> = {
@@ -58,9 +58,10 @@ export async function fetchViaApi(
   try {
     if (!(await creditsLeft(db, env as typeof process.env))) return null;
     const country = countryFor(new URL(url).hostname);
-    let res = await doFetch(apiUrl(apiKey, url, country), { signal: AbortSignal.timeout(TIMEOUT_MS) });
+    const signal = AbortSignal.timeout(TOTAL_MS);
+    let res = await doFetch(apiUrl(apiKey, url, country), { signal });
     // A plan without that country answers 403, and some shops fail only from that country; failed requests cost nothing.
-    if (!res.ok && country && [403, 500].includes(res.status)) res = await doFetch(apiUrl(apiKey, url, null), { signal: AbortSignal.timeout(TIMEOUT_MS) });
+    if (!res.ok && country && [403, 500].includes(res.status)) res = await doFetch(apiUrl(apiKey, url, null), { signal });
     if (!res.ok) return null;
     const text = await res.text();
     return text.length > 5_000_000 ? null : text;
