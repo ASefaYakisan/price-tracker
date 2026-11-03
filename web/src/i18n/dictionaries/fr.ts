@@ -244,7 +244,7 @@ const fr: Dict = {
     footerBrowser: "Cette liste est conservée dans ce navigateur.",
     footerSignIn: "Connectez-vous",
     footerSignInRest: "pour retrouver vos alertes sur tous vos appareils.",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "Chaque alerte envoie un e-mail lorsque le prix atteint votre objectif ; modifiez-la pour suivre à nouveau le prix.",
     notActive: "Inactive",
     emailSent: "E-mail envoyé le {date}",
     readFailed: "Lors de la dernière vérification, le prix de cette page n'a pas pu être lu : {reason}. Votre alerte attend qu'il soit de nouveau lisible.",
