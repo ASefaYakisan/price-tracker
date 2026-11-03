@@ -9,6 +9,7 @@ import { authEnabled } from "@/lib/supabase/enabled";
 import { money, percent, shortDate } from "@/lib/format";
 import { useI18n } from "@/i18n/client";
 import { SourceChip } from "@/components/SourceChip";
+import { SkeletonRows } from "@/components/Skeleton";
 import { ProductThumb } from "@/components/ProductThumb";
 import { refreshAccountAlerts, useAccountAlerts, useVisibleAlerts } from "@/lib/account-alerts";
 import { errorReason } from "@/lib/link-status";
@@ -58,11 +59,7 @@ export function AlertsOverview() {
 
   if (user === undefined || (signedIn && !accountRows)) {
     return (
-      <div className="space-y-3" aria-busy>
-        {[0, 1].map((i) => (
-          <div key={i} className="h-32 animate-pulse rounded-xl bg-hover" />
-        ))}
-      </div>
+      <SkeletonRows label={t.common.pleaseWait} rows={2} />
     );
   }
 
