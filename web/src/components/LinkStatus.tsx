@@ -1,3 +1,4 @@
+import { AutoRefresh } from "@/components/AutoRefresh";
 import { RetryLink } from "@/components/RetryLink";
 import type { Locale } from "@/i18n/config";
 import { fill } from "@/i18n/config";
@@ -44,6 +45,7 @@ export function LinkStatusNote({ product, t, lang }: { product: ProductRow; t: D
   if (state === "pending") {
     return (
       <div role="status" className="mt-6 rounded-xl border border-line bg-accent-soft px-4 py-3 text-sm text-ink">
+        <AutoRefresh />
         <p>{t.product.pending}</p>
         {last && <p className="mt-1 text-muted">{fill(t.linkStatus.lastTry, last)}</p>}
       </div>
