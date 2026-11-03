@@ -1,14 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { registerHooks } from "node:module";
+import { register } from "node:module";
 import en from "../src/i18n/dictionaries/en.ts";
 
 // Node does not resolve Next's @ alias; keep application imports unchanged.
-const hooks = registerHooks({ resolve(specifier, context, next) {
-  return next(specifier === "@/i18n/config" ? new URL("../src/i18n/config.ts", import.meta.url).href : specifier, context);
-} });
+register(`data:text/javascript,${encodeURIComponent(`
+  export function resolve(specifier, context, nextResolve) {
+    return nextResolve(specifier === "@/i18n/config"
+      ? ${JSON.stringify(new URL("../src/i18n/config.ts", import.meta.url).href)}
+      : specifier, context);
+  }
+`)}`, import.meta.url);
 const { money, axisMoney, percentChange, percent, riseIsGood, changeTone, storeName, sourceLabel } = await import("../src/lib/format.ts");
-hooks.deregister();
 
 test("money handles absent, zero, fractional and small prices", () => {
   assert.equal(money(null, null), "–");
