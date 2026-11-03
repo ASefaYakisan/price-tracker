@@ -8,7 +8,7 @@ import { findUrl } from "@/lib/find-url";
 import { isPageType, readCapped } from "@/lib/read-body";
 import { assertPublicUrl } from "@/lib/safe-url";
 import { fetchViaApi, UNBLOCK_LAYER } from "@/lib/unblock";
-import { trackLimitMessage } from "@/lib/track-limits";
+import { LIMIT_CHECK_FAILED, limitCheckFailed, trackLimitMessage } from "@/lib/track-limits";
 import { attemptRow, botWall, messageFor, outcomeForError, retryLater, scriptRendered, type TrackOutcome } from "@/lib/track-outcome";
 
 export const maxDuration = 60; // the scraping API can take ~30 s on a blocked shop
@@ -47,7 +47,9 @@ export async function POST(request: Request) {
       db.from("products").select("id", { count: "exact", head: true }).eq("added_by", user.id),
       db.from("track_attempts").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("stage", "add").gte("created_at", hourAgo),
     ]);
-    const limit = trackLimitMessage({ recentLinks: recent.count, ownedLinks: owned.count, recentAttempts: attempts.count });
+    const counts = { recentLinks: recent.count, ownedLinks: owned.count, recentAttempts: attempts.count };
+    if (limitCheckFailed(counts)) return fail(LIMIT_CHECK_FAILED, 503);
+    const limit = trackLimitMessage(counts);
     if (limit) return fail(limit, 429);
   }
 
