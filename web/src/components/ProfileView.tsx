@@ -2,13 +2,17 @@
 
 import Link from "next/link";
 import { DeleteAccount } from "@/components/DeleteAccount";
+import { ExportData } from "@/components/ExportData";
+import { ProfileSecurity } from "@/components/ProfileSecurity";
 import { useUser } from "@/lib/auth";
 import { authEnabled } from "@/lib/supabase/client";
 import { useI18n } from "@/i18n/client";
 
+const date = (iso: string | undefined, lang: string) => (iso ? new Date(iso).toLocaleDateString(lang) : "");
+
 export function ProfileView() {
   const user = useUser();
-  const { t, href } = useI18n();
+  const { t, href, lang } = useI18n();
 
   if (authEnabled && user === undefined) {
     return <div className="h-40 animate-pulse rounded-xl bg-hover" aria-busy />;
@@ -33,6 +37,14 @@ export function ProfileView() {
           <span className="text-muted">{t.nav.profileEmail}</span>
           <span className="min-w-0 truncate font-medium text-ink">{user.email}</span>
         </div>
+        <div className="flex items-center justify-between gap-4 px-5 py-4">
+          <span className="text-muted">{t.nav.memberSince}</span>
+          <span className="font-medium text-ink">{date(user.created_at, lang)}</span>
+        </div>
+        <div className="flex items-center justify-between gap-4 px-5 py-4">
+          <span className="text-muted">{t.nav.lastSignIn}</span>
+          <span className="font-medium text-ink">{date(user.last_sign_in_at, lang)}</span>
+        </div>
         <Link href={href("/alerts")} className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-hover">
           <span className="text-ink">{t.nav.myAlerts}</span>
           <span aria-hidden className="text-muted rtl:rotate-180">
@@ -40,6 +52,8 @@ export function ProfileView() {
           </span>
         </Link>
       </section>
+      <ProfileSecurity />
+      <ExportData />
       <DeleteAccount />
     </div>
   );
