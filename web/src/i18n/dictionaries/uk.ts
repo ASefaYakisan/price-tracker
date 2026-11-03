@@ -244,7 +244,7 @@ const uk: Dict = {
     footerBrowser: "Цей список зберігається в цьому браузері.",
     footerSignIn: "Увійдіть",
     footerSignInRest: "— і сповіщення будуть доступні на всіх пристроях.",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "Кожне сповіщення надсилає один лист, коли ціна досягає вашої цілі; відредагуйте його, щоб знову відстежувати ціну.",
     notActive: "Неактивне",
     emailSent: "Лист надіслано {date}",
     readFailed: "Під час останньої перевірки не вдалося прочитати ціну на цій сторінці: {reason}. Ваше сповіщення чекатиме, доки ціну знову можна буде прочитати.",

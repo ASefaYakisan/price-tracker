@@ -244,7 +244,7 @@ const zh: Dict = {
     footerBrowser: "此列表保存在当前浏览器中。",
     footerSignIn: "登录",
     footerSignInRest: "即可在所有设备上保留你的提醒。",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "每个提醒会在价格达到您的目标时发送一封邮件；如需再次追踪，请编辑提醒。",
     notActive: "未启用",
     emailSent: "邮件已于 {date} 发送",
     readFailed: "上次检查时无法读取此页面的价格：{reason}。在能再次读取价格之前，你的提醒会一直等待。",
