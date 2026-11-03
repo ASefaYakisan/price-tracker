@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { clearAccountAlerts } from "@/lib/account-alerts";
 import { useUser } from "@/lib/auth";
-import { authEnabled, createClient } from "@/lib/supabase/client";
+import { authEnabled } from "@/lib/supabase/enabled";
 import { useI18n } from "@/i18n/client";
 
 export function UserMenu() {
@@ -35,6 +35,7 @@ export function UserMenu() {
     );
 
   async function signOut() {
+    const { createClient } = await import("@/lib/supabase/client");
     await createClient().auth.signOut();
     clearAccountAlerts();
     setOpen(false);

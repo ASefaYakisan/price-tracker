@@ -9,7 +9,7 @@ import { useUser } from "@/lib/auth";
 import { findUrl } from "@/lib/find-url";
 import { TrackSearch } from "@/components/TrackSearch";
 import { refreshMyProducts } from "@/lib/my-products";
-import { authEnabled } from "@/lib/supabase/client";
+import { authEnabled } from "@/lib/supabase/enabled";
 
 const PENDING_KEY = "pending-link";
 // The phone's Share menu lands on /add, which sends the link here as /<lang>#track=<link>.

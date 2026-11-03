@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { AlertStatus } from "@/lib/alert-status";
 import { alertProgress, isReached } from "@/lib/alert-direction";
 import { BellIcon } from "@/components/BellIcon";
-import { authEnabled } from "@/lib/supabase/client";
+import { authEnabled } from "@/lib/supabase/enabled";
 import { money, percent, shortDate } from "@/lib/format";
 import { useI18n } from "@/i18n/client";
 import { SourceChip } from "@/components/SourceChip";

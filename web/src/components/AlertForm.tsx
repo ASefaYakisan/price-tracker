@@ -5,7 +5,7 @@ import { useI18n } from "@/i18n/client";
 import { money } from "@/lib/format";
 import { refreshAccountAlerts } from "@/lib/account-alerts";
 import { useUser } from "@/lib/auth";
-import { authEnabled } from "@/lib/supabase/client";
+import { authEnabled } from "@/lib/supabase/enabled";
 import { BellIcon } from "@/components/BellIcon";
 import { saveAlert } from "@/lib/my-alerts";
 import { suggestedTarget, type AlertDirection } from "@/lib/alert-direction";
