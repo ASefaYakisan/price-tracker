@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { ATTEMPTS_PER_HOUR, LINKS_PER_ACCOUNT, LINKS_PER_HOUR, trackLimitMessage } from "../src/lib/track-limits.ts";
+import { ATTEMPTS_PER_HOUR, limitCheckFailed, LINKS_PER_ACCOUNT, LINKS_PER_HOUR, trackLimitMessage } from "../src/lib/track-limits.ts";
 
 const none = { recentLinks: 0, ownedLinks: 0, recentAttempts: 0 };
 
@@ -17,6 +17,9 @@ test("saved links hit the hourly and account limits", () => {
   assert.match(trackLimitMessage({ ...none, ownedLinks: LINKS_PER_ACCOUNT }) ?? "", /maximum/);
 });
 
-test("a count that failed does not block", () => {
-  assert.equal(trackLimitMessage({ recentLinks: null, ownedLinks: null, recentAttempts: null }), null);
+test("a count that failed blocks the request (fail-closed)", () => {
+  assert.equal(limitCheckFailed({ recentLinks: null, ownedLinks: 0, recentAttempts: 0 }), true);
+  assert.equal(limitCheckFailed({ recentLinks: 0, ownedLinks: null, recentAttempts: 0 }), true);
+  assert.equal(limitCheckFailed({ recentLinks: 0, ownedLinks: 0, recentAttempts: null }), true);
+  assert.equal(limitCheckFailed(none), false);
 });
