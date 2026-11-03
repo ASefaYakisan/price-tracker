@@ -80,7 +80,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.table.search}
-            className="h-9 w-full rounded-lg border form-field bg-card ps-9 pe-3 text-sm text-ink placeholder:text-faint"
+            className="h-11 w-full rounded-lg border form-field bg-card ps-9 pe-3 text-sm text-ink placeholder:text-faint"
           />
         </label>
         <div className="flex gap-3">
@@ -90,7 +90,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
               <select
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
-                className="h-9 w-full appearance-none rounded-lg border form-field bg-card ps-3 pe-8 text-sm text-ink"
+                className="h-11 w-full appearance-none rounded-lg border form-field bg-card ps-3 pe-8 text-sm text-ink"
               >
                 <option value="all">{t.table.allSources}</option>
                 {sources.map((s) => (
@@ -107,7 +107,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
-              className="h-9 w-full appearance-none rounded-lg border form-field bg-card ps-3 pe-8 text-sm text-ink"
+              className="h-11 w-full appearance-none rounded-lg border form-field bg-card ps-3 pe-8 text-sm text-ink"
             >
               {Object.entries(SORTS).map(([key, s]) => (
                 <option key={key} value={key}>
@@ -129,7 +129,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
               type="button"
               onClick={() => setFilter(f)}
               aria-pressed={active}
-              className={`shrink-0 border-b-2 py-2 font-medium whitespace-nowrap transition-colors ${
+              className={`shrink-0 border-b-2 py-3 font-medium lg:py-2 whitespace-nowrap transition-colors ${
                 active ? "border-accent text-ink" : "border-transparent text-muted hover:text-ink"
               }`}
             >
@@ -172,7 +172,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
               <Link
                 href={href(`/products/${p.id}#alert`)}
                 onClick={(e) => e.stopPropagation()}
-                className={`grid size-9 shrink-0 place-items-center rounded-full hover:bg-card ${
+                className={`grid size-11 shrink-0 place-items-center rounded-full hover:bg-card ${
                   alertIds.has(p.id) ? "text-accent" : "text-faint hover:text-ink"
                 }`}
                 title={alertIds.has(p.id) ? t.table.hasAlert : t.table.setAlert}
@@ -188,7 +188,7 @@ export function ProductTable({ products, sparklines = {} }: { products: ProductR
         <button
           type="button"
           onClick={() => setShown((n) => n + PAGE)}
-          className="mx-auto mt-4 block h-9 rounded-lg border border-line bg-card px-4 text-sm font-medium text-ink hover:bg-hover"
+          className="mx-auto mt-4 block h-11 rounded-lg border border-line bg-card px-4 text-sm font-medium text-ink hover:bg-hover"
         >
           {fill(t.table.showMore, { count: rows.length - shown })}
         </button>
