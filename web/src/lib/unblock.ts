@@ -1,0 +1,70 @@
+// Reads a page through a scraping API (ScraperAPI) when the shop turned Vercel's server away, so a link gets its
+// price right away instead of waiting for the GitHub reader. Port of the plain-read part of scraper/src/unblock-fetch.js.
+// Off unless SCRAPER_API_KEY is set on the web server. Every request costs credits: it stops for the month at UNBLOCK_MONTHLY_LIMIT.
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+export const UNBLOCK_LAYER = "unblock"; // track_attempts.layer prefix, shared with the scraper's monthly count
+const ENDPOINT = "https://api.scraperapi.com/";
+const DEFAULT_LIMIT = 900;
+const TIMEOUT_MS = 28_000;
+
+// Shops answer with their own country's page; Turkish shops need a Turkish address (Trendyol shows a country picker otherwise).
+const TLD_COUNTRY: Record<string, string> = {
+  tr: "tr", de: "de", fr: "fr", es: "es", it: "it", nl: "nl", pl: "pl", uk: "gb", se: "se", dk: "dk", pt: "pt", ro: "ro", cz: "cz", jp: "jp", kr: "kr", br: "br", in: "in", au: "au", ca: "ca",
+};
+
+export function countryFor(hostname: string): string | null {
+  const parts = hostname.toLowerCase().split(".");
+  const tld = parts[parts.length - 1];
+  if (tld === "uk") return "gb";
+  if (TLD_COUNTRY[tld]) return TLD_COUNTRY[tld];
+  // Trendyol, Hepsiburada and n11 style .com shops of Turkey.
+  return /(^|\.)(trendyol|hepsiburada|n11|akakce|itopya)\.com$/.test(hostname.toLowerCase()) ? "tr" : null;
+}
+
+export function apiUrl(apiKey: string, url: string, country: string | null) {
+  return `${ENDPOINT}?${new URLSearchParams({ api_key: apiKey, url, ...(country ? { country_code: country } : {}) })}`;
+}
+
+export function monthlyLimit(env: Record<string, string | undefined> = process.env) {
+  const n = Number.parseInt(env.UNBLOCK_MONTHLY_LIMIT ?? "", 10);
+  return Number.isFinite(n) && n >= 0 ? n : DEFAULT_LIMIT;
+}
+
+function monthStart(now: number) {
+  const d = new Date(now);
+  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1)).toISOString();
+}
+
+// Credits used this month (plain reads cost 1; rendered/premium "unblock-plus" reads from the scraper cost 10).
+export async function creditsLeft(db: SupabaseClient, env = process.env, now = Date.now()) {
+  const q = (like: string) =>
+    db.from("track_attempts").select("id", { count: "exact", head: true }).like("layer", like).gte("created_at", monthStart(now));
+  const [all, plus] = await Promise.all([q(`${UNBLOCK_LAYER}%`), q(`${UNBLOCK_LAYER}-plus%`)]);
+  if (all.error || plus.error) return false; // cannot count, so do not spend
+  const used = (all.count ?? 0) + (plus.count ?? 0) * 9;
+  return used < monthlyLimit(env);
+}
+
+// Returns the page HTML, or null when the layer is off, over budget or the read failed. Never throws.
+export async function fetchViaApi(
+  url: string,
+  db: SupabaseClient,
+  env: Record<string, string | undefined> = process.env,
+  doFetch: typeof fetch = fetch,
+): Promise<string | null> {
+  const apiKey = env.SCRAPER_API_KEY?.trim();
+  if (!apiKey) return null;
+  try {
+    if (!(await creditsLeft(db, env as typeof process.env))) return null;
+    const country = countryFor(new URL(url).hostname);
+    let res = await doFetch(apiUrl(apiKey, url, country), { signal: AbortSignal.timeout(TIMEOUT_MS) });
+    // A plan without that country answers 403, and some shops fail only from that country; failed requests cost nothing.
+    if (!res.ok && country && [403, 500].includes(res.status)) res = await doFetch(apiUrl(apiKey, url, null), { signal: AbortSignal.timeout(TIMEOUT_MS) });
+    if (!res.ok) return null;
+    const text = await res.text();
+    return text.length > 5_000_000 ? null : text;
+  } catch {
+    return null;
+  }
+}
