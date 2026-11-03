@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LOCALE_CODES } from "@/i18n/config";
+import { localeAlternates } from "@/lib/locale-alternates";
 import { getProducts, getSparklines, isDemo } from "@/lib/data";
 import { HomeLists } from "@/components/HomeLists";
 import { TrackForm } from "@/components/TrackForm";
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]">): Promis
     openGraph: { title: `${t.meta.title} – ${t.home.heroTitle}`, description: t.home.heroLead, url: `/${lang}` },
     alternates: {
       canonical: `/${lang}`,
-      languages: Object.fromEntries(LOCALE_CODES.map((l) => [l, `/${l}`])),
+      languages: localeAlternates(""),
     },
   };
 }
