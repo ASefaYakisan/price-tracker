@@ -185,6 +185,7 @@ const vi: Dict = {
     removeConfirm: "Bỏ mục này khỏi danh sách của bạn? Những người khác đang theo dõi vẫn giữ nó.",
     removing: "Đang xóa…",
     pending: "Cửa hàng đã từ chối lần đọc đầu tiên. Chúng tôi đang thử lại từ máy chủ khác; giá thường xuất hiện trong vòng một giờ.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "Đang chờ",

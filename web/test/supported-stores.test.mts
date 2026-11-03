@@ -25,3 +25,12 @@ test("every store has a region and the foreign shops that were read are listed",
     assert.equal(SUPPORTED_STORES.find((s) => s.domain === domain)?.region, "international");
   }
 });
+
+test("isLimitedStoreUrl flags limited shops and their subdomains only", async () => {
+  const { isLimitedStoreUrl } = await import("../src/lib/supported-stores.ts");
+  assert.equal(isLimitedStoreUrl("https://www.decathlon.com.tr/p/x/_/R-p-1"), true);
+  assert.equal(isLimitedStoreUrl("https://www.n11.com/urun/x"), true);
+  assert.equal(isLimitedStoreUrl("https://www.trendyol.com/x"), false);
+  assert.equal(isLimitedStoreUrl("https://evil-decathlon.com.tr.example.com/"), false);
+  assert.equal(isLimitedStoreUrl("not a url"), false);
+});

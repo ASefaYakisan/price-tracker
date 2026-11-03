@@ -26,3 +26,16 @@ export const SUPPORTED_STORES: readonly SupportedStore[] = [
   { name: "n11", domain: "n11.com", status: "limited", region: "turkey" },
   { name: "Decathlon", domain: "decathlon.com.tr", status: "limited", region: "turkey" },
 ];
+
+// A pasted link to a shop marked "limited" (it often blocks every reader), so "pending" should not promise a price soon.
+export function isLimitedStoreUrl(url: string): boolean {
+  let host: string;
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  return SUPPORTED_STORES.some(
+    (store) => store.status === "limited" && (host === store.domain || host.endsWith(`.${store.domain}`)),
+  );
+}

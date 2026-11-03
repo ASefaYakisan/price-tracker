@@ -185,6 +185,7 @@ const el: Dict = {
     removeConfirm: "Αφαίρεση αυτού του προϊόντος από τη λίστα σας; Όσοι άλλοι το παρακολουθούν το κρατούν.",
     removing: "Αφαίρεση…",
     pending: "Το κατάστημα απέρριψε την πρώτη ανάγνωση. Δοκιμάζουμε ξανά από άλλον διακομιστή· η τιμή συνήθως εμφανίζεται μέσα σε μία ώρα.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "Σε αναμονή",

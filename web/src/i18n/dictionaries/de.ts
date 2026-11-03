@@ -185,6 +185,7 @@ const de: Dict = {
     removeConfirm: "Diesen Artikel aus deiner Liste entfernen? Andere, die ihm folgen, behalten ihn.",
     removing: "Wird entfernt…",
     pending: "Der Shop hat den ersten Abruf abgelehnt. Wir versuchen es von einem anderen Server erneut; der Preis erscheint meist innerhalb einer Stunde.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "Ausstehend",

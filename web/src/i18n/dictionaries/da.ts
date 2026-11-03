@@ -185,6 +185,7 @@ const da: Dict = {
     removeConfirm: "Fjern varen fra din liste? Andre, der følger den, beholder den.",
     removing: "Fjerner…",
     pending: "Butikken afviste første forsøg. Vi prøver igen fra en anden server; prisen vises som regel inden for en time.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "Afventer",
