@@ -31,6 +31,22 @@ Issue #163 also reports **11â€“13 days of price history** for Hepsiburada, AkakÃ
 
 The current [sample URL list](../scraper/probe-urls.txt) includes additional stores. A URL being listed is not evidence of a successful price read. [Probe code](../scraper/src/probe.js) records the price, layer and outcome in `probe-report.json` for new measurements.
 
+## Foreign shops probe (3 November 2026)
+
+Issue #225. 17 product links were run through the [Shop probe](../.github/workflows/probe.yml) on GitHub Actions (plain request, real Chromium, then ScraperAPI with the shop's own country). **2 of 17 read a price.** Every ScraperAPI call answered HTTP 403 (also without the country code), so the shops that need the API are *not measured*, not proven unreadable; check the API plan and credits, then run the probe again.
+
+| Shop | Link used | Result |
+| --- | --- | --- |
+| IKEA US | billy-bookcase | Read: 39 USD (JSON-LD list) |
+| Amazon.com | dp/B09B8V1LZ3 | Read: 79.99 USD (shop adapter) |
+| AliExpress | item/1005006285761012 | Page opened (HTTP 200), no price found |
+| Amazon UK / DE / FR / ES / IT | dp/B09B8V1LZ3 | HTTP 403 from GitHub, API 403: not read |
+| Walmart, Etsy, eBay, MediaMarkt DE, Argos, Currys | see `scraper/probe-urls.txt` | HTTP 403 from GitHub, API 403: not read |
+| Best Buy | see `scraper/probe-urls.txt` | Network error |
+| Target, Zalando DE | see `scraper/probe-urls.txt` | HTTP 404: the sample link is gone, needs a new link |
+
+eBay read a price in the 22 October probe, so its 403 here comes from the API failure, not from the shop.
+
 ## Limits
 
 - Prices are normally checked once a day; alerts follow the daily read, not an instant price change.

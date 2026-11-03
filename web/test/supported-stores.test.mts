@@ -18,3 +18,10 @@ test("at least 10 stores are readable and unreadable ones are marked limited", (
   }
   assert.match(STORES_TESTED_ON, /^\d{4}-\d{2}-\d{2}$/);
 });
+
+test("every store has a region and the foreign shops that were read are listed", () => {
+  for (const s of SUPPORTED_STORES) assert.ok(s.region === "turkey" || s.region === "international");
+  for (const domain of ["amazon.com", "ebay.com", "ikea.com"]) {
+    assert.equal(SUPPORTED_STORES.find((s) => s.domain === domain)?.region, "international");
+  }
+});
