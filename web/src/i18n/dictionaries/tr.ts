@@ -185,6 +185,7 @@ const tr: Dict = {
     removeConfirm: "Bu ürün listenden çıkarılsın mı? Onu takip eden diğer kişilerde kalır.",
     removing: "Kaldırılıyor…",
     pending: "Mağaza ilk okumayı reddetti. Başka bir sunucudan tekrar deniyoruz; fiyat genelde bir saat içinde görünür.",
+    pendingLimited: "Bu mağaza otomatik okumayı sık sık engelliyor; fiyat bu üründe gelmeyebilir. Denemeye devam ediyoruz ama süre veremiyoruz.",
   },
   linkStatus: {
     pending: "Bekliyor",

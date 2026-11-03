@@ -185,6 +185,7 @@ const ru: Dict = {
     removeConfirm: "Убрать этот товар из вашего списка? У других, кто его отслеживает, он останется.",
     removing: "Удаление…",
     pending: "Магазин отклонил первый запрос. Мы пробуем снова с другого сервера; обычно цена появляется в течение часа.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "Ожидает",

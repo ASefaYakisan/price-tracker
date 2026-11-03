@@ -185,6 +185,7 @@ const ko: Dict = {
     removeConfirm: "이 상품을 목록에서 뺄까요? 이 상품을 팔로우하는 다른 사람에게는 남아 있습니다.",
     removing: "삭제 중…",
     pending: "쇼핑몰이 첫 번째 읽기를 거부했습니다. 다른 서버에서 다시 시도하고 있으며, 보통 1시간 안에 가격이 표시됩니다.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "대기 중",

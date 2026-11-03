@@ -185,6 +185,7 @@ const ro: Dict = {
     removeConfirm: "Scoți acest articol din listă? Ceilalți care îl urmăresc îl păstrează.",
     removing: "Se elimină…",
     pending: "Magazinul a refuzat prima citire. Încercăm din nou de pe alt server; prețul apare de obicei în cel mult o oră.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "În așteptare",
