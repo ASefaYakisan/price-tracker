@@ -4,6 +4,8 @@ import { getProducts, getSparklines, isDemo } from "@/lib/data";
 import { HomeLists } from "@/components/HomeLists";
 import { TrackForm } from "@/components/TrackForm";
 import { getDictionary, resolveLang } from "@/i18n/server";
+import Link from "next/link";
+import { SUPPORTED_STORES } from "@/lib/supported-stores";
 import { homeJsonLd } from "@/lib/home-seo";
 import { siteUrl } from "@/lib/site-url";
 
@@ -35,7 +37,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-5xl">{t.home.heroTitle}</h1>
         <p className="mt-2 mb-5 max-w-2xl text-base text-pretty text-muted sm:mt-3 sm:mb-6 sm:text-lg">{t.home.heroLead}</p>
         <TrackForm />
-        <ol className="mt-5 hidden flex-wrap gap-x-6 gap-y-2 text-sm text-ink sm:flex">
+        <ol className="mt-5 flex flex-col gap-2 text-sm text-ink sm:flex-row sm:flex-wrap sm:gap-x-6">
           {[t.home.step1, t.home.step2, t.home.step3].map((step, i) => (
             <li key={i} className="flex items-center gap-2">
               <span className="grid size-5 place-items-center rounded-full bg-accent-soft text-xs font-semibold text-accent tabular-nums" aria-hidden>
@@ -45,6 +47,14 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             </li>
           ))}
         </ol>
+        <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-2 text-xs">
+          <Link href={`/${lang}/how-to-add#stores`} className="inline-flex min-h-11 items-center font-medium text-muted underline sm:min-h-0">
+            {t.howTo.storesTitle}
+          </Link>
+          {SUPPORTED_STORES.filter((st) => st.status === "works").slice(0, 8).map((st) => (
+            <span key={st.domain} className="rounded-full border border-line bg-card px-2.5 py-1 text-ink">{st.name}</span>
+          ))}
+        </div>
       </section>
 
       {isDemo && (
