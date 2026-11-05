@@ -208,6 +208,7 @@ const ro: Dict = {
     atOrAbove: "Anunță-mă la sau peste",
     direction: "Direcția alertei",
     create: "Creează alerta",
+    quickAlert: "Anunță-mă la {price} (cu 5% mai ieftin) dintr-un clic",
     updated: "Alertă actualizată.",
     done: "Gata.",
     willEmail: "Îți vom trimite un e-mail la {email} când prețul ajunge la {price} sau mai jos.",

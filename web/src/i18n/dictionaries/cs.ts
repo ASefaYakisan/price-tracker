@@ -208,6 +208,7 @@ const cs: Dict = {
     atOrAbove: "Upozornit při ceně nejméně",
     direction: "Směr upozornění",
     create: "Vytvořit upozornění",
+    quickAlert: "Upozornit na {price} (o 5 % levněji) jedním klepnutím",
     updated: "Upozornění aktualizováno.",
     done: "Hotovo.",
     willEmail: "Pošleme e-mail na {email}, jakmile cena klesne na {price} nebo níže.",

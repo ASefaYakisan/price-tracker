@@ -208,6 +208,7 @@ const it: Dict = {
     atOrAbove: "Avvisami quando sale a",
     direction: "Tipo di avviso",
     create: "Crea avviso",
+    quickAlert: "Avvisami a {price} (5% in meno) con un clic",
     updated: "Avviso aggiornato.",
     done: "Fatto.",
     willEmail: "Scriveremo a {email} quando il prezzo sarà pari o inferiore a {price}.",

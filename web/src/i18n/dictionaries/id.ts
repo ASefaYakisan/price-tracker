@@ -208,6 +208,7 @@ const id: Dict = {
     atOrAbove: "Beri tahu saya pada harga atau di atas",
     direction: "Arah peringatan",
     create: "Buat peringatan",
+    quickAlert: "Beri tahu saya di {price} (5% lebih murah) dengan satu klik",
     updated: "Peringatan diperbarui.",
     done: "Selesai.",
     willEmail: "Kami akan mengirim email ke {email} begitu harga mencapai {price} atau lebih rendah.",

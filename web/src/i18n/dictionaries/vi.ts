@@ -208,6 +208,7 @@ const vi: Dict = {
     atOrAbove: "Báo cho tôi khi giá bằng hoặc cao hơn",
     direction: "Hướng cảnh báo",
     create: "Tạo cảnh báo",
+    quickAlert: "Báo cho tôi khi giá còn {price} (rẻ hơn 5%) chỉ với một cú nhấp",
     updated: "Đã cập nhật cảnh báo.",
     done: "Xong.",
     willEmail: "Chúng tôi sẽ gửi email đến {email} khi giá bằng hoặc thấp hơn {price}.",

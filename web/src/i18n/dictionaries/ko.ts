@@ -208,6 +208,7 @@ const ko: Dict = {
     atOrAbove: "이 가격 이상일 때 알림",
     direction: "알림 방향",
     create: "알림 만들기",
+    quickAlert: "한 번의 클릭으로 {price}(5% 인하)에 알림 받기",
     updated: "알림이 수정되었습니다.",
     done: "완료되었습니다.",
     willEmail: "가격이 {price} 이하가 되면 {email}(으)로 이메일을 보내 드립니다.",

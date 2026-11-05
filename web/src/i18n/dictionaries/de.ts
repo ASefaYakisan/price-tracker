@@ -208,6 +208,7 @@ const de: Dict = {
     atOrAbove: "Benachrichtigen bei oder über",
     direction: "Alarmrichtung",
     create: "Alarm erstellen",
+    quickAlert: "Mit einem Klick bei {price} benachrichtigen (5 % günstiger)",
     updated: "Alarm aktualisiert.",
     done: "Fertig.",
     willEmail: "Wir schreiben an {email}, sobald der Preis bei oder unter {price} liegt.",

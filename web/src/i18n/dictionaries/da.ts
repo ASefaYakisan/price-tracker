@@ -208,6 +208,7 @@ const da: Dict = {
     atOrAbove: "Giv besked ved eller over",
     direction: "Alarmretning",
     create: "Opret alarm",
+    quickAlert: "Giv mig besked ved {price} (5 % billigere) med ét tryk",
     updated: "Alarmen er opdateret.",
     done: "Færdig.",
     willEmail: "Vi sender en e-mail til {email}, når prisen er {price} eller lavere.",

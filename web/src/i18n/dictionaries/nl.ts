@@ -208,6 +208,7 @@ const nl: Dict = {
     atOrAbove: "Waarschuw me bij of boven",
     direction: "Soort waarschuwing",
     create: "Alert aanmaken",
+    quickAlert: "Meld me bij {price} (5% goedkoper) met één klik",
     updated: "Alert bijgewerkt.",
     done: "Klaar.",
     willEmail: "We mailen {email} zodra de prijs op of onder {price} staat.",
