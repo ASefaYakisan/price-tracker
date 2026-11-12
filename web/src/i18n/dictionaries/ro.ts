@@ -244,7 +244,7 @@ const ro: Dict = {
     footerBrowser: "Această listă este păstrată în acest browser.",
     footerSignIn: "Conectează-te",
     footerSignInRest: "pentru a-ți păstra alertele pe toate dispozitivele.",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "Fiecare alertă trimite un singur e-mail când prețul atinge ținta ta; editeaz-o pentru a urmări din nou prețul.",
     notActive: "Inactivă",
     emailSent: "E-mail trimis {date}",
     readFailed: "La ultima verificare nu am putut citi prețul acestei pagini: {reason}. Alerta ta așteaptă până când prețul poate fi citit din nou.",

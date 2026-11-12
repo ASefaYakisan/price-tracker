@@ -244,7 +244,7 @@ const cs: Dict = {
     footerBrowser: "Tento seznam je uložen v tomto prohlížeči.",
     footerSignIn: "Přihlaste se",
     footerSignInRest: "a mějte svá upozornění na všech zařízeních.",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "Každá výstraha odešle jeden e-mail, když cena dosáhne vaší cílové hodnoty; pro opětovné sledování ji upravte.",
     notActive: "Neaktivní",
     emailSent: "E-mail odeslán {date}",
     readFailed: "Při poslední kontrole se nepodařilo přečíst cenu této stránky: {reason}. Vaše upozornění počká, dokud půjde cenu znovu přečíst.",
