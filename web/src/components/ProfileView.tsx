@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { DeleteAccount } from "@/components/DeleteAccount";
 import { ExportData } from "@/components/ExportData";
+import { ProfileAccount, ProfileSummary } from "@/components/ProfileAccount";
 import { ProfileSecurity } from "@/components/ProfileSecurity";
 import { useUser } from "@/lib/auth";
 import { authEnabled } from "@/lib/supabase/enabled";
@@ -52,6 +53,8 @@ export function ProfileView() {
           </span>
         </Link>
       </section>
+      <ProfileSummary />
+      <ProfileAccount />
       <ProfileSecurity />
       <ExportData />
       <DeleteAccount />
