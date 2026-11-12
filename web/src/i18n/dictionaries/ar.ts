@@ -185,6 +185,7 @@ const ar: Dict = {
     removeConfirm: "هل تريد إزالة هذا العنصر من قائمتك؟ يبقى لدى الآخرين الذين يتابعونه.",
     removing: "جارٍ الإزالة…",
     pending: "رفض المتجر القراءة الأولى. نحاول مجددًا من خادم آخر، وعادةً يظهر السعر خلال ساعة.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "قيد الانتظار",

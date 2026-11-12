@@ -185,6 +185,7 @@ const id: Dict = {
     removeConfirm: "Hapus item ini dari daftar Anda? Orang lain yang mengikutinya tetap menyimpannya.",
     removing: "Menghapus…",
     pending: "Toko menolak pembacaan pertama. Kami mencoba lagi dari server lain; harga biasanya muncul dalam satu jam.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "Menunggu",

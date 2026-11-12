@@ -185,6 +185,7 @@ const nl: Dict = {
     removeConfirm: "Dit artikel uit je lijst verwijderen? Anderen die het volgen houden het.",
     removing: "Verwijderen…",
     pending: "De winkel weigerde de eerste poging. We proberen het opnieuw vanaf een andere server; de prijs verschijnt meestal binnen een uur.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "In afwachting",

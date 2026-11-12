@@ -185,6 +185,7 @@ const en = {
     removeConfirm: "Remove this item from your list? Other people who follow it keep it.",
     removing: "Removing…",
     pending: "The shop turned away our first read. We are trying again from another server; the price usually appears within an hour.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "Pending",

@@ -185,6 +185,7 @@ const ja: Dict = {
     removeConfirm: "この商品をリストから外しますか？フォローしている他の人のリストには残ります。",
     removing: "削除中…",
     pending: "ショップが最初の読み取りを拒否しました。別のサーバーから再試行しています。通常1時間以内に価格が表示されます。",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "保留中",

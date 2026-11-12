@@ -185,6 +185,7 @@ const hi: Dict = {
     removeConfirm: "इस आइटम को अपनी सूची से हटाएँ? इसे फ़ॉलो करने वाले दूसरे लोगों के पास यह बना रहेगा।",
     removing: "हटाया जा रहा है…",
     pending: "दुकान ने पहली कोशिश ठुकरा दी। हम दूसरे सर्वर से फिर कोशिश कर रहे हैं; कीमत आमतौर पर एक घंटे में दिख जाती है।",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "लंबित",

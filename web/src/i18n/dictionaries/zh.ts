@@ -185,6 +185,7 @@ const zh: Dict = {
     removeConfirm: "要从你的列表中移除此商品吗？其他关注它的人仍会保留。",
     removing: "正在移除…",
     pending: "商店拒绝了第一次读取。我们正在从另一台服务器重试，价格通常会在一小时内显示。",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "等待中",

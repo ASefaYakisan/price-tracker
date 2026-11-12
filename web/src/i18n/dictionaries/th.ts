@@ -185,6 +185,7 @@ const th: Dict = {
     removeConfirm: "นำสินค้านี้ออกจากรายการของคุณไหม? คนอื่นที่ติดตามอยู่จะยังเก็บไว้",
     removing: "กำลังนำออก…",
     pending: "ร้านค้าปฏิเสธการอ่านครั้งแรก เรากำลังลองใหม่จากเซิร์ฟเวอร์อื่น ปกติราคาจะแสดงภายในหนึ่งชั่วโมง",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "รอดำเนินการ",

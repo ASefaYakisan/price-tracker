@@ -185,6 +185,7 @@ const sv: Dict = {
     removeConfirm: "Ta bort varan från din lista? Andra som bevakar den behåller den.",
     removing: "Tar bort…",
     pending: "Butiken nekade första försöket. Vi försöker igen från en annan server; priset brukar synas inom en timme.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "Väntar",

@@ -5,6 +5,7 @@ import { fill } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries/en";
 import type { ProductRow } from "@/lib/data";
 import { dateTime } from "@/lib/format";
+import { isLimitedStoreUrl } from "@/lib/supported-stores";
 import { errorReason, lastReadFailed, linkState } from "@/lib/link-status";
 
 // "Pending" / "Couldn't read" next to a pasted link; tracked links need no label.
@@ -46,7 +47,7 @@ export function LinkStatusNote({ product, t, lang }: { product: ProductRow; t: D
     return (
       <div role="status" className="mt-6 rounded-xl border border-line bg-accent-soft px-4 py-3 text-sm text-ink">
         <AutoRefresh />
-        <p>{t.product.pending}</p>
+        <p>{isLimitedStoreUrl(product.url) ? t.product.pendingLimited : t.product.pending}</p>
         {last && <p className="mt-1 text-muted">{fill(t.linkStatus.lastTry, last)}</p>}
       </div>
     );

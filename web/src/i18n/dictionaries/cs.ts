@@ -185,6 +185,7 @@ const cs: Dict = {
     removeConfirm: "Odebrat tuto položku z vašeho seznamu? Ostatní, kteří ji sledují, si ji ponechají.",
     removing: "Odebírání…",
     pending: "Obchod odmítl první načtení. Zkoušíme to znovu z jiného serveru; cena se obvykle objeví do hodiny.",
+    pendingLimited: "This shop often blocks automated reading, so a price may never appear for this product. We keep trying, but cannot promise when.",
   },
   linkStatus: {
     pending: "Čeká",
