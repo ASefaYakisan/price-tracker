@@ -42,7 +42,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - id: previous
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: scraper/probe-previous
           key: probe-report-none
@@ -69,7 +69,7 @@ jobs:
       - name: Keep this report for the next run
         if: ${{ github.event_name == 'schedule' || (inputs.urls == '' && !inputs.api) }}
         run: mkdir -p probe-previous && cp probe-report.json probe-previous/probe-report.json
-      - uses: actions/cache/save@v4
+      - uses: actions/cache/save@v6
         if: ${{ github.event_name == 'schedule' || (inputs.urls == '' && !inputs.api) }}
         with:
           path: scraper/probe-previous
