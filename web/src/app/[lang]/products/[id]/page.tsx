@@ -12,6 +12,8 @@ import { siteUrl } from "@/lib/site-url";
 import { fill } from "@/i18n/config";
 import { BackLink } from "@/components/BackLink";
 import { ListButton } from "@/components/ListButton";
+import { CurrencyEquivalent } from "@/components/CurrencyEquivalent";
+import { ratesFromProducts } from "@/lib/convert";
 import { getDictionary, resolveLang } from "@/i18n/server";
 import { getProduct, getProducts, getVisible, pastedLinkExists } from "@/lib/data";
 import { changeTone, dateTime, money, percent, percentChange, storeName } from "@/lib/format";
@@ -69,6 +71,7 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
   const found = await getVisible(id);
   if (!found) notFound();
   const { product, history } = found;
+  const rates = ratesFromProducts((await getProducts()).filter((p) => p.source === "tcmb"));
 
   const prices = history.map((p) => p.price).filter((p): p is number => p != null);
   const first = prices[0] ?? null;
@@ -105,6 +108,13 @@ async function ProductDetail({ params }: { params: Promise<{ lang: string; id: s
             <span className="text-3xl font-bold tracking-tight tabular-nums sm:text-4xl">{money(product.price, cur, lang)}</span>
             <ChangeBadge price={product.price} previous={product.previous_price} currency={cur} source={product.source} t={t} lang={lang} />
           </div>
+          <CurrencyEquivalent
+            price={product.price}
+            currency={cur}
+            rates={rates}
+            lang={lang}
+            labels={{ showIn: t.product.showIn, original: t.product.showInOriginal, approx: t.product.approx }}
+          />
           {product.scraped_at && (
             <p className="mt-1 text-xs text-muted">{fill(t.product.updated, { date: dateTime(product.scraped_at, lang) })}</p>
           )}
