@@ -244,7 +244,7 @@ const ja: Dict = {
     footerBrowser: "このリストはこのブラウザに保存されています。",
     footerSignIn: "ログイン",
     footerSignInRest: "すると、どの端末でもアラートを利用できます。",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "各アラートは価格が目標に達するとメールを1回送信します。再度追跡するにはアラートを編集してください。",
     notActive: "停止中",
     emailSent: "{date} にメール送信済み",
     readFailed: "前回の確認でこのページの価格を読み取れませんでした：{reason}。価格が再び読み取れるまで、アラートは待機します。",

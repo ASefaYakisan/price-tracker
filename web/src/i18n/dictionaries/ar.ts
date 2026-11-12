@@ -244,7 +244,7 @@ const ar: Dict = {
     footerBrowser: "تُحفظ هذه القائمة في هذا المتصفح.",
     footerSignIn: "سجّل الدخول",
     footerSignInRest: "للاحتفاظ بتنبيهاتك على كل أجهزتك.",
-    footerRule: "Each alert sends one email when the price reaches your target; edit it to watch again.",
+    footerRule: "يرسل كل تنبيه رسالة واحدة عندما يصل السعر إلى هدفك؛ عدّله لمتابعة السعر مرة أخرى.",
     notActive: "غير نشط",
     emailSent: "أُرسل البريد {date}",
     readFailed: "تعذّرت قراءة سعر هذه الصفحة في آخر فحص: {reason}. سينتظر تنبيهك حتى يمكن قراءته مجددًا.",
